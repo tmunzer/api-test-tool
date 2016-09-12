@@ -16,7 +16,7 @@ module.exports.getPermanentToken = function(authCode, devAccount, callback){
         method: 'POST',
         headers: {
             'X-AH-API-CLIENT-SECRET' : devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientID,
+            'X-AH-API-CLIENT-ID': devAccount.clientId,
             'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl
         }
     };

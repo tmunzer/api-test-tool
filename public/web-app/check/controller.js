@@ -26,7 +26,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             locationId: false
         },
      */
-w
+
     $scope.endpoints = {
         configurationLocations: {
             key: "configurationLocations",
