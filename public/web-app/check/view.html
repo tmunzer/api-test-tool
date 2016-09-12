@@ -1,0 +1,31 @@
+<md-content style="padding-bottom: 5px; width: 100%">
+    <article md-whiteframe="5" ng-repeat="endpoint in endpoints">
+        <md-toolbar style="min-height: 50px">
+            <div class="md-toolbar-tools" style="height: 50px">
+                <h2 class="md-title">{{endpoint.name}}</h2>
+                <span flex></span>
+                <span class='badge badge-warning' ng-show="!endpoint.isLoaded">Loading...</span>
+                <span class='badge badge-warning' ng-show="endpoint.isLoaded && endpoint.status == 0">Not yet stared</span>
+                <span class='badge badge-success' ng-show="endpoint.isLoaded && endpoint.status == 200">Success</span>
+                <span class='badge badge-danger' ng-show="endpoint.isLoaded && endpoint.status != 200 && endpoint.status != 0">Error - HTTP {{endpoint.status}}</span>
+                <md-button aria-label="details" ng-click="showDetails(endpoint)" style="min-width: 20px;" ng-disabled="!endpoint.isLoaded || endpoint.status == 0">
+                    <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
+                    <md-icon class="material-icons" aria-label="details">description</md-icon>
+                </md-button>
+                <md-button aria-label="refresh" ng-click="generateRequest(endpoint.key)" style="min-width: 20px;">
+                    <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
+                    <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                </md-button>
+            </div>
+
+        </md-toolbar>
+        <div ng-show="endpoint.isLoaded" style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+        <md-progress-linear ng-show="!endpoint.isLoaded" md-mode="indeterminate" class="md-accent"></md-progress-linear>
+
+        <div layout-padding>
+            <div> <b>Endpoint: </b><i>{{ endpoint.endpoint}}</i> </div>
+            <div> <b>Description: </b>{{ endpoint.description}} </div>
+        </div>
+        </div>
+    </article>
+</md-content>
