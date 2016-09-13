@@ -10,7 +10,7 @@ module.exports.webhooks = {
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-    get : require("./configuration/webhook").get,
+    get : require("./configuration/webhooks").get,
     /**
  * Creates a new Webhook subscription
  * @param {Object} xapi - API credentials
@@ -27,7 +27,7 @@ module.exports.webhooks = {
  * @param {String} subscription.secret - The shared secret sent to the subscribing application. 
  * @param {String} subscription.url - The https URL to receive a callback as a result of the subscription
  *  */
-    create : require("./configuration/webhook").create,
+    create : require("./configuration/webhooks").create,
     /**
  * Deletes Webhook subscription
  * @param {Object} xapi - API credentials
@@ -40,7 +40,7 @@ module.exports.webhooks = {
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  * @param {String} subscriptionId - The subscription parameters
  *  */
-    remove : require("./configuration/webhook").remove,
+    remove : require("./configuration/webhooks").remove,
 }
 
 module.exports.configuration = {
