@@ -40,7 +40,6 @@ angular.module('Check').factory("queriesService", function ($http, $q) {
         var request = $http({
             url: "/api/configuration/webhooks",
             method: "GET",
-            params: {locationId: locationId},
             timeout: canceller.promise
         });
         return httpRequest(request);
@@ -157,6 +156,7 @@ angular.module('Check').factory("queriesService", function ($http, $q) {
     return {
         configurationLocations: configurationLocations,
         configurationSsids: configurationSsids,
+        configurationWebhooks: configurationWebhooks,
         identityCredentials: identityCredentials,
         identityUserGroups: identityUserGroups,
         locationClients: locationClients,

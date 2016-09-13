@@ -3,6 +3,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
     var requests = {
         configurationLocations: null,
         configurationSsids: null,
+        configurationWebhooks: null,
         identityCredentials: null,
         identityUserGroups: null,
         monitorClients: null,
@@ -10,8 +11,9 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         presenceClientCount: null,
         presenceClientPresence: null,
         presenceClientTimeSeries: null
-    }
-   
+    };
+
+
     /**
      *
             locationClients: null,
@@ -42,7 +44,17 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             key: "configurationSsids",
             name: "Configuration - Get SSIDs",
             endpoint: "GET /beta/configuration/ssids{?ownerId}",
-            description: "Provides information about the configured SSID Profiles",
+            description: "Provides information about the configured SSID Profiles.",
+            status: 0,
+            data: null,
+            isLoaded: true,
+            locationId: false
+        },
+        configurationWebhooks: {
+            key: "configurationWebhooks",
+            name: "Configuration - Get Webhooks",
+            endpoint: "GET /beta/configuration/webhooks{?ownerId}",
+            description: "Provides access to the list of current Webhook subscriptions.",
             status: 0,
             data: null,
             isLoaded: true,
@@ -52,7 +64,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             key: "identityCredentials",
             name: "Identity - Get Credentials",
             endpoint: "GET /v1/identity/credentials{?credentialType,ownerId,memberOf,adUser,creator,loginName,firstName,lastName,phone,email,userGroup,page,pageSize}",
-            description: "Allows one to query collection of credentials given query parameters as input",
+            description: "Allows one to query collection of credentials given query parameters as input.",
             status: 0,
             data: null,
             isLoaded: true,
@@ -62,7 +74,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             key: "identityUserGroups",
             name: "Identity - Get User Groups",
             endpoint: "GET /v1/identity/userGroups{?ownerId,memberOf,adUser}",
-            description: "Allows one to query the collection of user groups given query parameters as input",
+            description: "Allows one to query the collection of user groups given query parameters as input.",
             status: 0,
             data: null,
             isLoaded: true,
@@ -73,7 +85,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             key: "monitorClients",
             name: "Monitor - Get Clients",
             endpoint: "GET /v1/monitor/clients{?ownerId,startTime,endTime,page,pageSize}",
-            description: "Returns a list of clients",
+            description: "Returns a list of clients.",
             status: 0,
             data: null,
             isLoaded: true,
@@ -83,7 +95,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             key: "monitorDevices",
             name: "Monitor - Get Devices",
             endpoint: "GET /v1/monitor/devices{?ownerId,showActiveClientCount,page,pageSize}",
-            description: "Returns a list of devices",
+            description: "Returns a list of devices.",
             status: 0,
             data: null,
             isLoaded: true,
@@ -92,18 +104,18 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         presenceClientCount: {
             key: "presenceClientCount",
             name: "Presence - Get Clients Count",
-            endpoint: "",
-            description: "",
+            endpoint: "GET /v1/clientlocation/clientcount{?ownerId,apmac,location,startTime,endTime}",
+            description: "Returns a count of the number of clients seen during the specified time period with a timeUnit of OneHour.",
             status: 0,
             data: null,
             isLoaded: true,
             locationId: true
         },
         presenceClientPresence: {
-            key: "presenceClientTimeSeries",
+            key: "presenceClientPresence",
             name: "Presence - Get Clients Presence",
-            endpoint: "",
-            description: "",
+            endpoint: "GET /v1/clientlocation/clientpresence{?ownerId,apmac,location,timeUnit,startTime,endTime}",
+            description: "Returns a list of distinct clients during the specified time period broken down by the specified time unit.",
             status: 0,
             data: null,
             isLoaded: true,
@@ -112,14 +124,14 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         presenceClientTimeSeries: {
             key: "presenceClientTimeSeries",
             name: "Presence - Get Client Time Series",
-            endpoint: "",
-            description: "",
+            endpoint: "GET /v1/clientlocation/clienttimeseries{?ownerId,apmac,location,timeUnit,startTime,endTime}",
+            description: "Returns a count of the number of clients seen during the specified time period broken down by the specified time unit.",
             status: 0,
             data: null,
             isLoaded: true,
             locationId: true
         }
-    }
+    };
 
 
     $scope.generateRequest = function (endpoint) {
@@ -151,15 +163,16 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         if ($scope.endpoints[endpoint].locationId == false) $scope.generateRequest(endpoint);
     }
 
-$scope.showDetails = function(endpoint){
+    $scope.showDetails = function (endpoint) {
         $mdDialog.show({
             controller: 'DialogDetailsController',
             templateUrl: 'modals/modalDetailsContent.html',
             locals: {
-                items: endpoint                    
+                items: endpoint
             }
         }).then(function () {
             getClassrooms();
         });
     };
+
 });

@@ -17,12 +17,17 @@ router.get("/configuration/locations", function (req, res, next) {
     })
 })
 router.get("/configuration/ssids", function (req, res, next) {
-    API.configuration.ssids.GET(req.session.xapi, devAccount, function (err, result) {
+    API.configuration.ssids.get(req.session.xapi, devAccount, function (err, result) {
         if (err) res.status(err.status).send(err);
         else res.json(result);
     })
 })
-
+router.get("/configuration/webhooks", function (req, res, next) {
+    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, result) {
+        if (err) res.status(err.status).send(err);
+        else res.json(result);
+    })
+})
 /**
  * IDENTITY
  */
