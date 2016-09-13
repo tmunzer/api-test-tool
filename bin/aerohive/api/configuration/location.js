@@ -1,4 +1,4 @@
-var api = require("./../../req");
+var api = require("./../req");
 
 /**
  * Exposes the Location Folder Hierarchy that a customer uses to associate non-geographic location information with an Access Point/Device.

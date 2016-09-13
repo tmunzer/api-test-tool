@@ -1,4 +1,4 @@
-var api = require("./../../req");
+var api = require("./../req");
 
 /**
  * Provides access to the list of current Webhook subscriptions.
