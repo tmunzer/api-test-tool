@@ -9,9 +9,9 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         monitorDevices: null,
         presenceClientCount: null,
         presenceClientPresence: null,
-        presenceClientTimeSeries: null,
-        webhooks: null
-    };
+        presenceClientTimeSeries: null
+    }
+   
     /**
      *
             locationClients: null,
@@ -48,16 +48,6 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             isLoaded: true,
             locationId: false
         },
-        configurationWebhooks: {
-            key: "configurationWebhooks",
-            name: "Webhooks - Get list of current Webhook subscription",
-            endpoint: "GET /beta/configuration/webhooks{?ownerId}",
-            description: "Provides access to the list of current Webhook subscriptions.",
-            status: 0,
-            data: null,
-            isLoaded: true,
-            locationId: false
-        },
         identityCredentials: {
             key: "identityCredentials",
             name: "Identity - Get Credentials",
@@ -78,6 +68,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
             isLoaded: true,
             locationId: false
         },
+
         monitorClients: {
             key: "monitorClients",
             name: "Monitor - Get Clients",
@@ -101,18 +92,18 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         presenceClientCount: {
             key: "presenceClientCount",
             name: "Presence - Get Clients Count",
-            endpoint: "GET /v1/clientlocation/clientcount{?ownerId,apmac,location,startTime,endTime}",
-            description: "Returns a count of the number of clients seen during the specified time period with a timeUnit of OneHour.",
+            endpoint: "",
+            description: "",
             status: 0,
             data: null,
             isLoaded: true,
             locationId: true
         },
         presenceClientPresence: {
-            key: "presenceClientPresence",
+            key: "presenceClientTimeSeries",
             name: "Presence - Get Clients Presence",
-            endpoint: "GET /v1/clientlocation/clientpresence{?ownerId,apmac,location,timeUnit,startTime,endTime}",
-            description: " Returns a list of distinct clients during the specified time period broken down by the specified time unit.",
+            endpoint: "",
+            description: "",
             status: 0,
             data: null,
             isLoaded: true,
@@ -121,8 +112,8 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         presenceClientTimeSeries: {
             key: "presenceClientTimeSeries",
             name: "Presence - Get Client Time Series",
-            endpoint: "GET /v1/clientlocation/clienttimeseries{?ownerId,apmac,location,timeUnit,startTime,endTime}",
-            description: "Returns a count of the number of clients seen during the specified time period broken down by the specified time unit.",
+            endpoint: "",
+            description: "",
             status: 0,
             data: null,
             isLoaded: true,
