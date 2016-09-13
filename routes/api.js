@@ -11,7 +11,7 @@ var devAccount = require("./../bin/aerohive/config").aerohive;
  * CONFIGURATION
  */
 router.get("/configuration/locations", function (req, res, next) {
-    API.configuration.locations.GET(req.session.xapi, devAccount, function (err, result) {
+    API.configuration.locations.locations(req.session.xapi, devAccount, function (err, result) {
         if (err) res.status(err.status).send(err);
         else res.json(result);
     })

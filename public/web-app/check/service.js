@@ -2,6 +2,7 @@ angular.module('Check').factory("queriesService", function ($http, $q) {
     var dataLoaded = {
         configurationLocations: false,
         configurationSsids: false,
+        configurationWebhooks: false,
         identityCredentials: false,
         identityUserGroups: false,
         locationClients: false,
@@ -29,6 +30,17 @@ angular.module('Check').factory("queriesService", function ($http, $q) {
         var request = $http({
             url: "/api/configuration/ssids",
             method: "GET",
+            timeout: canceller.promise
+        });
+        return httpRequest(request);
+    }
+    function configurationWebhooks(){
+        dataLoaded.configurationWebhooks = false;
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/configuration/webhooks",
+            method: "GET",
+            params: {locationId: locationId},
             timeout: canceller.promise
         });
         return httpRequest(request);

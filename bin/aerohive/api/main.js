@@ -1,4 +1,47 @@
-
+module.exports.webhooks = {
+    /**
+ * Provides access to the list of current Webhook subscriptions.
+ * @param {Object} xapi - API credentials
+ * @param {String} xapi.vpcUrl - ACS server to request
+ * @param {String} xapi.ownerId - ACS ownerId
+ * @param {String} xapi.accessToken - ACS accessToken
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ *  */
+    get : require("./configuration/webhook").get,
+    /**
+ * Creates a new Webhook subscription
+ * @param {Object} xapi - API credentials
+ * @param {String} xapi.vpcUrl - ACS server to request
+ * @param {String} xapi.ownerId - ACS ownerId
+ * @param {String} xapi.accessToken - ACS accessToken
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ * @param {Object} subscription - The subscription parameters
+ * @param {String} subscription.application - The application name that receives a callback as a result of the subscription.
+ * @param {String} subscription.ownerId - The id of the customer that owns this device.
+ * @param {String} subscription.secret - The shared secret sent to the subscribing application. 
+ * @param {String} subscription.url - The https URL to receive a callback as a result of the subscription
+ *  */
+    create : require("./configuration/webhook").create,
+    /**
+ * Deletes Webhook subscription
+ * @param {Object} xapi - API credentials
+ * @param {String} xapi.vpcUrl - ACS server to request
+ * @param {String} xapi.ownerId - ACS ownerId
+ * @param {String} xapi.accessToken - ACS accessToken
+ * @param {Object} devAccount - information about the Aerohive developper account to user
+ * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
+ * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+ * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ * @param {String} subscriptionId - The subscription parameters
+ *  */
+    remove : require("./configuration/webhook").remove,
+}
 
 module.exports.configuration = {
     locations: {
@@ -13,10 +56,9 @@ module.exports.configuration = {
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-        GET: require("./configuration/location/location").GET
-    },
-    locationNode: {
-        /**
+        locations: require("./configuration/location").locations,
+
+           /**
  * Allows one to retrieve a Location Folder node anywhere within the hierarchy.
  * @param {Object} xapi - API credentials
  * @param {String} xapi.vpcUrl - ACS server to request
@@ -28,8 +70,9 @@ module.exports.configuration = {
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  * @param {String} folderId - The id of the desired Location folder
  *  */
-        GET: require("./configuration/location/locationNode").GET
+        location: require("./configuration/location").location
     },
+ 
     ssids: {
         /**
  * Provides information about the configured SSID Profiles
