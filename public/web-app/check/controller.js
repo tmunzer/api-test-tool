@@ -11,7 +11,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         presenceClientPresence: null,
         presenceClientTimeSeries: null,
         webhooks: null
-    }
+    };
     /**
      *
             locationClients: null,
