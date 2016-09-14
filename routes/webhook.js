@@ -5,7 +5,7 @@ var router = express.Router();
 
 
 /* GET users listing. */
-router.post('/presence', function (req, res, next) {
+router.post('/presence/', function (req, res, next) {
     console.log(request.body);
     //io.emit("webhook", request.body);    
 });
