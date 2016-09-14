@@ -57,8 +57,8 @@ var webhook = require('./routes/webhook');
 app.use('/', routes);
 app.use('/web-app/', webapp);
 app.use('/api/', api);
-app.use('/oauth', oauth);
-app.use('/webhook', webhook);
+app.use('/oauth/', oauth);
+app.use('/webhook/', webhook);
 
 
 app.get('/fail', function (req, res, next) {
