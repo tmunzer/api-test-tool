@@ -53,10 +53,12 @@ var routes = require('./routes/login');
 var webapp = require('./routes/web-app');
 var api = require('./routes/api');
 var oauth = require('./routes/oauth');
+var webhook = require('./routes/webhook');
 app.use('/', routes);
 app.use('/web-app/', webapp);
 app.use('/api/', api);
 app.use('/oauth', oauth);
+app.use('/webhook', webhook);
 
 
 app.get('/fail', function (req, res, next) {

@@ -28,6 +28,31 @@ router.get("/configuration/webhooks", function (req, res, next) {
         else res.json(result);
     })
 })
+router.post("/configuration/webhooks", function (req, res, next) {
+    if (req.session.xapi.ownerId) {
+        var subscription = {
+            "application": "ApiTestTool",
+            "ownerId": req.session.xapi.ownerId,
+            "secret": "",
+            "url": "https://check.ah-lab.fr/webhook"
+        }
+        API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, result) {
+            if (err) res.status(err.status).send(err);
+            else {
+                req.session.webhookId = result.data.id;
+                res.json(result);
+            }
+        })
+    } else res.status("404").send("ownerId not present in session.");
+})
+router.delete("/configuration/webhooks", function (req, res, next) {
+    if (req.session.webhookId)
+        API.configuration.webhooks.get(req.session.xapi, devAccount, req.session.webhookId, function (err, result) {
+            if (err) res.status(err.status).send(err);
+            else res.json(result);
+        })
+    else res.status("404").send("webhookId not present in session.");
+})
 /**
  * IDENTITY
  */
