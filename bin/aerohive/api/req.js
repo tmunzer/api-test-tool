@@ -44,7 +44,7 @@ module.exports.GET = function (xapi, devAccount, path, callback) {
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-module.exports.POST = function (xapi, path, data, devAccount, callback) {
+module.exports.POST = function (xapi, devAccount, path, data, callback) {
     var rejectUnauthorized = true;
     if (xapi.hasOwnProperty('rejectUnauthorized')) rejectUnauthorized = xapi.rejectUnauthorized;
     var options = {

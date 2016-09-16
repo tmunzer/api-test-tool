@@ -1,4 +1,6 @@
-angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, queriesService) {
+angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, endpointService) {
+});
+angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, endpointService) {
     var locationId;
     var requests = {
         configurationLocations: null,
@@ -13,21 +15,6 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         presenceClientTimeSeries: null
     };
 
-
-    /**
-     *
-            locationClients: null,
-                    locationClients: {
-            key: "locationClients",
-            name: "Location - Get Clients",
-            endpoint: "GET /v1/location/clients{?ownerId,apMacs}",
-            description: "Returns a list of current client location observations for each requested AP.",
-            status: 0,
-            data: null,
-            isLoaded: true,
-            locationId: false
-        },
-     */
 
     $scope.endpoints = {
         configurationLocations: {
@@ -137,8 +124,8 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
     $scope.generateRequest = function (endpoint) {
         if (requests[endpoint]) requests[endpoint].abort();
         $scope.endpoints[endpoint].isLoaded = false;
-        if ($scope.endpoints[endpoint].locationId == true) requests[endpoint] = queriesService[endpoint](locationId);
-        else requests[endpoint] = queriesService[endpoint]();
+        if ($scope.endpoints[endpoint].locationId == true) requests[endpoint] = endpointService[endpoint](locationId);
+        else requests[endpoint] = endpointService[endpoint]();
         requests[endpoint].then(function (promise) {
             if (promise) {
                 $scope.endpoints[endpoint].status = promise.status;
@@ -175,4 +162,69 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, que
         });
     };
 
+});
+
+
+angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, webhookService) {
+    var requestWebhook;
+    $scope.webhook = {
+        register: {
+            name: "Presence - Get Client Time Series",
+            endpoint: "POST /beta/configuration/webhooks",
+            description: "Creates a new Webhook subscription",
+            status: 0,
+            data: null,
+            isLoaded: true,
+            locationId: false
+        },
+        remove: {
+            name: "Presence - Get Client Time Series",
+            endpoint: "DELETE /beta/configuration/webhooks/{subscription}",
+            description: "Deletes a Webhook subscription",
+            status: 0,
+            data: null,
+            isLoaded: true,
+            locationId: false
+        },
+        ready: false
+    }
+
+    $scope.start = function () {
+        if (requestWebhook) requestWebhook.abort();
+        $scope.webhook.register.isLoaded = false;
+        requestWebhook = webhookService.createWebhook();
+        requestWebhook.then(function (promise) {
+            if (promise) {
+                $scope.webhook.register.status = promise.status;
+                $scope.webhook.register.data = promise.data;
+                $scope.webhook.register.isLoaded = true;
+                if ($scope.webhook.register.status == 200) $scope.webhook.ready = true;
+            }
+        });
+    }
+    $scope.stop = function () {
+        if (requestWebhook) requestWebhook.abort();
+        $scope.webhook.remove.isLoaded = false;
+        requestWebhook = webhookService.deleteWebhook();
+        requestWebhook.then(function (promise) {
+            if (promise) {
+                $scope.webhook.remove.status = promise.status;
+                $scope.webhook.remove.data = promise.data;
+                $scope.webhook.remove.isLoaded = true;
+                if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
+            }
+        });
+    }
+
+    $scope.showDetails = function (endpoint) {
+        $mdDialog.show({
+            controller: 'DialogDetailsController',
+            templateUrl: 'modals/modalDetailsContent.html',
+            locals: {
+                items: endpoint
+            }
+        }).then(function () {
+            getClassrooms();
+        });
+    };
 });

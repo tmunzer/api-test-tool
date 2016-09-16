@@ -22,7 +22,10 @@ var fr = {
         reset: "Réinitialiser",
         cancel: "Annuler",
         yes: "Oui",
-        details: "Details"
+        details: "Details",
+        restart: "Restart",
+        start: "Start",
+        stop: "Stop"
     },
     filter: {
         filterBy: "Filtrer Par",

@@ -22,7 +22,11 @@ var en = {
         reset: "Reset",
         cancel: "Cancel",
         yes: "Yes",
-        details: "Details"
+        details: "Details",
+        create: "Create",
+        restart: "Restart",
+        start: "Start",
+        stop: "Stop"
     },
     filter: {
         filterBy: "Filter By",

@@ -35,13 +35,13 @@ router.post("/configuration/webhooks", function (req, res, next) {
         var subscription = {
             "application": "ApiTestTool",
             "ownerId": req.session.xapi.ownerId,
-            "secret": req.session.xapi.ownerId + req.session.xapi.accessToken,
+            "secret": req.session.xapi.ownerId + req.session.xapi.vpcUrl,
             "url": "https://check.ah-lab.fr/webhook"
         }
         API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, result) {
             if (err) res.status(err.status).send(err);
             else {
-                req.session.webhookId = result.data.id;
+                req.session.webhookId = result.id;
                 res.json(result);
             }
         })

@@ -13,7 +13,7 @@ var api = require("./../req");
  *  */
 module.exports.get = function (xapi, devAccount, callback) {
     var path = "/xapi/beta/configuration/webhooks?ownerId=" + xapi.ownerId;
-    api.GET(xapi, devAccount, path,function (err, result) {
+    api.GET(xapi, devAccount, path, function (err, result) {
         if (err) {
             callback(err, null);
         } else if (result) {
@@ -46,6 +46,7 @@ module.exports.create = function (xapi, devAccount, subscription, callback) {
     for (var key in subscription) {
         if (subscription[key] === '') delete subscription[key];
     }
+    console.log(subscription);
     api.POST(xapi, devAccount, path, subscription, function (err, result) {
         if (err) {
             callback(err, null);
@@ -71,8 +72,8 @@ module.exports.create = function (xapi, devAccount, subscription, callback) {
  * @param {String} subscriptionId - The subscription parameters
  *  */
 module.exports.remove = function (xapi, devAccount, subscriptionId, callback) {
-    var path = "/xapi/beta/configuration/webhooks/"+subscriptionId;
-     api.DELETE(xapi, devAccount, path, function (err, result) {
+    var path = "/xapi/beta/configuration/webhooks/" + subscriptionId;
+    api.DELETE(xapi, devAccount, path, function (err, result) {
         if (err) {
             callback(err, null);
         } else if (result) {
