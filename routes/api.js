@@ -23,25 +23,52 @@ router.get("/configuration/ssids", function (req, res, next) {
     })
 })
 router.get("/configuration/webhooks", function (req, res, next) {
-    console.log(req.session.socketio);
     io.sockets.connected[req.session.socketio].emit("hi", "webhook started");
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, result) {
         if (err) res.status(err.status).send(err);
         else res.json(result);
     })
 })
+function checkWebhook(req, callback) {
+    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, result) {
+        if (err) callback(err, null);
+        else {
+            var webhook;
+            result.forEach(function (wh) {
+                if (
+                    wh.ownerId == req.session.xapi.ownerId
+                    && wh.application == "ApiTestTool"
+                    && wh.secret == req.session.xapi.vpcUrl + req.session.xapi.ownerId
+                    && wh.url == "https://check.ah-lab.fr/webhook"
+                ) {
+                    webhook = wh;
+                    req.session.webhookId = wh.id;
+                    req.session.save();
+                };
+                callback(null, webhook);
+            });
+        }
+    })
+}
 router.post("/configuration/webhooks", function (req, res, next) {
     if (req.session.xapi.ownerId) {
         var subscription = {
             "application": "ApiTestTool",
             "ownerId": req.session.xapi.ownerId,
-            "secret": req.session.xapi.ownerId + req.session.xapi.vpcUrl,
+            "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
             "url": "https://check.ah-lab.fr/webhook"
         }
         API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, result) {
-            if (err) res.status(err.status).send(err);
-            else {
+            if (err) {
+                if (err.code == "core.service.data.can.not.persist.object") {
+                    checkWebhook(req, function (err2, result2) {
+                        if (err2) res.status(err.status).send(err);
+                        else res.json(result2);
+                    });
+                } else res.status(err.status).send(err);
+            } else {
                 req.session.webhookId = result.id;
+                req.session.save();
                 res.json(result);
             }
         })
@@ -49,7 +76,7 @@ router.post("/configuration/webhooks", function (req, res, next) {
 })
 router.delete("/configuration/webhooks", function (req, res, next) {
     if (req.session.webhookId)
-        API.configuration.webhooks.get(req.session.xapi, devAccount, req.session.webhookId, function (err, result) {
+        API.configuration.webhooks.remove(req.session.xapi, devAccount, req.session.webhookId, function (err, result) {
             if (err) res.status(err.status).send(err);
             else res.json(result);
         })

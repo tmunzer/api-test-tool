@@ -56,7 +56,7 @@ att
 
 
 
-att.controller("HeaderCtrl", function ($scope, $location, socketio) {
+att.controller("HeaderCtrl", function ($scope, $location) {
     $scope.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
         $mdOpenMenu(ev);
@@ -77,10 +77,6 @@ att.controller("HeaderCtrl", function ($scope, $location, socketio) {
         if (path === $location.path().toString().split("/")[2]) return true;
         else return false;
     };
-    socketio.on('hi', function (obj) {
-        console.log("hi", obj);
-
-    });
 });
 
 

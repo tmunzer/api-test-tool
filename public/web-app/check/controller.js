@@ -165,8 +165,11 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
 });
 
 
-angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, webhookService) {
+angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, socketio) {
     var requestWebhook;
+    $scope.timeout = 600;
+    $scope.format = "mm:ss";
+    var countdown;
     $scope.webhook = {
         register: {
             name: "Presence - Get Client Time Series",
@@ -186,34 +189,49 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, w
             isLoaded: true,
             locationId: false
         },
-        ready: false
+        ready: false,
+        data: null,
+        success: null
     }
 
     $scope.start = function () {
-        if (requestWebhook) requestWebhook.abort();
-        $scope.webhook.register.isLoaded = false;
-        requestWebhook = webhookService.createWebhook();
-        requestWebhook.then(function (promise) {
-            if (promise) {
-                $scope.webhook.register.status = promise.status;
-                $scope.webhook.register.data = promise.data;
-                $scope.webhook.register.isLoaded = true;
-                if ($scope.webhook.register.status == 200) $scope.webhook.ready = true;
-            }
-        });
+        if (!$scope.webhook.ready) {
+            if (requestWebhook) requestWebhook.abort();
+            $scope.webhook.register.isLoaded = false;
+            requestWebhook = webhookService.createWebhook();
+            requestWebhook.then(function (promise) {
+                if (promise) {
+                    $scope.webhook.register.status = promise.status;
+                    $scope.webhook.register.data = promise.data;
+                    $scope.webhook.register.isLoaded = true;
+                    if ($scope.webhook.register.status == 200) {
+                        $scope.webhook.ready = true;
+                        $scope.webhook.data = null;
+                        $scope.webhook.success = null;
+                        countdown = $interval(function () {
+                            if ($scope.timeout > 0) $scope.timeout--;
+                            else $scope.stop();
+                        }, 1000);
+                    }
+                }
+            });
+        }
     }
     $scope.stop = function () {
-        if (requestWebhook) requestWebhook.abort();
-        $scope.webhook.remove.isLoaded = false;
-        requestWebhook = webhookService.deleteWebhook();
-        requestWebhook.then(function (promise) {
-            if (promise) {
-                $scope.webhook.remove.status = promise.status;
-                $scope.webhook.remove.data = promise.data;
-                $scope.webhook.remove.isLoaded = true;
-                if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
-            }
-        });
+        if ($scope.webhook.ready) {
+            $interval.cancel(countdown);
+            if (requestWebhook) requestWebhook.abort();
+            $scope.webhook.remove.isLoaded = false;
+            requestWebhook = webhookService.deleteWebhook();
+            requestWebhook.then(function (promise) {
+                if (promise) {
+                    $scope.webhook.remove.status = promise.status;
+                    $scope.webhook.remove.data = promise.data;
+                    $scope.webhook.remove.isLoaded = true;
+                    if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
+                }
+            });
+        }
     }
 
     $scope.showDetails = function (endpoint) {
@@ -227,4 +245,16 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, w
             getClassrooms();
         });
     };
+
+    $scope.$on('$destroy', function () {
+        // Make sure that the interval is destroyed too
+        $scope.stop();
+    });
+
+
+    socketio.on('data', function (obj) {
+        console.log("data", obj);
+        webhook.data = obj;
+
+    });
 });

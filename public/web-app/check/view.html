@@ -39,6 +39,8 @@
 
         <md-tab label="Webhooks">
             <div ng-controller="WebhookCtrl">
+
+                <div><b>{{timeout*1000 | date:'mm:ss'}}</b></div>
                 <article md-whiteframe="2">
                     <md-toolbar style="min-height: 50px">
                         <div class="md-toolbar-tools" style="height: 50px">
@@ -60,9 +62,10 @@
                     </md-toolbar>
 
                     <div layout-padding>
-                        <md-toolbar style="min-height: 20px">
-                            <div class="md-toolbar-tools" style="height: 20px">
-                                <h3 style="font-size: 70%" class="md-title">Create Presence Webhook</h3>
+                        <div md-whiteframe="1">
+                        <md-toolbar style="min-height: 30px">
+                            <div class="md-toolbar-tools" style="height: 30px">
+                                <h3 style="font-size: 70%; height: 30px" class="md-title">Create Presence Webhook</h3>
                                 <span flex></span>
                                 <span class='badge badge-warning' ng-show="!webhook.register.isLoaded">Loading...</span>
                                 <span class='badge badge-unknown' ng-show="webhook.register.isLoaded && webhook.register.status == 0">Not yet stared</span>
@@ -77,9 +80,11 @@
                         </md-toolbar>
                         <div> <b>Endpoint: </b><i>{{ webhook.register.endpoint}}</i> </div>
                         <div> <b>Description: </b>{{ webhook.register.description}} </div>
-                        <md-toolbar style="min-height: 20px">
-                            <div class="md-toolbar-tools" style="height: 20px">
-                                <h3 style="font-size: 70%" class="md-title">Remove Presence Webhook</h3>
+                        </div>
+                        <div md-whiteframe="1">
+                         <md-toolbar style="min-height: 30px">
+                            <div class="md-toolbar-tools" style="height: 30px">
+                                <h3 style="font-size: 70%; height: 30px" class="md-title">Remove Presence Webhook</h3>
                                 <span flex></span>
                                 <span class='badge badge-warning' ng-show="!webhook.remove.isLoaded">Loading...</span>
                                 <span class='badge badge-unknown' ng-show="webhook.remove.isLoaded && webhook.remove.status == 0">Not yet stared</span>
@@ -95,6 +100,26 @@
                         </md-toolbar>
                         <div> <b>Endpoint: </b><i>{{ webhook.remove.endpoint}}</i> </div>
                         <div> <b>Description: </b>{{ webhook.remove.description}} </div>
+                        </div>
+                        <div md-whiteframe="1">
+                         <md-toolbar style="min-height: 30px">
+                            <div class="md-toolbar-tools" style="height: 30px">
+                                <h3 style="font-size: 70%; height: 30px" class="md-title">Result From Presence Webhook</h3>
+                                <span flex></span>
+                                <span class='badge badge-warning' ng-show="webhook.ready && !webhook.data">Waiting for data...</span>
+                                <span class='badge badge-unknown' ng-show="!webhook.ready">Not yet stared</span>
+                                <span class='badge badge-success' ng-show="webhook.success==true">Success</span>
+                                <span class='badge badge-danger' ng-show="webhook.success==false">Success</span>
+                            </div>
+                        </md-toolbar>
+                        <div ng-show="!webhook.data && !webhook.ready" style="text-align: center">Please start the Webhook listener</div>
+                        <div ng-show="!webhook.data && webhook.ready" style="text-align: center">
+                            <div>Waiting for data from the ACS... This can take up to 10min...</div>
+                            <div>Timeout: <b>{{timeout*1000 | date:'mm:ss'}}</b></div>
+                        </div>
+                        <div ng-show="webhood.success==false" style="text-align=center">Timed out...</div>
+                        <pre ng-show="webhook.data"> {{ webhook.data | json }}</pre>
+                    </div>
                     </div>
                 </article>
             </div>
