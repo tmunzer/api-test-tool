@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var ApiConf = require(appRoot + "/bin/aerohive/config").aerohive;
 
+
 /*================================================================
  ROUTES
  ================================================================*/
@@ -62,7 +63,7 @@ router.post('/op', function (req, res, next) {
     }
 });
 router.get('/howto/', function (req, res, next) {
-    res.render('howto', {title: 'Identity'});
+    res.render('howto', { title: 'Identity' });
 });
 router.get('/logout/', function (req, res, next) {
     req.session.destroy(function (err) {

@@ -7,13 +7,17 @@ var att = angular.module("att", [
     'ngCsv',
     'ngMaterial',
     'ngMessages',
-    'md.data.table',    
+    'md.data.table',
     'Check',
     'Modals',
+    'btford.socket-io',
     'pascalprecht.translate'
 ]);
 
 att
+    .factory('socketio', function (socketFactory) {
+        return socketFactory();
+    })
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette("blue", {
@@ -52,13 +56,13 @@ att
 
 
 
-att.controller("HeaderCtrl", function ($scope, $location) {
+att.controller("HeaderCtrl", function ($scope, $location, socketio) {
     $scope.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
         $mdOpenMenu(ev);
     };
 
-    $scope.translate = function (langKey){
+    $scope.translate = function (langKey) {
         $translate.use(langKey);
     }
     $scope.appDetails = {};
@@ -73,7 +77,10 @@ att.controller("HeaderCtrl", function ($scope, $location) {
         if (path === $location.path().toString().split("/")[2]) return true;
         else return false;
     };
+    socketio.on('hi', function (obj) {
+        console.log("hi", obj);
 
+    });
 });
 
 

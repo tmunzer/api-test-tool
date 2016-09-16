@@ -4,7 +4,7 @@ global.appRoot = path.resolve(__dirname);
 
 var express = require('express');
 var parseurl = require('parseurl');
-var session = require('express-session');
+//var session = require('express-session');
 var favicon = require('serve-favicon');
 
 
@@ -20,9 +20,9 @@ global.eventEmitter = new events.EventEmitter();
 
 var app = express();
 
-app.use(session({
+global.session = require("express-session")({
   secret: 'Aerohive Identity Ref APP Secret',
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   //defines how long the session will live in milliseconds. After that, the cookie is invalidated and will need to be set again.
   //duration: 1 * 60 * 1000,
@@ -34,7 +34,12 @@ app.use(session({
   secure: true,
   //deletes the cookie when the browser is closed. Ephemeral cookies are particularly important if you your app lends itself to use on public computers.
   ephemeral: true
-}));
+});
+
+// Use express-session middleware for express
+app.use(session); ;
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

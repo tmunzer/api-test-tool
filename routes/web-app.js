@@ -1,8 +1,21 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
+/*================================================================
+ CREATE SOCKET.IO
+ ================================================================*/
+function createSocket(req, res, next) {
+    io.on('connection', function (socket) {
+        req.session.socketio = socket.id;
+        req.session.save();
+        io.sockets.connected[req.session.socketio].emit("hi", req.session.socketio, "test");
+    });
+    next();
+}
+/*================================================================
+ ENTRYU POINT
+ ================================================================*/
+router.get('/', createSocket, function (req, res) {
     if (req.session.xapi) {
         res.render('web-app', {
             title: 'API Test Tool',

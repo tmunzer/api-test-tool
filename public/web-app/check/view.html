@@ -8,12 +8,14 @@
                 <span class='badge badge-warning' ng-show="endpoint.isLoaded && endpoint.status == 0">Not yet stared</span>
                 <span class='badge badge-success' ng-show="endpoint.isLoaded && endpoint.status == 200">Success</span>
                 <span class='badge badge-danger' ng-show="endpoint.isLoaded && endpoint.status != 200 && endpoint.status != 0">Error - HTTP {{endpoint.status}}</span>
-                <md-button aria-label="details" ng-click="showDetails(endpoint)" style="min-width: 20px;" ng-disabled="!endpoint.isLoaded || endpoint.status == 0">
-                    <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
+                <md-button aria-label="details" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.isLoaded || endpoint.status == 0">
+                    <span hide show-gt-sm translate="button.details"></span>
+                    <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
                     <md-icon class="material-icons" aria-label="details">description</md-icon>
                 </md-button>
-                <md-button aria-label="refresh" ng-click="generateRequest(endpoint.key)" style="min-width: 20px;">
-                    <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
+                <md-button aria-label="refresh" ng-click="generateRequest(endpoint.key)" style="min-width: 10px;">
+                    <span hide show-gt-sm translate="button.refresh"></span>
+                    <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
                     <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
                 </md-button>
             </div>
