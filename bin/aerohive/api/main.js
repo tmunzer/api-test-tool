@@ -151,8 +151,22 @@ module.exports.clientlocation = {
  * @param {String} endTime - The end time of the query (ISO-8601 format)
  * @param {String} timeUnit - The time unit by which you want to roll up the returned items.
  *  */
-    clientpresence: require("./presence/clientlocation").clientpresence
-
+    clientpresence: require("./presence/clientlocation").clientpresence,
+    /**
+     * Returns a list of client sessions and waypoints during the specified time period.
+     * @param {Object} xapi - API credentials
+     * @param {String} xapi.vpcUrl - ACS server to request
+     * @param {String} xapi.ownerId - ACS ownerId
+     * @param {String} xapi.accessToken - ACS accessToken
+     * @param {Object} devAccount - information about the Aerohive developper account to user
+     * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
+     * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
+     * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+     * @param {String} location - The location that you'd like to check against.
+     * @param {String} startTime - The start time of the query (ISO-8601 format).
+     * @param {String} endTime - The end time of the query (ISO-8601 format)
+     *  */
+    waypoints: require("./presence/clientlocation").waypoints
 };
 
 module.exports.identity = {

@@ -12,7 +12,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         monitorDevices: null,
         presenceClientCount: null,
         presenceClientPresence: null,
-        presenceClientTimeSeries: null
+        presenceClientTimeSeries: null,
+        presenceWaypoints: null
     };
 
 
@@ -23,7 +24,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/configuration/apLocationFolders{?ownerId}",
             description: "Exposes the Location Folder Hierarchy that a customer uses to associate non-geographic location information with an Access Point/Device.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -33,7 +35,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /beta/configuration/ssids{?ownerId}",
             description: "Provides information about the configured SSID Profiles.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -43,7 +46,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /beta/configuration/webhooks{?ownerId}",
             description: "Provides access to the list of current Webhook subscriptions.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -53,7 +57,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/identity/credentials{?credentialType,ownerId,memberOf,adUser,creator,loginName,firstName,lastName,phone,email,userGroup,page,pageSize}",
             description: "Allows one to query collection of credentials given query parameters as input.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -63,7 +68,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/identity/userGroups{?ownerId,memberOf,adUser}",
             description: "Allows one to query the collection of user groups given query parameters as input.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -74,7 +80,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/monitor/clients{?ownerId,startTime,endTime,page,pageSize}",
             description: "Returns a list of clients.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -84,7 +91,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/monitor/devices{?ownerId,showActiveClientCount,page,pageSize}",
             description: "Returns a list of devices.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -94,7 +102,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/clientlocation/clientcount{?ownerId,apmac,location,startTime,endTime}",
             description: "Returns a count of the number of clients seen during the specified time period with a timeUnit of OneHour.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: true
         },
@@ -104,7 +113,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/clientlocation/clientpresence{?ownerId,apmac,location,timeUnit,startTime,endTime}",
             description: "Returns a list of distinct clients during the specified time period broken down by the specified time unit.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: true
         },
@@ -114,7 +124,19 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             endpoint: "GET /v1/clientlocation/clienttimeseries{?ownerId,apmac,location,timeUnit,startTime,endTime}",
             description: "Returns a count of the number of clients seen during the specified time period broken down by the specified time unit.",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
+            isLoaded: true,
+            locationId: true
+        },
+        presenceWaypoints: {
+            key: "presenceWaypoints",
+            name: "Presence - Get Client Sessions and Waypoints",
+            endpoint: "GET /v1/clientlocation/waypoints{?ownerId,location,startTime,endTime}",
+            description: "Returns a list of client sessions and waypoints during the specified time period.",
+            status: 0,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: true
         }
@@ -129,7 +151,8 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         requests[endpoint].then(function (promise) {
             if (promise) {
                 $scope.endpoints[endpoint].status = promise.status;
-                $scope.endpoints[endpoint].data = promise.data;
+                $scope.endpoints[endpoint].response = promise.data.response;
+                $scope.endpoints[endpoint].request = promise.data.request;
                 $scope.endpoints[endpoint].isLoaded = true;
                 if (endpoint == "configurationLocations") setLocationId();
             }
@@ -139,7 +162,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
 
     function setLocationId() {
         if ($scope.endpoints.configurationLocations.status == 200) {
-            locationId = $scope.endpoints.configurationLocations.data.id;
+            locationId = $scope.endpoints.configurationLocations.response.id;
             for (var endpoint in requests) {
                 if ($scope.endpoints[endpoint].locationId == true) $scope.generateRequest(endpoint);
             }
@@ -176,7 +199,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             endpoint: "POST /beta/configuration/webhooks",
             description: "Creates a new Webhook subscription",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
@@ -185,12 +209,13 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             endpoint: "DELETE /beta/configuration/webhooks/{subscription}",
             description: "Deletes a Webhook subscription",
             status: 0,
-            data: null,
+            request: null,
+            reponse: null,
             isLoaded: true,
             locationId: false
         },
         ready: false,
-        data: null,
+        reponse: null,
         success: null
     }
 
@@ -202,11 +227,11 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             requestWebhook.then(function (promise) {
                 if (promise) {
                     $scope.webhook.register.status = promise.status;
-                    $scope.webhook.register.data = promise.data;
+                    $scope.webhook.register.reponse = promise.data;
                     $scope.webhook.register.isLoaded = true;
                     if ($scope.webhook.register.status == 200) {
                         $scope.webhook.ready = true;
-                        $scope.webhook.data = null;
+                        $scope.webhook.reponse = null;
                         $scope.webhook.success = null;
                         countdown = $interval(function () {
                             if ($scope.timeout > 0) $scope.timeout--;
@@ -226,7 +251,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             requestWebhook.then(function (promise) {
                 if (promise) {
                     $scope.webhook.remove.status = promise.status;
-                    $scope.webhook.remove.data = promise.data;
+                    $scope.webhook.remove.reponse = promise.data;
                     $scope.webhook.remove.isLoaded = true;
                     if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
                 }
@@ -253,8 +278,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
 
 
     socketio.on('data', function (obj) {
-        console.log("data", obj);
-        webhook.data = obj;
+        console.log("reponse", obj);
+        webhook.reponse = obj;
 
     });
 });

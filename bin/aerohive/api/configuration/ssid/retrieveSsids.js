@@ -13,13 +13,5 @@ var api = require("./../../req");
  *  */
 module.exports.GET = function (xapi, devAccount, callback) {
     var path = "/xapi/beta/configuration/ssids?ownerId=" + xapi.ownerId;
-    api.GET(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.GET(xapi, devAccount, path, callback);
 };

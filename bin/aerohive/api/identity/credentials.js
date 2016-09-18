@@ -15,15 +15,7 @@ module.exports.getCredentials = function (xapi, devAccount, credentialType, user
     if (userGroup && userGroup != "") path += '&userGroup=' + userGroup;
     if (page && page != "") path += '&page=' + page;
     if (pageSize && pageSize != "") path += '&pageSize=' + pageSize;
-    api.GET(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.GET(xapi, devAccount, path,  callback);
 };
 
 module.exports.createCredential = function (xapi, devAccount, memberOf, adUser, hmCredentialsRequestVo, callback) {
@@ -34,15 +26,7 @@ module.exports.createCredential = function (xapi, devAccount, memberOf, adUser, 
     for (var key in hmCredentialsRequestVo) {
         if (hmCredentialsRequestVo[key] === '') delete hmCredentialsRequestVo[key];
     }
-    api.POST(xapi, devAccount, path, hmCredentialsRequestVo, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.POST(xapi, devAccount, path, hmCredentialsRequestVo, callback);
 };
 
 module.exports.deleteCredential = function (xapi, devAccount, memberOf, adUser, ids, callback) {
@@ -50,15 +34,7 @@ module.exports.deleteCredential = function (xapi, devAccount, memberOf, adUser, 
     if (memberOf && memberOf != "") path += '&memberOf=' + memberOf;
     if (adUser && adUser != "") path += '&adUser=' + adUser;
     if (ids && ids != "") path += '&ids=' + ids;
-    api.DELETE(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.DELETE(xapi, devAccount, path, callback);
 };
 
 module.exports.deliverCredential = function (xapi, devAccount, memberOf, adUser, hmCredentialDeliveryInfoVo, callback) {
@@ -69,30 +45,14 @@ module.exports.deliverCredential = function (xapi, devAccount, memberOf, adUser,
     for (var key in hmCredentialDeliveryInfoVo) {
         if (hmCredentialDeliveryInfoVo[key] === '') delete hmCredentialDeliveryInfoVo[key];
     }
-    api.POST(xapi, devAccount, path, hmCredentialDeliveryInfoVo, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.POST(xapi, devAccount, path, hmCredentialDeliveryInfoVo,  callback);
 };
 
 module.exports.renewCredential = function (xapi, devAccount, credentialId, memberOf, adUser, callback) {
     var path = "/xapi/v1/identity/credentials/" + credentialId + "/renew?ownerId=" + xapi.ownerId;
     if (memberOf && memberOf != "") path += '&memberOf=' + memberOf;
     if (adUser && adUser != "") path += '&adUser=' + adUser;
-    api.PUT(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.PUT(xapi, devAccount, path, callback);
 };
 
 module.exports.updateCredential = function (xapi, devAccount, credentialId, memberOf, adUser, hmCredentialUpdateVo, callback) {
@@ -103,13 +63,5 @@ module.exports.updateCredential = function (xapi, devAccount, credentialId, memb
     for (var key in hmCredentialUpdateVo) {
         if (hmCredentialUpdateVo[key] === '') delete hmCredentialUpdateVo[key];
     }
-    api.PUT(xapi, devAccount, path, hmCredentialUpdateVo, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.PUT(xapi, devAccount, path, hmCredentialUpdateVo,  callback);
 };

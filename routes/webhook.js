@@ -6,6 +6,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.post('/presence/', function (req, res, next) {
+    //if (req.session.webhookId == )
     console.log(req.body);
     io.sockets.connected[req.session.socketio].emit("data", req.body);
 });

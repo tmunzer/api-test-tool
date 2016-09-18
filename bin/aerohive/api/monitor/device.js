@@ -16,15 +16,5 @@ module.exports.GET = function (xapi, devAccount, callback) {
     var path = '/xapi/v1/monitor/devices?ownerId=' + xapi.ownerId;
 
     // send the API request
-    api.GET(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, result);
-        }
-        else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, []);
-        }
-
-    })
+    api.GET(xapi, devAccount, path,  callback);
 };

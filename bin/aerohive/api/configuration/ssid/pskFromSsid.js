@@ -14,15 +14,7 @@ var api = require("./../../req");
  *  */
 module.exports.GET = function (xapi, devAccount, ssidProfileId, callback) {
     var path = "/beta/configuration/ssids/" + ssidProfileId + "/psk?ownerId=" + xapi.ownerId;
-    api.GET(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.GET(xapi, devAccount, path, callback);
 };
 
 /**
@@ -40,13 +32,5 @@ module.exports.GET = function (xapi, devAccount, ssidProfileId, callback) {
  *  */
 module.exports.PUT = function (xapi, devAccount, ssidProfileId, changes, callback) {
     var path = "/beta/configuration/ssids/" + ssidProfileId + "/psk?ownerId=" + xapi.ownerId;
-    api.PUT(xapi, devAccount, path, changes, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.PUT(xapi, devAccount, path, changes, callback);
 };

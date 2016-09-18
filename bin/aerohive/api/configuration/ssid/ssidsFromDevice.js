@@ -14,15 +14,7 @@ var api = require("./../../req");
  *  */
 module.exports.GET = function (xapi, devAccount,  deviceId,callback) {
     var path = "/beta/configuration/devices/" + deviceId + "/ssids?ownerId=" + xapi.ownerId;
-    api.GET(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.GET(xapi, devAccount, path, callback);
 };
 /**
  * Updates the SSID Configuration for the specified device.
@@ -39,13 +31,5 @@ module.exports.GET = function (xapi, devAccount,  deviceId,callback) {
  *  */
 module.exports.PUT = function (xapi, devAccount,  deviceId, changes,callback) {
     var path = "/beta/configuration/devices/" + deviceId + "/ssids?ownerId=" + xapi.ownerID;
-    api.PUT(xapi,devAccount,  path, changes, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.PUT(xapi,devAccount,  path, changes,  callback);
 };

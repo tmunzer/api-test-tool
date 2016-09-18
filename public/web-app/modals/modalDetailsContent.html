@@ -4,14 +4,21 @@
             <h2>Detailed result for {{items.name}}</h2>
         </div>
     </md-toolbar>
-    <md-dialog-content layout-padding>
+    <div layout-padding>
         <div><b>Endpoint:</b> {{items.endpoint}}</div>
-        <div><b>Request:</b></div>
         <div><b>HTTP Status Code:</b> {{items.status}}</div>
-        <div><b>Result data:</b></div>
-        <pre> {{ items.data | json }}</pre>
-    </md-dialog-content>
+    </div>
+    <md-tabs>
+        <md-tab label="request">
+            <pre> {{ items.request.options | json }}</pre>
+        </md-tab>
+        <md-tab label="result">
+            <md-dialog-content layout-padding>
+                <pre> {{ items.response | json }}</pre>
+            </md-dialog-content>
+        </md-tab>
+    </md-tabs>
     <md-dialog-actions layout="row">
-<md-button ng-click="close()" translate="button.close" class="md-raised md-primary" aria-label="close"></md-button>
+        <md-button ng-click="close()" translate="button.close" class="md-raised md-primary" aria-label="close"></md-button>
     </md-dialog-actions>
 </md-dialog>

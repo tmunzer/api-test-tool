@@ -127,6 +127,17 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
         });
         return httpRequest(request);
     }
+        function presenceWaypoints(locationId) {
+        dataLoaded.presenceClientTimeSeries = false;
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/presence/waypoints",
+            method: "GET",
+            params: {locationId: locationId},
+            timeout: canceller.promise
+        });
+        return httpRequest(request);
+    }
 
     function httpRequest(request) {
         var promise = request.then(
@@ -165,6 +176,7 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
         presenceClientCount: presenceClientCount,
         presenceClientPresence: presenceClientPresence,
         presenceClientTimeSeries: presenceClientTimeSeries,
+        presenceWaypoints: presenceWaypoints,
         isLoaded: function(endpoint) {
             return isLoaded[endpoint];
         }

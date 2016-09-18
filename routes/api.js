@@ -11,26 +11,25 @@ var devAccount = require("./../bin/aerohive/config").aerohive;
  * CONFIGURATION
  */
 router.get("/configuration/locations", function (req, res, next) {
-    API.configuration.locations.locations(req.session.xapi, devAccount, function (err, result) {
+    API.configuration.locations.locations(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 router.get("/configuration/ssids", function (req, res, next) {
-    API.configuration.ssids.get(req.session.xapi, devAccount, function (err, result) {
+    API.configuration.ssids.get(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 router.get("/configuration/webhooks", function (req, res, next) {
-    io.sockets.connected[req.session.socketio].emit("hi", "webhook started");
-    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, result) {
+    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 function checkWebhook(req, callback) {
-    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, result) {
+    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
         if (err) callback(err, null);
         else {
             var webhook;
@@ -76,9 +75,9 @@ router.post("/configuration/webhooks", function (req, res, next) {
 })
 router.delete("/configuration/webhooks", function (req, res, next) {
     if (req.session.webhookId)
-        API.configuration.webhooks.remove(req.session.xapi, devAccount, req.session.webhookId, function (err, result) {
+        API.configuration.webhooks.remove(req.session.xapi, devAccount, req.session.webhookId, function (err, response, request) {
             if (err) res.status(err.status).send(err);
-            else res.json(result);
+            else res.json({ response: response, request: request });
         })
     else res.status("404").send("webhookId not present in session.");
 })
@@ -86,15 +85,15 @@ router.delete("/configuration/webhooks", function (req, res, next) {
  * IDENTITY
  */
 router.get("/identity/credentials", function (req, res, next) {
-    API.identity.credentials.getCredentials(req.session.xapi, devAccount, null, null, null, null, null, null, null, null, null, null, null, null, function (err, result) {
+    API.identity.credentials.getCredentials(req.session.xapi, devAccount, null, null, null, null, null, null, null, null, null, null, null, null, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 router.get("/identity/userGroups", function (req, res, next) {
-    API.identity.userGroups.getUserGroups(req.session.xapi, devAccount, null, null, function (err, result) {
+    API.identity.userGroups.getUserGroups(req.session.xapi, devAccount, null, null, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 
@@ -102,9 +101,9 @@ router.get("/identity/userGroups", function (req, res, next) {
  * LOCATION
  */
 router.get("/location/clients", function (req, res, next) {
-    API.configuration.ssid.GET(req.session.xapi, devAccount, function (err, result) {
+    API.configuration.ssid.GET(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 
@@ -112,15 +111,15 @@ router.get("/location/clients", function (req, res, next) {
  * MONITOR
  */
 router.get("/monitor/clients", function (req, res, next) {
-    API.monitor.clients.list(req.session.xapi, devAccount, function (err, result) {
+    API.monitor.clients.list(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 router.get("/monitor/devices", function (req, res, next) {
-    API.monitor.devices.list(req.session.xapi, devAccount, function (err, result) {
+    API.monitor.devices.list(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send(err);
-        else res.json(result);
+        else res.json({ response: response, request: request });
     })
 })
 
@@ -132,9 +131,9 @@ router.get("/presence/clientcount", function (req, res, next) {
         var locationId = req.query.locationId;
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
-        API.clientlocation.clientcount(req.session.xapi, devAccount, locationId, startTime, endTime, function (err, result) {
+        API.clientlocation.clientcount(req.session.xapi, devAccount, locationId, startTime, endTime, function (err, response, request) {
             if (err) res.status(err.status).send(err);
-            else res.json(result);
+            else res.json({ response: response, request: request });
         })
     } else res.status(401).send("Error: no locationId");
 })
@@ -144,9 +143,9 @@ router.get("/presence/clientpresence", function (req, res, next) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         var timeUnit = "OneHour";
-        API.clientlocation.clientpresence(req.session.xapi, devAccount, locationId, startTime, endTime, timeUnit, function (err, result) {
+        API.clientlocation.clientpresence(req.session.xapi, devAccount, locationId, startTime, endTime, timeUnit, function (err, response, request) {
             if (err) res.status(err.status).send(err);
-            else res.json(result);
+            else res.json({ response: response, request: request });
         })
     } else res.status(401).send("Error: no locationId");
 })
@@ -156,9 +155,20 @@ router.get("/presence/clienttimeseries", function (req, res, next) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         var timeUnit = "OneHour";
-        API.clientlocation.clienttimeseries(req.session.xapi, devAccount, locationId, startTime, endTime, timeUnit, function (err, result) {
+        API.clientlocation.clienttimeseries(req.session.xapi, devAccount, locationId, startTime, endTime, timeUnit, function (err, response, request) {
             if (err) res.status(err.status).send(err);
-            else res.json(result);
+            else res.json({ response: response, request: request });
+        })
+    } else res.status(401).send("Error: no locationId");
+})
+router.get("/presence/waypoints", function (req, res, next) {
+    if (req.query.locationId) {
+        var locationId = req.query.locationId;
+        var endTime = new Date().toISOString();
+        var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
+        API.clientlocation.waypoints(req.session.xapi, devAccount, locationId, startTime, endTime, function (err, response, request) {
+            if (err) res.status(err.status).send(err);
+            else res.json({ response: response, request: request });
         })
     } else res.status(401).send("Error: no locationId");
 })

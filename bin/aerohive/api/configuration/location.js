@@ -13,15 +13,7 @@ var api = require("./../req");
  *  */
 module.exports.locations = function (xapi, devAccount, callback) {
     var path = "/xapi/v1/configuration/apLocationFolders?ownerId=" + xapi.ownerId;
-    api.GET(xapi, devAccount, path,function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.GET(xapi, devAccount, path, callback);
 };
 
 
@@ -39,13 +31,5 @@ module.exports.locations = function (xapi, devAccount, callback) {
  *  */
 module.exports.location = function (xapi, devAccount, folderId, callback) {
     var path = "/xapi/v1/configuration/apLocationFolders/"+folderId+"?ownerId=" + xapi.ownerId;
-    api.GET(xapi, devAccount, path, function (err, result) {
-        if (err) {
-            callback(err, null);
-        } else if (result) {
-            callback(null, result);
-        } else {
-            callback(null, null);
-        }
-    })
+    api.GET(xapi, devAccount, path, callback)
 };

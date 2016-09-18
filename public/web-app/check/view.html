@@ -104,19 +104,19 @@
                             <div class="md-toolbar-tools" style="height: 30px">
                                 <h3 style="font-size: 70%; height: 30px" class="md-title">Result From Presence Webhook</h3>
                                 <span flex></span>
-                                <span class='badge badge-warning' ng-show="webhook.ready && !webhook.data">Waiting for data...</span>
+                                <span class='badge badge-warning' ng-show="webhook.ready && !webhook.reponse">Waiting for data...</span>
                                 <span class='badge badge-unknown' ng-show="!webhook.ready">Not yet stared</span>
                                 <span class='badge badge-success' ng-show="webhook.success==true">Success</span>
                                 <span class='badge badge-danger' ng-show="webhook.success==false">Success</span>
                             </div>
                         </md-toolbar>
-                        <div ng-show="!webhook.data && !webhook.ready" style="text-align: center">Please start the Webhook listener</div>
-                        <div ng-show="!webhook.data && webhook.ready" style="text-align: center">
+                        <div ng-show="!webhook.reponse && !webhook.ready" style="text-align: center">Please start the Webhook listener</div>
+                        <div ng-show="!webhook.reponse && webhook.ready" style="text-align: center">
                             <div>Waiting for data from the ACS... This can take up to 10min...</div>
                             <div>Timeout: <b>{{timeout*1000 | date:'mm:ss'}}</b></div>
                         </div>
                         <div ng-show="webhood.success==false" style="text-align=center"></div>
-                        <pre ng-show="webhook.data"> {{ webhook.data | json }}</pre>
+                        <pre ng-show="webhook.reponse"> {{ webhook.data | json }}</pre>
                     </div>
                     </div>
                 </article>
