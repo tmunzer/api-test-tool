@@ -227,7 +227,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             requestWebhook.then(function (promise) {
                 if (promise) {
                     $scope.webhook.register.status = promise.status;
-                    $scope.webhook.register.reponse = promise.data;
+                    $scope.webhook.register.response = promise.data.response;
+                    $scope.webhook.register.request = promise.data.request;
                     $scope.webhook.register.isLoaded = true;
                     if ($scope.webhook.register.status == 200) {
                         $scope.webhook.ready = true;
@@ -251,7 +252,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             requestWebhook.then(function (promise) {
                 if (promise) {
                     $scope.webhook.remove.status = promise.status;
-                    $scope.webhook.remove.reponse = promise.data;
+                    $scope.webhook.remove.response = promise.data.response;
+                    $scope.webhook.remove.request = promise.data.request;
                     $scope.webhook.remove.isLoaded = true;
                     if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
                 }

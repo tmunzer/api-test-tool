@@ -33,7 +33,7 @@ function checkWebhook(req, callback) {
         if (err) callback(err, null);
         else {
             var webhook;
-            result.forEach(function (wh) {
+            response.forEach(function (wh) {
                 if (
                     wh.ownerId == req.session.xapi.ownerId
                     && wh.application == "ApiTestTool"
@@ -44,7 +44,7 @@ function checkWebhook(req, callback) {
                     req.session.webhookId = wh.id;
                     req.session.save();
                 };
-                callback(null, webhook);
+                callback(null, webhook, request);
             });
         }
     })
@@ -57,18 +57,18 @@ router.post("/configuration/webhooks", function (req, res, next) {
             "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
             "url": "https://check.ah-lab.fr/webhook"
         }
-        API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, result) {
+        API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, response, request) {
             if (err) {
                 if (err.code == "core.service.data.can.not.persist.object") {
-                    checkWebhook(req, function (err2, result2) {
+                    checkWebhook(req, function (err2, response, request) {
                         if (err2) res.status(err.status).send(err);
-                        else res.json(result2);
+                        else res.json({ response: response, request: request });
                     });
                 } else res.status(err.status).send(err);
             } else {
-                req.session.webhookId = result.id;
+                req.session.webhookId = response.id;
                 req.session.save();
-                res.json(result);
+                res.json({ response: response, request: request });
             }
         })
     } else res.status("404").send("ownerId not present in session.");
