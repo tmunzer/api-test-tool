@@ -155,7 +155,7 @@ function httpRequest(options, callback, body) {
                 result.data = dataJSON.data;
                 result.error = dataJSON.error;
             }
-            result.request.options.headers['X-AH-API-CLIENT-SECRET'] = "anonymized-data";
+            request.options.headers['X-AH-API-CLIENT-SECRET'] = "anonymized-data";
             switch (result.result.status) {
                 case 200:
                     callback(null, result.data, request);
