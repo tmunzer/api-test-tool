@@ -13,10 +13,7 @@
             </md-dialog-content>
         </md-tab>
         <md-tab label="request">
-            <span layout-padding>HTTP Header</span>
-            <pre> {{ items.request.options | json }}</pre>
-            <span layout-padding>HTTP Body</span>
-            <pre> {{items.body | json}}</pre>
+            <pre> {{ items.request | json }}</pre>
         </md-tab>
         <md-tab label="response" ng-show="items.response != null">
             <pre> {{ items.response | json }}</pre>

@@ -147,6 +147,9 @@ function httpRequest(options, callback, body) {
             data += chunk;
         });
         res.on('end', function () {
+            var request = result.request;
+            if (body) request.body = JSON.parse(body);
+            else request.body = {};
             if (data != '') {
                 var dataJSON = JSON.parse(data);
                 result.data = dataJSON.data;
@@ -155,12 +158,12 @@ function httpRequest(options, callback, body) {
             result.request.options.headers['X-AH-API-CLIENT-SECRET'] = "anonymized-data";
             switch (result.result.status) {
                 case 200:
-                    callback(null, result.data, result.request, body);
+                    callback(null, result.data, request);
                     break;
                 default:
                     var error = {};
                     console.error(result);
-                    callback(result.error, result.data, result.request, body);
+                    callback(result.error, result.data, request);
                     break;
 
             }

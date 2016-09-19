@@ -83,7 +83,6 @@ angular.module('Modals').controller('DialogConfirmController', function ($scope,
 angular.module('Modals').controller('DialogDetailsController', function ($scope, $mdDialog, items) {
     // items is injected in the controller, not its scope!
     $scope.items = items;
-    console.log(items);
     $scope.close = function () {
         $mdDialog.cancel()
     };
