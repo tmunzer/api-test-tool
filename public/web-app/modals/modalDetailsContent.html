@@ -1,24 +1,27 @@
-<md-dialog aria-label="List dialog">
-    <md-toolbar>
+<md-dialog aria-label="List dialog" class="details-modal">
+    <md-toolbar >
         <div class="md-toolbar-tools">
             <h2>Detailed result for {{items.name}}</h2>
         </div>
     </md-toolbar>
-    <div layout-padding>
+    <md-tabs>
+        <md-tab label="info" ">
+            <md-dialog-content layout-padding>
         <div><b>Endpoint:</b> {{items.endpoint}}</div>
         <div><b>HTTP Status Code:</b> {{items.status}}</div>
-    </div>
-    <md-tabs>
-        <md-tab label="request">
+        <div><b>URL: </b><span>https://{{items.request.options.host}}{{items.request.options.path}}</span></div>
+            </md-dialog-content>
+       </md-tab>
+        <md-tab label="request ">
             <pre> {{ items.request.options | json }}</pre>
         </md-tab>
-        <md-tab label="result">
-            <md-dialog-content layout-padding>
+        <md-tab label="result ">
+            
                 <pre> {{ items.response | json }}</pre>
-            </md-dialog-content>
         </md-tab>
     </md-tabs>
-    <md-dialog-actions layout="row">
-        <md-button ng-click="close()" translate="button.close" class="md-raised md-primary" aria-label="close"></md-button>
+    <md-dialog-actions layout="row ">
+        <md-button ng-click="close() " translate="button.close " class="md-raised md-primary " aria-label="close "></md-button>
     </md-dialog-actions>
 </md-dialog>
+

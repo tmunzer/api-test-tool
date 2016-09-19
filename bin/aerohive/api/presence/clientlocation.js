@@ -90,7 +90,7 @@ module.exports.clientpresence = function (xapi, devAccount, location, startTime,
  * @param {String} endTime - The end time of the query (ISO-8601 format)
  *  */
 module.exports.waypoints = function (xapi, devAccount, location, startTime, endTime, callback) {
-    var path = "/xapi//v1/clientlocation/waypoints?" +
+    var path = "/xapi/v1/clientlocation/waypoints?" +
         "ownerId=" + xapi.ownerId +
         "&location=" + location +
         "&startTime=" + startTime +
