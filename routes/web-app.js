@@ -9,7 +9,12 @@ function createSocket(req, res, next) {
         req.session.socketio = socket.id;
         req.session.save();
         io.sockets.connected[req.session.socketio].emit("hi", req.session.socketio, "test");
+        socket.on("webhook", function (wid) {
+            socket.join(wid);
+            io.sockets.in(wid).emit("message", "new user");
+        })
     });
+
     next();
 }
 /*================================================================

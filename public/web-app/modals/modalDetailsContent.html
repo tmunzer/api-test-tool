@@ -1,27 +1,31 @@
 <md-dialog aria-label="List dialog" class="details-modal">
-    <md-toolbar >
+    <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Detailed result for {{items.name}}</h2>
         </div>
     </md-toolbar>
     <md-tabs>
-        <md-tab label="info" ">
+        <md-tab label="info">
             <md-dialog-content layout-padding>
-        <div><b>Endpoint:</b> {{items.endpoint}}</div>
-        <div><b>HTTP Status Code:</b> {{items.status}}</div>
-        <div><b>URL: </b><span>https://{{items.request.options.host}}{{items.request.options.path}}</span></div>
+                <div><b>Endpoint:</b> {{items.endpoint}}</div>
+                <div><b>HTTP Status Code:</b> {{items.status}}</div>
+                <div><b>URL: </b><span>https://{{items.request.options.host}}{{items.request.options.path}}</span></div>
             </md-dialog-content>
-       </md-tab>
-        <md-tab label="request ">
-            <pre> {{ items.request.options | json }}</pre>
         </md-tab>
-        <md-tab label="result ">
-            
-                <pre> {{ items.response | json }}</pre>
+        <md-tab label="request">
+            <span layout-padding>HTTP Header</span>
+            <pre> {{ items.request.options | json }}</pre>
+            <span layout-padding>HTTP Body</span>
+            <pre> {{items.body | json}}</pre>
+        </md-tab>
+        <md-tab label="response" ng-show="items.response != null">
+            <pre> {{ items.response | json }}</pre>
+        </md-tab>
+        <md-tab label="error">
+            <pre> {{ items.error | json }}</pre>
         </md-tab>
     </md-tabs>
     <md-dialog-actions layout="row ">
         <md-button ng-click="close() " translate="button.close " class="md-raised md-primary " aria-label="close "></md-button>
     </md-dialog-actions>
 </md-dialog>
-

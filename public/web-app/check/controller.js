@@ -25,7 +25,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Exposes the Location Folder Hierarchy that a customer uses to associate non-geographic location information with an Access Point/Device.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: false
         },
@@ -36,7 +38,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Provides information about the configured SSID Profiles.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: false
         },
@@ -47,7 +51,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Provides access to the list of current Webhook subscriptions.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: false
         },
@@ -58,7 +64,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Allows one to query collection of credentials given query parameters as input.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: false
         },
@@ -69,7 +77,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Allows one to query the collection of user groups given query parameters as input.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: false
         },
@@ -81,7 +91,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Returns a list of clients.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: false
         },
@@ -92,7 +104,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Returns a list of devices.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: false
         },
@@ -103,7 +117,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Returns a count of the number of clients seen during the specified time period with a timeUnit of OneHour.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: true
         },
@@ -114,7 +130,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Returns a list of distinct clients during the specified time period broken down by the specified time unit.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: true
         },
@@ -125,7 +143,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Returns a count of the number of clients seen during the specified time period broken down by the specified time unit.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: true
         },
@@ -136,7 +156,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             description: "Returns a list of client sessions and waypoints during the specified time period.",
             status: 0,
             request: null,
+            body: {},
             reponse: null,
+            error: null,
             isLoaded: true,
             locationId: true
         }
@@ -152,7 +174,9 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             if (promise) {
                 $scope.endpoints[endpoint].status = promise.status;
                 $scope.endpoints[endpoint].response = promise.data.response;
+                $scope.endpoints[endpoint].error = promise.data.error;
                 $scope.endpoints[endpoint].request = promise.data.request;
+                $scope.endpoints[endpoint].body = promise.data.body;
                 $scope.endpoints[endpoint].isLoaded = true;
                 if (endpoint == "configurationLocations") setLocationId();
             }
@@ -190,7 +214,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
 
 angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, socketio) {
     var requestWebhook;
-    $scope.timeout = 600;
+    $scope.timeout = 900;
     $scope.format = "mm:ss";
     var countdown;
     $scope.webhook = {
@@ -200,6 +224,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             description: "Creates a new Webhook subscription",
             status: 0,
             request: null,
+            body: {},
+            error: null,
             reponse: null,
             isLoaded: true,
             locationId: false
@@ -210,12 +236,14 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             description: "Deletes a Webhook subscription",
             status: 0,
             request: null,
+            body: {},
+            error: null,
             reponse: null,
             isLoaded: true,
             locationId: false
         },
         ready: false,
-        reponse: null,
+        response: null,
         success: null
     }
 
@@ -229,11 +257,17 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
                     $scope.webhook.register.status = promise.status;
                     $scope.webhook.register.response = promise.data.response;
                     $scope.webhook.register.request = promise.data.request;
+                    $scope.webhook.register.error = promise.data.error;
+                    $scope.webhook.register.body = promise.data.body;
                     $scope.webhook.register.isLoaded = true;
                     if ($scope.webhook.register.status == 200) {
                         $scope.webhook.ready = true;
-                        $scope.webhook.reponse = null;
+                        $scope.webhook.response = null;
                         $scope.webhook.success = null;
+                        console.log($scope.webhook.register.response);
+                        var wid = $scope.webhook.register.response.id;
+                        console.log(wid);
+                        socketio.emit("webhook", wid);
                         countdown = $interval(function () {
                             if ($scope.timeout > 0) $scope.timeout--;
                             else $scope.stop();
@@ -254,6 +288,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
                     $scope.webhook.remove.status = promise.status;
                     $scope.webhook.remove.response = promise.data.response;
                     $scope.webhook.remove.request = promise.data.request;
+                    $scope.webhook.remove.error = promise.data.error;
+                    $scope.webhook.remove.body = promise.data.body;
                     $scope.webhook.remove.isLoaded = true;
                     if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
                 }
@@ -283,5 +319,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
         console.log("reponse", obj);
         webhook.reponse = obj;
 
+    });
+    socketio.on('message', function (data) {
+        console.log('Incoming message:', data);
     });
 });

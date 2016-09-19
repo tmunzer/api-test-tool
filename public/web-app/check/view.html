@@ -59,7 +59,7 @@
                         </div>
                     </md-toolbar>
 
-                    <div layout-padding>
+                    <div>
                         <div md-whiteframe="1">
                         <md-toolbar style="min-height: 30px">
                             <div class="md-toolbar-tools" style="height: 30px">
@@ -76,8 +76,10 @@
                                 </md-button>
                             </div>
                         </md-toolbar>
+                        <div layout-padding>
                         <div> <b>Endpoint: </b><i>{{ webhook.register.endpoint}}</i> </div>
                         <div> <b>Description: </b>{{ webhook.register.description}} </div>
+                        </div>
                         </div>
                         <div md-whiteframe="1">
                          <md-toolbar style="min-height: 30px">
@@ -96,8 +98,10 @@
 
                             </div>
                         </md-toolbar>
+                        <div layout-padding>
                         <div> <b>Endpoint: </b><i>{{ webhook.remove.endpoint}}</i> </div>
                         <div> <b>Description: </b>{{ webhook.remove.description}} </div>
+                        </div>
                         </div>
                         <div md-whiteframe="1">
                          <md-toolbar style="min-height: 30px">
@@ -110,6 +114,7 @@
                                 <span class='badge badge-danger' ng-show="webhook.success==false">Success</span>
                             </div>
                         </md-toolbar>
+                        <div layout-padding>
                         <div ng-show="!webhook.reponse && !webhook.ready" style="text-align: center">Please start the Webhook listener</div>
                         <div ng-show="!webhook.reponse && webhook.ready" style="text-align: center">
                             <div>Waiting for data from the ACS... This can take up to 10min...</div>
@@ -117,6 +122,7 @@
                         </div>
                         <div ng-show="webhood.success==false" style="text-align=center"></div>
                         <pre ng-show="webhook.reponse"> {{ webhook.data | json }}</pre>
+                        </div>
                     </div>
                     </div>
                 </article>
