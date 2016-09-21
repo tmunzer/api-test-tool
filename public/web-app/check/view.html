@@ -8,7 +8,7 @@
                             <h2 class="md-title">{{endpoint.name}}</h2>
                             <span flex></span>
                             <span class='badge badge-warning' ng-show="!endpoint.isLoaded">Loading...</span>
-                            <span class='badge badge-unknown' ng-show="endpoint.isLoaded && endpoint.status == 0">Not yet stared</span>
+                            <span class='badge badge-unknown' ng-show="endpoint.isLoaded && endpoint.status == 0">Not yet started</span>
                             <span class='badge badge-success' ng-show="endpoint.isLoaded && endpoint.status == 200">Success</span>
                             <span class='badge badge-danger' ng-show="endpoint.isLoaded && endpoint.status != 200 && endpoint.status != 0">Error - HTTP {{endpoint.status}}</span>
                             <md-button aria-label="details" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.isLoaded || endpoint.status == 0">
@@ -66,7 +66,7 @@
                                 <h3 style="font-size: 70%; height: 30px" class="md-title">Create Presence Webhook</h3>
                                 <span flex></span>
                                 <span class='badge badge-warning' ng-show="!webhook.register.isLoaded">Loading...</span>
-                                <span class='badge badge-unknown' ng-show="webhook.register.isLoaded && webhook.register.status == 0">Not yet stared</span>
+                                <span class='badge badge-unknown' ng-show="webhook.register.isLoaded && webhook.register.status == 0">Not yet started</span>
                                 <span class='badge badge-success' ng-show="webhook.register.isLoaded && webhook.register.status == 200">Success</span>
                                 <span class='badge badge-danger' ng-show="webhook.register.isLoaded && webhook.register.status != 200 && webhook.register.status != 0">Error - HTTP {{webhook.register.status}}</span>
                                 <md-button aria-label="details" ng-click="showDetails(webhook.register)" style="min-width: 10px;" ng-disabled="!webhook.register.isLoaded || webhook.register.status == 0">
@@ -87,7 +87,7 @@
                                 <h3 style="font-size: 70%; height: 30px" class="md-title">Remove Presence Webhook</h3>
                                 <span flex></span>
                                 <span class='badge badge-warning' ng-show="!webhook.remove.isLoaded">Loading...</span>
-                                <span class='badge badge-unknown' ng-show="webhook.remove.isLoaded && webhook.remove.status == 0">Not yet stared</span>
+                                <span class='badge badge-unknown' ng-show="webhook.remove.isLoaded && webhook.remove.status == 0">Not yet started</span>
                                 <span class='badge badge-success' ng-show="webhook.remove.isLoaded && webhook.remove.status == 200">Success</span>
                                 <span class='badge badge-danger' ng-show="webhook.remove.isLoaded && webhook.remove.status != 200 && webhook.remove.status != 0">Error - HTTP {{webhook.remove.status}}</span>
                                 <md-button aria-label="details" ng-click="showDetails(webhook.remove)" style="min-width: 10px;" ng-disabled="!webhook.remove.isLoaded || webhook.remove.status == 0">
@@ -109,7 +109,7 @@
                                 <h3 style="font-size: 70%; height: 30px" class="md-title">Result From Presence Webhook</h3>
                                 <span flex></span>
                                 <span class='badge badge-warning' ng-show="webhook.ready && !webhook.reponse">Waiting for data...</span>
-                                <span class='badge badge-unknown' ng-show="!webhook.ready">Not yet stared</span>
+                                <span class='badge badge-unknown' ng-show="!webhook.ready">Not yet started</span>
                                 <span class='badge badge-success' ng-show="webhook.success==true">Success</span>
                                 <span class='badge badge-danger' ng-show="webhook.success==false">Success</span>
                             </div>
