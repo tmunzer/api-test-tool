@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var ApiConf = require("../bin/aerohive/config").appServer;
+var devAccount = require("../config").devAccount;
 
 
 /*================================================================
@@ -17,8 +17,8 @@ router.get('/', function (req, res, next) {
         res.render('login', {
             title: 'API Test Tool',
             errorcode: errorcode,
-            client_id: appServer.clientID,
-            redirect_uri: appServer.redirectUrl
+            client_id: devAccount.clientID,
+            redirect_uri: devAccount.redirectUrl
         });
     }
 });
