@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var ApiConf = require(appRoot + "/bin/aerohive/config").appServer;
+var ApiConf = require("../bin/aerohive/config").appServer;
 
 
 /*================================================================
