@@ -17,8 +17,8 @@ router.get('/', function (req, res, next) {
         res.render('login', {
             title: 'API Test Tool',
             errorcode: errorcode,
-            client_id: ApiConf.clientID,
-            redirect_uri: ApiConf.redirectUrl
+            client_id: appServer.clientID,
+            redirect_uri: appServer.redirectUrl
         });
     }
 });
@@ -28,7 +28,7 @@ router.post('/', function (req, res, next) {
     var apiServers = ["cloud-va.aerohive.com", "cloud-ie.aerohive.com"];
     if (!(req.body.hasOwnProperty("vpcUrl") && apiServers.indexOf(req.body["vpcUrl"]) >= 0)) {
         res.redirect("/?errorcode=1");
-    } else if (!(req.body.hasOwnProperty("ownerID") && ownerIdRegexp.test(req.body['ownerID']))) {
+    } else if (!(req.body.hasOwnProperty("ownerId") && ownerIdRegexp.test(req.body['ownerId']))) {
         res.redirect("/?errorcode=2");
     } else if (!(req.body.hasOwnProperty("accessToken") && accessTokenRegexp.test(req.body["accessToken"].trim()))) {
         res.redirect("/?errorcode=3");
@@ -36,7 +36,7 @@ router.post('/', function (req, res, next) {
         req.session.xapi = {
             rejectUnauthorized: true,
             vpcUrl: req.body["vpcUrl"],
-            ownerId: req.body["ownerID"],
+            ownerId: req.body["ownerId"],
             accessToken: req.body["accessToken"].trim(),
             hmngType: "public"
         };
@@ -48,14 +48,14 @@ router.post('/op', function (req, res, next) {
     var accessTokenRegexp = new RegExp("^[a-zA-Z0-9]{40}$");
     var apiServers = ["cloud-va.aerohive.com", "cloud-ie.aerohive.com"];
     if (!(req.body.hasOwnProperty("vpcUrl") && req.body["vpcUrl"] != "")) res.redirect("/?errorcode=1");
-    else if (!(req.body.hasOwnProperty("ownerID") && ownerIdRegexp.test(req.body['ownerID']))) res.redirect("/?errorcode=2");
+    else if (!(req.body.hasOwnProperty("ownerId") && ownerIdRegexp.test(req.body['ownerId']))) res.redirect("/?errorcode=2");
     else if (!(req.body.hasOwnProperty("accessToken") && accessTokenRegexp.test(req.body["accessToken"].trim()))) res.redirect("/?errorcode=3");
     else if (apiServers.indexOf(req.body["vpcUrl"]) >= 0) res.redirect('/?errorcode=4');
     else {
         req.session.xapi = {
             rejectUnauthorized: false,
             vpcUrl: req.body["vpcUrl"],
-            ownerId: req.body["ownerID"],
+            ownerId: req.body["ownerId"],
             accessToken: req.body["accessToken"].trim(),
             hmngType: "private"
         };

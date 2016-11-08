@@ -30,6 +30,6 @@ module.exports.GET = function (xapi, devAccount,  deviceId,callback) {
  * @param {Object} changes - The changes to be applied to the SSID Configuration for the specified device.
  *  */
 module.exports.PUT = function (xapi, devAccount,  deviceId, changes,callback) {
-    var path = "/beta/configuration/devices/" + deviceId + "/ssids?ownerId=" + xapi.ownerID;
+    var path = "/beta/configuration/devices/" + deviceId + "/ssids?ownerId=" + xapi.ownerId;
     api.PUT(xapi,devAccount,  path, changes,  callback);
 };
