@@ -1,4 +1,4 @@
 node_modules/
 bower_components/
-bin/aerohive/config.js
+config.js
 *.DS_Store

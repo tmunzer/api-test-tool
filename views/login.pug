@@ -62,15 +62,15 @@ html
                                         label(for="vpcUrlOl" translate="TOKEN.SERVER")
                                         md-select(id="vpcUrlOl" name="vpcUrl" ng-model="vpcUrl")
                                             md-option(value="cloud-va.aerohive.com") cloud-va.aerohive.com
-                                            md-option(value="cloud-ie.aerohive.com") cloud-ie.aerohive.com
+                                            md-option(value="cloud-ie.aerohive.com" selected="selected") cloud-ie.aerohive.com
                                     form(id="ATOl" action="/" method="post")
                                         input(type="hidden" name="vpcUrl" value='{{vpcUrl}}')
                                         md-input-container.md-block.flex-gt-sm
                                             label(for="OwnerIDOl" translate="TOKEN.OWNERID")
-                                            input(required="required" autocorrect="off" autocapitalize="none" id="ownerIDOl" name="ownerID" type="text")
+                                            input(required="required" autocorrect="off" autocapitalize="none" id="ownerIDOl" name="ownerID" type="text" value="11832")
                                         md-input-container.md-block.flex-gt-sm
                                             label(for="accessTokenOl" translate="TOKEN.TOKEN")
-                                            input(required="required" id="accessTokenOl" name="accessToken" type="text")
+                                            input(required="required" id="accessTokenOl" name="accessToken" type="text" value="i7yXyBisCelYmHW4Xvp_3n6my5srQIqM07b077c5")
                                         div(style="float: right")
                                             md-button.md-raised.md-primary(type="submit" translate="TOKEN.CONNECT" aria-label="connect Token")
                                     div

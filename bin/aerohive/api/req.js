@@ -8,7 +8,7 @@ var https = require('https');
  * @param {String} xapi.accessToken - ACS accessToken
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} devAccount - information about the Aerohive developper account to user
- * @param {String} devAccount.clientId - Aerohive Developper Account clientId
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
@@ -24,7 +24,7 @@ module.exports.GET = function (xapi, devAccount, path, callback) {
         method: "GET",
         headers: {
             'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientId,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
             'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken
         }
@@ -40,7 +40,7 @@ module.exports.GET = function (xapi, devAccount, path, callback) {
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} data - data to include to the POST Request
  * @param {Object} devAccount - information about the Aerohive developper account to user
- * @param {String} devAccount.clientId - Aerohive Developper Account clientId
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
@@ -55,7 +55,7 @@ module.exports.POST = function (xapi, devAccount, path, data, callback) {
         method: "POST",
         headers: {
             'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientId,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
             'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken,
             'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ module.exports.POST = function (xapi, devAccount, path, data, callback) {
  * @param {String} xapi.accessToken - ACS accessToken
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} devAccount - information about the Aerohive developper account to user
- * @param {String} devAccount.clientId - Aerohive Developper Account clientId
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
@@ -88,7 +88,7 @@ module.exports.PUT = function (xapi, devAccount, path, callback) {
         method: "PUT",
         headers: {
             'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientId,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
             'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken,
             'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ module.exports.PUT = function (xapi, devAccount, path, callback) {
  * @param {String} xapi.accessToken - ACS accessToken
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} devAccount - information about the Aerohive developper account to user
- * @param {String} devAccount.clientId - Aerohive Developper Account clientId
+ * @param {String} devAccount.clientID - Aerohive Developper Account clientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
@@ -120,7 +120,7 @@ module.exports.DELETE = function (xapi, devAccount, path, callback) {
         method: "DELETE",
         headers: {
             'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientId,
+            'X-AH-API-CLIENT-ID': devAccount.clientID,
             'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
             'Authorization': "Bearer " + xapi.accessToken
         }
