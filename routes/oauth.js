@@ -6,13 +6,13 @@ var Error = require("./../routes/error");
 
 router.get('/reg', function (req, res) {
     if (req.session) {
-        if (req.query.hasOwnProperty('error')) {
+        if (req.query.error) {
             Error.render(req.query.error, "conf", req, res);
-        } else if (req.query.hasOwnProperty("authCode")) {
+        } else if (req.query.authCode) {
             var authCode = req.query.authCode;
             OAuth.getPermanentToken(authCode, devAccount, function (data) {
-                if (data.hasOwnProperty("error")) Error.render(data.error, "conf", req, res);
-                else if (data.hasOwnProperty("data")) {
+                if (data.error) Error.render(data.error, "conf", req, res);
+                else if (data.data) {
                     for (var owner in data.data) {
                         req.session.xapi = {
                             rejectUnauthorized: true,
