@@ -264,9 +264,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
                         $scope.webhook.ready = true;
                         $scope.webhook.response = null;
                         $scope.webhook.success = null;
-                        console.log($scope.webhook.register.response);
                         var wid = $scope.webhook.register.response.id;
-                        console.log(wid);
                         socketio.emit("webhook", wid);
                         countdown = $interval(function () {
                             if ($scope.timeout > 0) $scope.timeout--;
@@ -316,7 +314,6 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
 
 
     socketio.on('data', function (obj) {
-        console.log("reponse", obj);
         webhook.reponse = obj;
 
     });

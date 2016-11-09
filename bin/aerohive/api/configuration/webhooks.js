@@ -38,7 +38,6 @@ module.exports.create = function (xapi, devAccount, subscription, callback) {
     for (var key in subscription) {
         if (subscription[key] === '') delete subscription[key];
     }
-    console.log(subscription);
     api.POST(xapi, devAccount, path, subscription,  callback);
 };
 
