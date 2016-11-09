@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var API = require("./../bin/aerohive/api/main");
 
-var devAccount = require("../config").aerohive;
+var devAccount = require("../config").devAccount;
 /* GET users listing. */
 
 
