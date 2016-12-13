@@ -1,144 +1,64 @@
 angular.module('Check').factory("endpointService", function ($http, $q) {
-    var dataLoaded = {
-        configurationLocations: false,
-        configurationSsids: false,
-        configurationWebhooks: false,
-        identityCredentials: false,
-        identityUserGroups: false,
-        locationClients: false,
-        monitorClients: false,
-        monitorDevices: false,
-        presenceClientCount: false,
-        presenceClientPresence: false,
-        presenceClientTimeSeries: false,
-    }
 
-
-    function configurationLocations() {
-        dataLoaded.configurationLocations = false;
+    function noId(endpoint) {
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/configuration/locations",
-            method: "GET",
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
             timeout: canceller.promise
         });
         return httpRequest(request);
     }
-    function configurationSsids() {
-        dataLoaded.configurationSsids = false;
+    function locationId(endpoint, locationId) {        
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/configuration/ssids",
-            method: "GET",
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
+            params: { 'locationId': locationId },
             timeout: canceller.promise
         });
         return httpRequest(request);
     }
-    function configurationWebhooks(){
-        dataLoaded.configurationWebhooks = false;
+    function deviceId(endpoint, deviceId) {
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/configuration/webhooks",
-            method: "GET",
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
+            params: { 'deviceId': deviceId },
             timeout: canceller.promise
         });
         return httpRequest(request);
     }
-    function identityCredentials() {
-        dataLoaded.identityCredentials = false;
+    function clientId(endpoint, clientId) {
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/identity/credentials",
-            method: "GET",
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
+            params: { 'clientId': clientId },
             timeout: canceller.promise
         });
         return httpRequest(request);
     }
-    function identityUserGroups() {
-        dataLoaded.identityUserGroups = false;
+    function ssidProfile(endpoint, ssidProfile) {
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/identity/userGroups",
-            method: "GET",
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
+            params: { 'ssidProfile': ssidProfile },
             timeout: canceller.promise
         });
         return httpRequest(request);
     }
-    function locationClients() {
-        dataLoaded.locationClients = false;
+    function noId(endpoint, locationId) {
         var canceller = $q.defer();
         var request = $http({
-            url: "/api/location/clients",
-            method: "GET",
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
+            params: { 'locationId': locationId },
             timeout: canceller.promise
         });
         return httpRequest(request);
     }
-    function monitorClients() {
-        dataLoaded.monitorClients = false;
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/monitor/clients",
-            method: "GET",
-            timeout: canceller.promise
-        });
-        return httpRequest(request);
-    }
-    function monitorDevices() {
-        dataLoaded.monitorDevices = false;
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/monitor/devices",
-            method: "GET",
-            timeout: canceller.promise
-        });
-        return httpRequest(request);
-    }
-    function presenceClientCount(locationId) {
-        dataLoaded.presenceClientCount = false;
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/presence/clientcount",
-            method: "GET",
-            params: {locationId: locationId},
-            timeout: canceller.promise
-        });
-        return httpRequest(request);
-    }
-    function presenceClientPresence(locationId) {
-        dataLoaded.presenceClientPresence = false;
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/presence/clientpresence",
-            method: "GET",
-            params: {'locationId': locationId},
-            timeout: canceller.promise
-        });
-        return httpRequest(request);
-    }
-    function presenceClientTimeSeries(locationId) {
-        dataLoaded.presenceClientTimeSeries = false;
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/presence/clienttimeseries",
-            method: "GET",
-            params: {locationId: locationId},
-            timeout: canceller.promise
-        });
-        return httpRequest(request);
-    }
-        function presenceWaypoints(locationId) {
-        dataLoaded.presenceClientTimeSeries = false;
-        var canceller = $q.defer();
-        var request = $http({
-            url: "/api/presence/waypoints",
-            method: "GET",
-            params: {locationId: locationId},
-            timeout: canceller.promise
-        });
-        return httpRequest(request);
-    }
-
     function httpRequest(request) {
         var promise = request.then(
             function (response) {
@@ -165,21 +85,10 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
 
 
     return {
-        configurationLocations: configurationLocations,
-        configurationSsids: configurationSsids,
-        configurationWebhooks: configurationWebhooks,
-        identityCredentials: identityCredentials,
-        identityUserGroups: identityUserGroups,
-        locationClients: locationClients,
-        monitorClients: monitorClients,
-        monitorDevices: monitorDevices,
-        presenceClientCount: presenceClientCount,
-        presenceClientPresence: presenceClientPresence,
-        presenceClientTimeSeries: presenceClientTimeSeries,
-        presenceWaypoints: presenceWaypoints,
-        isLoaded: function(endpoint) {
-            return isLoaded[endpoint];
-        }
+        noId: noId,
+        locationId: locationId,
+        deviceId: deviceId,
+        clientId: clientId
     }
 });
 
@@ -206,7 +115,7 @@ angular.module('Check').factory("webhookService", function ($http, $q) {
         return httpRequest(request);
     }
 
-    
+
     function httpRequest(request) {
         var promise = request.then(
             function (response) {

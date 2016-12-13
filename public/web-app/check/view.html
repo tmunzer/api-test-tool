@@ -2,10 +2,32 @@
     <md-tabs md-dynamic-height>
         <md-tab label="Endpoints">
             <div ng-controller="EndpointCtrl">
-                <article md-whiteframe="2" ng-repeat="endpoint in endpoints">
+                <article md-whiteframe="2" ng-repeat="apiCall in apiCalls">
                     <md-toolbar style="min-height: 50px">
                         <div class="md-toolbar-tools" style="height: 50px">
-                            <h2 class="md-title">{{endpoint.name}}</h2>
+                            <h2 class="md-title">{{apiCall.name}}</h2>
+                            <span flex></span>
+                            <span class='badge badge-success'>Success: {{apiCallSuccess(apiCall)}} / {{apiCall.endpoints.length}}</span>
+                            <span style='width: 5px'></span>
+                            <span class='badge badge-danger'>Error: {{apiCallError(apiCall)}} / {{apiCall.endpoints.length}}</span>
+                            <md-button aria-label="refresh" ng-click="refreshApiCall(apiCall)" style="min-width: 10px;">
+                                <span hide show-gt-sm translate="button.refreshAll"></span>
+                                <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refreshAll" | translate}}</md-tooltip>
+                                <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                            </md-button>
+                        </div>
+
+                    </md-toolbar>
+                    <div ng-show="apiCallFinished(apiCall)" style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
+                    <md-progress-linear ng-show="!apiCallFinished(apiCall)" md-mode="indeterminate" class="md-accent"></md-progress-linear>
+
+                    <div ng-repeat="endpoint in apiCall.endpoints"> 
+                    <div layout-padding>
+                        <div>
+                            <b class="badge badge-primary">{{endpoint.method}}</b><b> {{ endpoint.endpoint}}</b> 
+                        </div>
+                        <div>{{ endpoint.description}} </div>
+                        <div>
                             <span flex></span>
                             <span class='badge badge-warning' ng-show="!endpoint.isLoaded">Loading...</span>
                             <span class='badge badge-unknown' ng-show="endpoint.isLoaded && endpoint.status == 0">Not yet started</span>
@@ -16,20 +38,14 @@
                                 <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
                                 <md-icon class="material-icons" aria-label="details">description</md-icon>
                             </md-button>
-                            <md-button aria-label="refresh" ng-click="generateRequest(endpoint.key)" style="min-width: 10px;">
+                            <md-button aria-label="refresh" ng-click="generateRequest(endpoint)" style="min-width: 10px;">
                                 <span hide show-gt-sm translate="button.refresh"></span>
                                 <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
                                 <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
                             </md-button>
                         </div>
-
-                    </md-toolbar>
-                    <div ng-show="endpoint.isLoaded" style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
-                    <md-progress-linear ng-show="!endpoint.isLoaded" md-mode="indeterminate" class="md-accent"></md-progress-linear>
-
-                    <div layout-padding>
-                        <div> <b>Endpoint: </b><i>{{ endpoint.endpoint}}</i> </div>
-                        <div> <b>Description: </b>{{ endpoint.description}} </div>
+                    </div>
+                    <hr>
                     </div>
                 </article>
             </div>

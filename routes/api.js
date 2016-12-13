@@ -10,8 +10,30 @@ var devAccount = require("../config").devAccount;
 /**
  * CONFIGURATION
  */
-router.get("/configuration/locations", function (req, res, next) {
+router.get("/configuration/apiLocationFolder", function (req, res, next) {
+    //TODO
     API.configuration.locations.locations(req.session.xapi, devAccount, function (err, response, request) {
+        if (err) res.status(err.status).send({ error: err, request: request});
+        else res.json({ response: response, request: request});
+    })
+})
+router.get("/configuration/apiLocationFolders", function (req, res, next) {
+    API.configuration.locations.locations(req.session.xapi, devAccount, function (err, response, request) {
+        if (err) res.status(err.status).send({ error: err, request: request});
+        else res.json({ response: response, request: request});
+    })
+})
+
+router.get("/configuration/device/ssids", function (req, res, next) {
+    //TODO
+    API.configuration.ssids.get(req.session.xapi, devAccount, function (err, response, request) {
+        if (err) res.status(err.status).send({ error: err, request: request});
+        else res.json({ response: response, request: request});
+    })
+})
+router.get("/configuration/ssid/psk", function (req, res, next) {
+    //TODO
+    API.configuration.ssids.get(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send({ error: err, request: request});
         else res.json({ response: response, request: request});
     })
@@ -22,6 +44,15 @@ router.get("/configuration/ssids", function (req, res, next) {
         else res.json({ response: response, request: request});
     })
 })
+
+router.get("/configuration/ssids/filters", function (req, res, next) {
+    //TODO
+    API.configuration.ssids.get(req.session.xapi, devAccount, function (err, response, request) {
+        if (err) res.status(err.status).send({ error: err, request: request});
+        else res.json({ response: response, request: request});
+    })
+})
+
 router.get("/configuration/webhooks", function (req, res, next) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send({ error: err, request: request});
@@ -111,8 +142,23 @@ router.get("/location/clients", function (req, res, next) {
 /**
  * MONITOR
  */
+router.get("/monitor/client", function (req, res, next) {
+    //TODO
+    API.monitor.clients.list(req.session.xapi, devAccount, function (err, response, request) {
+        if (err) res.status(err.status).send({ error: err, request: request});
+        else res.json({ response: response, request: request});
+    })
+})
 router.get("/monitor/clients", function (req, res, next) {
     API.monitor.clients.list(req.session.xapi, devAccount, function (err, response, request) {
+        if (err) res.status(err.status).send({ error: err, request: request});
+        else res.json({ response: response, request: request});
+    })
+})
+
+router.get("/monitor/device", function (req, res, next) {
+    //TODO
+    API.monitor.devices.list(req.session.xapi, devAccount, function (err, response, request) {
         if (err) res.status(err.status).send({ error: err, request: request});
         else res.json({ response: response, request: request});
     })
@@ -145,6 +191,19 @@ router.get("/presence/clientpresence", function (req, res, next) {
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         var timeUnit = "OneHour";
         API.clientlocation.clientpresence(req.session.xapi, devAccount, locationId, startTime, endTime, timeUnit, function (err, response, request) {
+            if (err) res.status(err.status).send({ error: err, request: request});
+            else res.json({ response: response, request: request});
+        })
+    } else res.status(401).send("Error: no locationId");
+})
+router.get("/presence/clientsessions", function (req, res, next) {
+    //TODO
+    if (req.query.locationId) {
+        var locationId = req.query.locationId;
+        var endTime = new Date().toISOString();
+        var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
+        var timeUnit = "OneHour";
+        API.clientlocation.clienttimeseries(req.session.xapi, devAccount, locationId, startTime, endTime, timeUnit, function (err, response, request) {
             if (err) res.status(err.status).send({ error: err, request: request});
             else res.json({ response: response, request: request});
         })
