@@ -19,6 +19,7 @@ var en = {
         back: 'Back',
         search: "Search",
         refresh: "Refresh",
+        refreshAll: "Refresh All",
         reset: "Reset",
         cancel: "Cancel",
         yes: "Yes",

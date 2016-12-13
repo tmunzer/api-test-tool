@@ -11,7 +11,7 @@ var api = require("./../req");
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-module.exports.clientsList = function (xapi, devAccount, callback) {
+module.exports.clients = function (xapi, devAccount, callback) {
 
     var path = '/xapi/v1/monitor/clients?ownerId=' + xapi.ownerId;
 
@@ -29,11 +29,11 @@ module.exports.clientsList = function (xapi, devAccount, callback) {
  * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
- * @param {String} clientID - The unique number of the client device.
+ * @param {String} clientId - The unique number of the client device.
  *  */
-module.exports.clientDetails = function (xapi, devAccount, clientID, callback) {
+module.exports.client = function (xapi, devAccount, clientId, callback) {
 
-    var path = '/xapi/v1/monitor/clients/' + clientID + '?ownerId=' + xapi.ownerId;
+    var path = '/xapi/v1/monitor/clients/' + clientId + '?ownerId=' + xapi.ownerId;
 
     // send the API request
     api.GET(xapi, devAccount, path,  callback);

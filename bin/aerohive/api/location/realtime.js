@@ -1,7 +1,7 @@
-var api = require("./../../req");
+var api = require("./../req");
 
 /**
- * Provides information about the configured SSID Profiles
+ * Allows one to query the collection of user groups given query parameters as input
  * @param {Object} xapi - API credentials
  * @param {String} xapi.vpcUrl - ACS server to request
  * @param {String} xapi.ownerId - ACS ownerId
@@ -10,8 +10,12 @@ var api = require("./../../req");
  * @param {String} devAccount.clientID - Aerohive Developper Account ClientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
+ * @param {Array} apMacs - A comma seperated list of AP Mac Addresses.
  *  */
-module.exports.GET = function (xapi, devAccount, callback) {
-    var path = "/xapi/beta/configuration/ssids?ownerId=" + xapi.ownerId;
-    api.GET(xapi, devAccount, path, callback);
+module.exports.clients = function (xapi, devAccount, apMacs, callback) {
+
+    var path = '/xapi/v1/location/clients?ownerId=' + xapi.ownerId + "&apMacs=" + apMacs;
+
+    // send the API request
+    api.GET(xapi, devAccount, path,  callback);
 };

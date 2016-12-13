@@ -19,6 +19,7 @@ var fr = {
         back: 'Retour',
         search: "Rechercher",
         refresh: "Rafraichir",
+        refreshAll: "Tout Rafraichir",
         reset: "Réinitialiser",
         cancel: "Annuler",
         yes: "Oui",

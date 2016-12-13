@@ -1,218 +1,455 @@
-angular.module('Check').controller("CheckCtrl", function ($scope, $mdDialog, endpointService) {
+angular.module('Check').controller("CheckCtrl", function($scope, $mdDialog, endpointService) {
 });
-angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, endpointService) {
-    var locationId;
-    var requests = {
-        configurationLocations: null,
-        configurationSsids: null,
-        configurationWebhooks: null,
-        identityCredentials: null,
-        identityUserGroups: null,
-        monitorClients: null,
-        monitorDevices: null,
-        presenceClientCount: null,
-        presenceClientPresence: null,
-        presenceClientTimeSeries: null,
-        presenceWaypoints: null
-    };
+angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, endpointService) {
+    var locationId, deviceId, clientId, ssidProfileId, apMacs;
+    var requests = {};
 
 
-    $scope.endpoints = {
+    $scope.apiCalls = {
         configurationLocations: {
-            key: "configurationLocations",
-            name: "Configuration - Get Locations",
-            endpoint: "GET /v1/configuration/apLocationFolders{?ownerId}",
-            description: "Exposes the Location Folder Hierarchy that a customer uses to associate non-geographic location information with an Access Point/Device.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: false
+            key: "configuration-device-location",
+            name: "Device Location Endpoints",
+            endpoints: [
+                {
+                    name: "configuration/apiLocationFolder",
+                    method: "GET",
+                    endpoint: "/v1/configuration/apLocationFolders/{folderId}{?ownerId}",
+                    description: "Allows one to retrieve a Location Folder node anywhere within the hierarchy.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    locationId: true
+                },
+                {
+                    name: "configuration/apiLocationFolders",
+                    method: "GET",
+                    endpoint: "/v1/configuration/apLocationFolders{?ownerId}",
+                    description: "Exposes the Location Folder Hierarchy that a customer uses to associate non-geographic location information with an Access Point/Device.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    action: "locationId"
+                }
+            ]
         },
         configurationSsids: {
-            key: "configurationSsids",
-            name: "Configuration - Get SSIDs",
-            endpoint: "GET /beta/configuration/ssids{?ownerId}",
-            description: "Provides information about the configured SSID Profiles.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: false
+            key: "configuration-ssid",
+            name: "Configuration Endpoints for SSID related operations",
+            endpoints: [
+                {
+                    name: "configuration/device/ssids",
+                    method: "GET",
+                    endpoint: "/beta/configuration/devices/{deviceId}/ssids{?ownerId}",
+                    descriptions: "Retrieves SSID related configuration information for the specified device.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    deviceId: true
+                },
+                {
+                    name: "configuration/ssid/psk",
+                    method: "GET",
+                    endpoint: "/beta/configuration/ssids/{ssidProfileId}/psk{?ownerId}",
+                    descriptions: "Provides information about the configured Pre-shared Key or Private Pre-shared Key for the specified SSID.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    ssidProfileId: true
+                },
+                {
+                    name: "configuration/ssids",
+                    method: "GET",
+                    endpoint: "/beta/configuration/ssids{?ownerId}",
+                    descriptions: "Provides information about the configured SSID Profiles.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    action: "ssidProfileId"
+                }
+            ]
+        },
+        configurationSsidFilter: {
+            key: "configuration-ssid-profile-filter",
+            name: "Configuration Endpoints for SSID Profile Filtering.",
+            endpoints: [
+                {
+                    name: "configuration/ssids/filters",
+                    method: "GET",
+                    endpoint: "/beta/configuration/ssids/{ssidProfileId}/filters{?ownerId}",
+                    descriptions: "Get the Filtering Rules for the given SSID Profile ID",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    ssidProfileId: true
+                }
+            ]
         },
         configurationWebhooks: {
-            key: "configurationWebhooks",
-            name: "Configuration - Get Webhooks",
-            endpoint: "GET /beta/configuration/webhooks{?ownerId}",
-            description: "Provides access to the list of current Webhook subscriptions.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: false
+            key: "configuration-webhooks",
+            name: "Configuration Endpoints for Webhook Subscriptions",
+            endpoints: [
+                {
+                    name: "configuration/webhooks",
+                    method: "GET",
+                    endpoint: "/beta/configuration/webhooks{?ownerId}",
+                    description: "Provides access to the list of current Webhook subscriptions.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                }
+            ]
         },
         identityCredentials: {
-            key: "identityCredentials",
-            name: "Identity - Get Credentials",
-            endpoint: "GET /v1/identity/credentials{?credentialType,ownerId,memberOf,adUser,creator,loginName,firstName,lastName,phone,email,userGroup,page,pageSize}",
-            description: "Allows one to query collection of credentials given query parameters as input.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: false
+            key: "identity-management-credentials",
+            name: "Credential Management Endpoints",
+            endpoints: [
+                {
+                    name: "identity/credentials",
+                    method: "GET",
+                    endpoint: "/v1/identity/credentials{?credentialType,ownerId,memberOf,adUser,creator,loginName,firstName,lastName,phone,email,userGroup,page,pageSize}",
+                    description: "Allows one to query collection of credentials given query parameters as input.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true
+                }
+            ]
         },
         identityUserGroups: {
-            key: "identityUserGroups",
-            name: "Identity - Get User Groups",
-            endpoint: "GET /v1/identity/userGroups{?ownerId,memberOf,adUser}",
-            description: "Allows one to query the collection of user groups given query parameters as input.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: false
+            key: "identity-management-user-groups",
+            name: "User Group Management Endpoints",
+            endpoints: [
+                {
+                    name: "identity/usergroups",
+                    method: "GET",
+                    endpoint: "/v1/identity/userGroups{?ownerId,memberOf,adUser}",
+                    description: "Allows one to query the collection of user groups given query parameters as input.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true
+                }
+            ]
         },
-
+        locationRealtime: {
+            key: "location-realtime",
+            name: "Location Endpoints for Current Client Geo-Location Information",
+            endpoints: [
+                {
+                    name: "location/clients",
+                    method: "GET",
+                    endpoint: "/v1/location/clients{?ownerId,apMacs}",
+                    description: "Returns a list of current client location observations for each requested AP.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    apMacs: true
+                }
+            ]
+        },
         monitorClients: {
-            key: "monitorClients",
-            name: "Monitor - Get Clients",
-            endpoint: "GET /v1/monitor/clients{?ownerId,startTime,endTime,page,pageSize}",
-            description: "Returns a list of clients.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: false
+            key: "monitoring-client-devices",
+            name: "Monitoring Endpoints for Client Devices Connected to Aerohive Devices",
+            endpoints: [
+                {
+                    name: "monitor/client",
+                    method: "GET",
+                    endpoint: "/v1/monitor/clients/{clientId}{?ownerId,startTime,endTime,timeUnit}",
+                    description: "Returns detail information about a specific client.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    clientId: true
+                },
+                {
+                    name: "monitor/clients",
+                    method: "GET",
+                    endpoint: "/v1/monitor/clients{?ownerId,startTime,endTime,page,pageSize}",
+                    description: "Returns a list of clients.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    action: "clientId"
+                }
+            ]
         },
         monitorDevices: {
-            key: "monitorDevices",
-            name: "Monitor - Get Devices",
-            endpoint: "GET /v1/monitor/devices{?ownerId,showActiveClientCount,page,pageSize}",
-            description: "Returns a list of devices.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: false
+            key: "monitoring-devices",
+            name: "Device Monitoring Endpoints",
+            endpoints: [
+                {
+                    name: "monitor/device",
+                    method: "GET",
+                    endpoint: "/v1/monitor/devices/{deviceId}{?ownerId}",
+                    description: "Returns details regarding the specified device.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    deviceId: true,
+                    action: "apMacs"
+                },
+                {
+                    name: "monitor/devices",
+                    method: "GET",
+                    endpoint: "/v1/monitor/devices{?ownerId,showActiveClientCount,page,pageSize}",
+                    description: "Returns a list of devices.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    action: "deviceId"
+                }
+            ]
+
         },
-        presenceClientCount: {
-            key: "presenceClientCount",
-            name: "Presence - Get Clients Count",
-            endpoint: "GET /v1/clientlocation/clientcount{?ownerId,apmac,location,startTime,endTime}",
-            description: "Returns a count of the number of clients seen during the specified time period with a timeUnit of OneHour.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: true
-        },
-        presenceClientPresence: {
-            key: "presenceClientPresence",
-            name: "Presence - Get Clients Presence",
-            endpoint: "GET /v1/clientlocation/clientpresence{?ownerId,apmac,location,timeUnit,startTime,endTime}",
-            description: "Returns a list of distinct clients during the specified time period broken down by the specified time unit.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: true
-        },
-        presenceClientTimeSeries: {
-            key: "presenceClientTimeSeries",
-            name: "Presence - Get Client Time Series",
-            endpoint: "GET /v1/clientlocation/clienttimeseries{?ownerId,apmac,location,timeUnit,startTime,endTime}",
-            description: "Returns a count of the number of clients seen during the specified time period broken down by the specified time unit.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: true
-        },
-        presenceWaypoints: {
-            key: "presenceWaypoints",
-            name: "Presence - Get Client Sessions and Waypoints",
-            endpoint: "GET /v1/clientlocation/waypoints{?ownerId,location,startTime,endTime}",
-            description: "Returns a list of client sessions and waypoints during the specified time period.",
-            status: 0,
-            request: null,
-            body: {},
-            reponse: null,
-            error: null,
-            isLoaded: true,
-            locationId: true
+        presenceAnalytics: {
+            key: "presence-analytics",
+            name: " Presence Analytics Endpoints",
+            endpoints: [
+                {
+                    name: "presence/clientcount",
+                    method: "GET",
+                    endpoint: "/v1/clientlocation/clientcount{?ownerId,apmac,location,startTime,endTime}",
+                    description: "Returns a count of the number of clients seen during the specified time period with a timeUnit of OneHour.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    locationId: true
+                },
+                {
+                    name: "presence/clientpresence",
+                    method: "GET",
+                    endpoint: "/v1/clientlocation/clientpresence{?ownerId,apmac,location,timeUnit,startTime,endTime}",
+                    description: "Returns a list of distinct clients during the specified time period broken down by the specified time unit.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    locationId: true
+                },
+                {
+                    name: "presence/clientsessions",
+                    method: "GET",
+                    endpoint: "/v1/clientlocation/clientsessions{?ownerId,location,waypoints,startTime,endTime}",
+                    description: "Returns a list of client sessions and waypoints during the specified time period.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    locationId: true
+                },
+                {
+                    name: "presence/clienttimeseries",
+                    method: "GET",
+                    endpoint: "/v1/clientlocation/clienttimeseries{?ownerId,apmac,location,timeUnit,startTime,endTime}",
+                    description: "Returns a count of the number of clients seen during the specified time period broken down by the specified time unit.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    locationId: true
+                },
+                {
+                    name: "presence/waypoints",
+                    method: "GET",
+                    endpoint: "/v1/clientlocation/waypoints{?ownerId,location,startTime,endTime}",
+                    description: "Returns a list of client sessions and waypoints during the specified time period.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    isLoaded: true,
+                    locationId: true
+                }
+            ]
         }
     };
 
+    $scope.apiCallSuccess = function(apiCall) {
+        var done = 0;
+        apiCall.endpoints.forEach(function(endpoint) {
+            if (endpoint.response) done++;
+        })
+        return done;
+    }
+    $scope.apiCallError = function(apiCall) {
+        var error = 0;
+        apiCall.endpoints.forEach(function(endpoint) {
+            if (endpoint.error) error++;
+        })
+        return error;
+    }
+    $scope.apiCallFinished = function(apiCall) {
+        var finished = 0;
+        apiCall.endpoints.forEach(function(endpoint) {
+            if (endpoint.isLoaded) finished++;
+        })
+        return apiCall.endpoints.length == finished;
+    }
 
-    $scope.generateRequest = function (endpoint) {
-        if (requests[endpoint]) requests[endpoint].abort();
-        $scope.endpoints[endpoint].isLoaded = false;
-        if ($scope.endpoints[endpoint].locationId == true) requests[endpoint] = endpointService[endpoint](locationId);
-        else requests[endpoint] = endpointService[endpoint]();
-        requests[endpoint].then(function (promise) {
+    $scope.refreshApiCall = function(apiCall) {
+        apiCall.endpoints.forEach(function(endpoint) {
+            $scope.generateRequest(endpoint);
+        })
+    }    
+
+    $scope.generateRequest = function(endpoint) {
+        if (requests[endpoint.name]) requests[endpoint.name].abort();
+        endpoint.isLoaded = false;
+        if (endpoint.locationId == true) requests[endpoint.name] = endpointService.locationId(endpoint, locationId);
+        else if (endpoint.deviceId == true) requests[endpoint.name] = endpointService.deviceId(endpoint, deviceId);
+        else if (endpoint.clientId == true) requests[endpoint.name] = endpointService.clientId(endpoint, clientId);
+        else if (endpoint.ssidProfileId == true) requests[endpoint.name] = endpointService.ssidProfileId(endpoint, ssidProfileId);  
+        else if (endpoint.apMacs == true) requests[endpoint.name] = endpointService.apMacs(endpoint, apMacs);      
+        else requests[endpoint.name] = endpointService.noId(endpoint);
+        requests[endpoint.name].then(function(promise) {
             if (promise) {
-                $scope.endpoints[endpoint].status = promise.status;
-                $scope.endpoints[endpoint].response = promise.data.response;
-                $scope.endpoints[endpoint].error = promise.data.error;
-                $scope.endpoints[endpoint].request = promise.data.request;
-                $scope.endpoints[endpoint].body = promise.data.body;
-                $scope.endpoints[endpoint].isLoaded = true;
-                if (endpoint == "configurationLocations") setLocationId();
+                endpoint.status = promise.status;
+                endpoint.response = promise.data.response;
+                endpoint.error = promise.data.error;
+                endpoint.request = promise.data.request;
+                endpoint.body = promise.data.body;
+                endpoint.isLoaded = true;
+                if (endpoint.action == "locationId") setLocationId(endpoint.status, endpoint.response);
+                else if (endpoint.action == "deviceId") setDeviceId(endpoint.status, endpoint.response);
+                else if (endpoint.action == "clientId") setClientId(endpoint.status, endpoint.response);
+                else if (endpoint.action == "ssidProfileId") setSsidProfileId(endpoint.status, endpoint.response); 
+                else if (endpoint.action == "apMacs") setApMacs(endpoint.status, endpoint.response); 
             }
         });
     }
 
 
-    function setLocationId() {
-        if ($scope.endpoints.configurationLocations.status == 200) {
-            locationId = $scope.endpoints.configurationLocations.response.id;
-            for (var endpoint in requests) {
-                if ($scope.endpoints[endpoint].locationId == true) $scope.generateRequest(endpoint);
+    function setLocationId(status, response) {       
+        if (status == 200) {
+            locationId = response.id;
+            for (var apiCall in $scope.apiCalls) {
+                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
+                    if (endpoint.locationId == true) $scope.generateRequest(endpoint);
+                })
+            }
+        }
+    }
+    function setDeviceId(status, response) {
+        if (status == 200 && response.length > 0) {
+            deviceId = response[0].deviceId;
+            for (var apiCall in $scope.apiCalls) {
+                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
+                    if (endpoint.deviceId == true) $scope.generateRequest(endpoint);
+                })
+            }
+        }
+    }
+    function setClientId(status, response) {
+        if (status == 200 && response.length > 0) {
+            clientId = response[0].clientId;
+            for (var apiCall in $scope.apiCalls) {
+                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
+                    if (endpoint.clientId == true) $scope.generateRequest(endpoint);
+                })
+            }
+        }
+    }
+    function setSsidProfileId(status, response) {
+        if (status == 200 && response.length > 0) {
+            var i = 0;
+            while (ssidProfileId == undefined) {
+                if (response[i].name != "ssid0") ssidProfileId = response[i].id;
+                else i++;
+            }
+            
+            for (var apiCall in $scope.apiCalls) {
+                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
+                    if (endpoint.ssidProfileId == true) $scope.generateRequest(endpoint);
+                })
+            }
+        }
+    }
+    function setApMacs(status, response) {
+        if (status == 200) {
+            apMacs = response.macAddress;
+            for (var apiCall in $scope.apiCalls) {
+                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
+                    if (endpoint.apMacs == true) $scope.generateRequest(endpoint);
+                })
             }
         }
     }
 
-    for (var endpoint in requests) {
-        if ($scope.endpoints[endpoint].locationId == false) $scope.generateRequest(endpoint);
-    }
-
-    $scope.showDetails = function (endpoint) {
+    $scope.showDetails = function(endpoint) {
         $mdDialog.show({
             controller: 'DialogDetailsController',
             templateUrl: 'modals/modalDetailsContent.html',
             locals: {
                 items: endpoint
             }
-        }).then(function () {
-            getClassrooms();
         });
     };
 
+// entry point
+    for (var apiCall in $scope.apiCalls) {
+        $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
+            if (!endpoint.locationId
+                && !endpoint.deviceId
+                && !endpoint.clientId
+                && !endpoint.ssidProfileId
+                && !endpoint.apMacs
+            ) $scope.generateRequest(endpoint);
+        })
+    }    
 });
 
 
-angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, socketio) {
+angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $interval, webhookService, socketio) {
     var requestWebhook;
     $scope.timeout = 900;
     $scope.format = "mm:ss";
@@ -247,12 +484,12 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
         success: null
     }
 
-    $scope.start = function () {
+    $scope.start = function() {
         if (!$scope.webhook.ready) {
             if (requestWebhook) requestWebhook.abort();
             $scope.webhook.register.isLoaded = false;
             requestWebhook = webhookService.createWebhook();
-            requestWebhook.then(function (promise) {
+            requestWebhook.then(function(promise) {
                 if (promise) {
                     $scope.webhook.register.status = promise.status;
                     $scope.webhook.register.response = promise.data.response;
@@ -266,7 +503,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
                         $scope.webhook.success = null;
                         var wid = $scope.webhook.register.response.id;
                         socketio.emit("webhook", wid);
-                        countdown = $interval(function () {
+                        countdown = $interval(function() {
                             if ($scope.timeout > 0) $scope.timeout--;
                             else $scope.stop();
                         }, 1000);
@@ -275,13 +512,13 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             });
         }
     }
-    $scope.stop = function () {
+    $scope.stop = function() {
         if ($scope.webhook.ready) {
             $interval.cancel(countdown);
             if (requestWebhook) requestWebhook.abort();
             $scope.webhook.remove.isLoaded = false;
             requestWebhook = webhookService.deleteWebhook();
-            requestWebhook.then(function (promise) {
+            requestWebhook.then(function(promise) {
                 if (promise) {
                     $scope.webhook.remove.status = promise.status;
                     $scope.webhook.remove.response = promise.data.response;
@@ -295,29 +532,29 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
         }
     }
 
-    $scope.showDetails = function (endpoint) {
+    $scope.showDetails = function(endpoint) {
         $mdDialog.show({
             controller: 'DialogDetailsController',
             templateUrl: 'modals/modalDetailsContent.html',
             locals: {
                 items: endpoint
             }
-        }).then(function () {
+        }).then(function() {
             getClassrooms();
         });
     };
 
-    $scope.$on('$destroy', function () {
+    $scope.$on('$destroy', function() {
         // Make sure that the interval is destroyed too
         $scope.stop();
     });
 
 
-    socketio.on('data', function (obj) {
+    socketio.on('data', function(obj) {
         webhook.reponse = obj;
 
     });
-    socketio.on('message', function (data) {
+    socketio.on('message', function(data) {
         console.log('Incoming message:', data);
     });
 });
