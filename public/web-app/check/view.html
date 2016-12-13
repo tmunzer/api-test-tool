@@ -24,17 +24,17 @@
                     <div ng-repeat="endpoint in apiCall.endpoints"> 
                     <div layout-padding>
                         <div>
-                            <b class="badge badge-primary">{{endpoint.method}}</b><b> {{ endpoint.endpoint}}</b> 
-                        </div>
-                        <div>{{ endpoint.description}} </div>
-                        <div>
-                            <span flex></span>
+                            <b class="badge badge-primary">{{endpoint.method}}</b><b> {{ endpoint.endpoint}}</b> <span flex></span>
                             <span class='badge badge-warning' ng-show="!endpoint.isLoaded">Loading...</span>
                             <span class='badge badge-unknown' ng-show="endpoint.isLoaded && endpoint.status == 0">Not yet started</span>
                             <span class='badge badge-success' ng-show="endpoint.isLoaded && endpoint.status == 200">Success</span>
                             <span class='badge badge-danger' ng-show="endpoint.isLoaded && endpoint.status != 200 && endpoint.status != 0">Error - HTTP {{endpoint.status}}</span>
-                            <md-button aria-label="details" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.isLoaded || endpoint.status == 0">
-                                <span hide show-gt-sm translate="button.details"></span>
+                            
+                        </div>
+                        <div>{{ endpoint.description}} </div>
+                        <div>
+                            <md-button aria-label="details" class="md-raised md-primary" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.isLoaded || endpoint.status == 0">
+                                <span translate="button.details"></span>
                                 <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
                                 <md-icon class="material-icons" aria-label="details">description</md-icon>
                             </md-button>

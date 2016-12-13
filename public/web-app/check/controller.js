@@ -20,7 +20,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     locationId: true
                 },
                 {
@@ -33,7 +33,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     action: "locationId"
                 }
             ]
@@ -52,7 +52,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     deviceId: true
                 },
                 {
@@ -65,7 +65,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     ssidProfileId: true
                 },
                 {
@@ -78,7 +78,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     action: "ssidProfileId"
                 }
             ]
@@ -97,7 +97,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     ssidProfileId: true
                 }
             ]
@@ -116,7 +116,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                 }
             ]
         },
@@ -134,7 +134,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true
+                    isLoaded: false
                 }
             ]
         },
@@ -152,7 +152,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true
+                    isLoaded: false
                 }
             ]
         },
@@ -170,7 +170,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     apMacs: true
                 }
             ]
@@ -189,7 +189,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     clientId: true
                 },
                 {
@@ -202,7 +202,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     action: "clientId"
                 }
             ]
@@ -221,7 +221,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     deviceId: true,
                     action: "apMacs"
                 },
@@ -235,7 +235,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     action: "deviceId"
                 }
             ]
@@ -255,7 +255,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     locationId: true
                 },
                 {
@@ -268,7 +268,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     locationId: true
                 },
                 {
@@ -281,7 +281,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     locationId: true
                 },
                 {
@@ -294,7 +294,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     locationId: true
                 },
                 {
@@ -307,7 +307,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true,
+                    isLoaded: false,
                     locationId: true
                 }
             ]
@@ -464,7 +464,7 @@ angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $i
             body: {},
             error: null,
             reponse: null,
-            isLoaded: true,
+            isLoaded: false,
             locationId: false
         },
         remove: {
@@ -476,7 +476,7 @@ angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $i
             body: {},
             error: null,
             reponse: null,
-            isLoaded: true,
+            isLoaded: false,
             locationId: false
         },
         ready: false,
