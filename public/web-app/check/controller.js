@@ -1,7 +1,7 @@
 angular.module('Check').controller("CheckCtrl", function($scope, $mdDialog, endpointService) {
 });
 angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, endpointService) {
-    var locationId, deviceId, clientId, ssidProfile, apMacs;
+    var locationId, deviceId, clientId, ssidProfileId, apMacs;
     var requests = {};
 
 
@@ -20,7 +20,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true
+                    isLoaded: true,
+                    locationId: true
                 },
                 {
                     name: "configuration/apiLocationFolders",
@@ -51,7 +52,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     body: {},
                     reponse: null,
                     error: null,
-                    isLoaded: true
+                    isLoaded: true,
+                    deviceId: true
                 },
                 {
                     name: "configuration/ssid/psk",
@@ -64,7 +66,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     reponse: null,
                     error: null,
                     isLoaded: true,
-                    ssidProfile: true
+                    ssidProfileId: true
                 },
                 {
                     name: "configuration/ssids",
@@ -77,11 +79,11 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     reponse: null,
                     error: null,
                     isLoaded: true,
-                    action: "ssidProfile"
+                    action: "ssidProfileId"
                 }
             ]
         },
-        configurationSsids: {
+        configurationSsidFilter: {
             key: "configuration-ssid-profile-filter",
             name: "Configuration Endpoints for SSID Profile Filtering.",
             endpoints: [
@@ -96,7 +98,7 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     reponse: null,
                     error: null,
                     isLoaded: true,
-                    ssidProfile: true
+                    ssidProfileId: true
                 }
             ]
         },
@@ -220,7 +222,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                     reponse: null,
                     error: null,
                     isLoaded: true,
-                    clientId: true
+                    deviceId: true,
+                    action: "apMacs"
                 },
                 {
                     name: "monitor/devices",
@@ -345,7 +348,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         if (endpoint.locationId == true) requests[endpoint.name] = endpointService.locationId(endpoint, locationId);
         else if (endpoint.deviceId == true) requests[endpoint.name] = endpointService.deviceId(endpoint, deviceId);
         else if (endpoint.clientId == true) requests[endpoint.name] = endpointService.clientId(endpoint, clientId);
-        else if (endpoint.ssidProfile == true) requests[endpoint.name] = endpointService.ssidProfile(endpoint, ssidProfile);    
+        else if (endpoint.ssidProfileId == true) requests[endpoint.name] = endpointService.ssidProfileId(endpoint, ssidProfileId);  
+        else if (endpoint.apMacs == true) requests[endpoint.name] = endpointService.apMacs(endpoint, apMacs);      
         else requests[endpoint.name] = endpointService.noId(endpoint);
         requests[endpoint.name].then(function(promise) {
             if (promise) {
@@ -355,16 +359,17 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                 endpoint.request = promise.data.request;
                 endpoint.body = promise.data.body;
                 endpoint.isLoaded = true;
-                if (endpoint.action == "locationId") setLocationId(promise.status, promise.data.response);
-                else if (endpoint.action == "deviceId") setDeviceId(promise.status, promise.data.response);
-                else if (endpoint.action == "clientId") setClientId(promise.status, promise.data.response);
-                else if (endpoint.action == "ssidProfile") setSsidProfile(promise.status, promise.data.response);                
+                if (endpoint.action == "locationId") setLocationId(endpoint.status, endpoint.response);
+                else if (endpoint.action == "deviceId") setDeviceId(endpoint.status, endpoint.response);
+                else if (endpoint.action == "clientId") setClientId(endpoint.status, endpoint.response);
+                else if (endpoint.action == "ssidProfileId") setSsidProfileId(endpoint.status, endpoint.response); 
+                else if (endpoint.action == "apMacs") setApMacs(endpoint.status, endpoint.response); 
             }
         });
     }
 
 
-    function setLocationId(status, response) {        
+    function setLocationId(status, response) {       
         if (status == 200) {
             locationId = response.id;
             for (var apiCall in $scope.apiCalls) {
@@ -375,8 +380,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         }
     }
     function setDeviceId(status, response) {
-        if (status == 200) {
-            deviceId = response.id;
+        if (status == 200 && response.length > 0) {
+            deviceId = response[0].deviceId;
             for (var apiCall in $scope.apiCalls) {
                 $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
                     if (endpoint.deviceId == true) $scope.generateRequest(endpoint);
@@ -385,8 +390,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         }
     }
     function setClientId(status, response) {
-        if (status == 200) {
-            clientId = response.id;
+        if (status == 200 && response.length > 0) {
+            clientId = response[0].clientId;
             for (var apiCall in $scope.apiCalls) {
                 $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
                     if (endpoint.clientId == true) $scope.generateRequest(endpoint);
@@ -394,12 +399,27 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
             }
         }
     }
-    function setSsidProfile(status, response) {
-        if (status == 200) {
-            ssidProfile = response.id;
+    function setSsidProfileId(status, response) {
+        if (status == 200 && response.length > 0) {
+            var i = 0;
+            while (ssidProfileId == undefined) {
+                if (response[i].name != "ssid0") ssidProfileId = response[i].id;
+                else i++;
+            }
+            
             for (var apiCall in $scope.apiCalls) {
                 $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
-                    if (endpoint.ssidProfile == true) $scope.generateRequest(endpoint);
+                    if (endpoint.ssidProfileId == true) $scope.generateRequest(endpoint);
+                })
+            }
+        }
+    }
+    function setApMacs(status, response) {
+        if (status == 200) {
+            apMacs = response.macAddress;
+            for (var apiCall in $scope.apiCalls) {
+                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
+                    if (endpoint.apMacs == true) $scope.generateRequest(endpoint);
                 })
             }
         }
@@ -412,8 +432,6 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
             locals: {
                 items: endpoint
             }
-        }).then(function() {
-            getClassrooms();
         });
     };
 
@@ -423,7 +441,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
             if (!endpoint.locationId
                 && !endpoint.deviceId
                 && !endpoint.clientId
-                && !endpoint.ssidProfile
+                && !endpoint.ssidProfileId
+                && !endpoint.apMacs
             ) $scope.generateRequest(endpoint);
         })
     }    

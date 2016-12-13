@@ -39,12 +39,22 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
         });
         return httpRequest(request);
     }
-    function ssidProfile(endpoint, ssidProfile) {
+    function ssidProfileId(endpoint, ssidProfileId) {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/" + endpoint.name,
             method: endpoint.method,
-            params: { 'ssidProfile': ssidProfile },
+            params: { 'ssidProfileId': ssidProfileId },
+            timeout: canceller.promise
+        });
+        return httpRequest(request);
+    }
+        function apMacs(endpoint, apMacs) {
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
+            params: { 'apMacs': apMacs },
             timeout: canceller.promise
         });
         return httpRequest(request);
@@ -88,7 +98,9 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
         noId: noId,
         locationId: locationId,
         deviceId: deviceId,
-        clientId: clientId
+        clientId: clientId,
+        ssidProfileId: ssidProfileId,
+        apMacs: apMacs
     }
 });
 
