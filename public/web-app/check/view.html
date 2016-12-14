@@ -1,58 +1,82 @@
-<md-content style="padding-bottom: 5px; width: 100%">
+<md-content style="padding-bottom: 5px" ng-controller="CheckCtrl">
     <md-tabs md-dynamic-height>
+
         <md-tab label="Endpoints">
-            <div ng-controller="EndpointCtrl">
-                <article md-whiteframe="2" ng-repeat="apiCall in apiCalls">
-                    <md-toolbar style="min-height: 50px">
-                        <div class="md-toolbar-tools" style="height: 50px">
-                            <h2 class="md-title">{{apiCall.name}}</h2>
-                            <span flex></span>
-                            <span class='badge badge-success' ng-show="apiCallSuccess(apiCall) > 0">Success: {{apiCallSuccess(apiCall)}} / {{apiCall.endpoints.length}}</span>
-                            <span style='width: 5px'></span>
-                            <span class='badge badge-danger' ng-show="apiCallError(apiCall) > 0">Error: {{apiCallError(apiCall)}} / {{apiCall.endpoints.length}}</span>
-                            <md-button aria-label="refresh" ng-click="refreshApiCall(apiCall)" style="min-width: 10px;">
-                                <span hide show-gt-sm translate="button.refreshAll"></span>
-                                <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refreshAll" | translate}}</md-tooltip>
-                                <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
-                            </md-button>
-                        </div>
+            <section flex layout="row" ng-controller="EndpointCtrl">
 
+                <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="4">
+                    <md-toolbar>
+                        <h1 class="md-toolbar-tools">Endpoint Categories</h1>
                     </md-toolbar>
-                    <div ng-show="apiCallFinished(apiCall)" style="background-color: rgb(76,175,80); height: 5px; width: 100%"></div>
-                    <md-progress-linear ng-show="!apiCallFinished(apiCall)" md-mode="indeterminate" class="md-accent"></md-progress-linear>
+                    <md-content layout-padding style="padding: 0;">
+                        <div ng-repeat="apiCall in apiCalls" layout="column" style="padding:0">
+                            <md-button layout="row" style="margin:0" ng-click="goTo(apiCall.key)">
+                                <span style="font-size:0.8em">{{apiCall.key}}</span>
+                                <span flex></span>
+                                <span layout="row">
+                                    <md-progress-circular md-diameter="20px" md-mode="determinate" value="{{(apiCallFinished(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                    <md-progress-circular md-diameter="20px" class="md-accent" md-mode="determinate" value="{{(apiCallSuccess(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                    <md-progress-circular md-diameter="20px" class='md-warn' md-mode="determinate" value="{{(apiCallError(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                    <md-tooltip md-visible="tooltipVisible">Done: {{apiCallFinished(apiCall)}} / Success: {{apiCallSuccess(apiCall)}} / Error: {{apiCallError(apiCall)}}</md-tooltip>
+                                </span>
+                            </md-button>
+                        </div>
+                    </md-content>
+                </md-sidenav>
 
-                    <div ng-repeat="endpoint in apiCall.endpoints"> 
-                    <div layout-padding>
-                        <div>
-                            <b class="badge badge-primary">{{endpoint.method}}</b><b> {{ endpoint.endpoint}}</b> <span flex></span>
-                            <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.locationId">Waiting for locationId from other API call...</span>
-                            <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.deviceId">Waiting for deviceId from other API call...</span>
-                            <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.clientId">Waiting for clientId from other API call...</span>
-                            <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.ssidProfileId">Waiting for ssidProfileId from other API call...</span>
-                            <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.apMacs">Waiting for apMacs from other API call...</span>
-                            <span class='badge badge-warning' ng-show="endpoint.started && !endpoint.loaded">Loading...</span>
-                            <span class='badge badge-success' ng-show="endpoint.loaded && endpoint.status == 200">Success</span>
-                            <span class='badge badge-danger' ng-show="endpoint.loaded && endpoint.status != 200 && endpoint.status != 0">Error - HTTP {{endpoint.status}}</span>
-                            
+
+                <md-content flex style="overflow: scroll;height: 100%;padding-bottom: 100px;">
+
+                    <article md-whiteframe="2" ng-repeat="apiCall in apiCalls" id="{{apiCall.key}}">
+                        <md-toolbar style="min-height: 50px">
+                            <div class="md-toolbar-tools" style="height: 50px">
+                                <h2 class="md-title">{{apiCall.name}}</h2>
+                                <span flex></span>
+
+
+                                <md-button aria-label="refresh" ng-click="refreshApiCall(apiCall)" style="min-width: 10px;">
+                                    <span hide show-gt-sm translate="button.refreshAll"></span>
+                                    <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible"> {{"button.refreshAll" | translate}}</md-tooltip>
+                                    <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                                </md-button>
+                            </div>
+
+                        </md-toolbar>
+                        <div ng-repeat="endpoint in apiCall.endpoints">
+                            <div layout-padding>
+                                <div>
+                                    <b class="badge badge-primary">{{endpoint.method}}</b><b> {{ endpoint.endpoint}}</b>                                    <span flex></span>
+                                    <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.locationId">Waiting for locationId from other API call...</span>
+                                    <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.deviceId">Waiting for deviceId from other API call...</span>
+                                    <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.clientId">Waiting for clientId from other API call...</span>
+                                    <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.ssidProfileId">Waiting for ssidProfileId from other API call...</span>
+                                    <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.apMacs">Waiting for apMacs from other API call...</span>
+                                    <span class='badge badge-warning' ng-show="endpoint.started && !endpoint.loaded">Loading...</span>
+                                    <span class='badge badge-success' ng-show="endpoint.loaded && endpoint.status == 200">Success</span>
+                                    <span class='badge badge-danger' ng-show="endpoint.loaded && endpoint.status != 200 && endpoint.status != 0">Error - HTTP {{endpoint.status}}</span>
+
+                                </div>
+                                <div>{{ endpoint.description}} </div>
+                                <div>
+                                    <md-button aria-label="details" class="md-raised md-primary" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.loaded || endpoint.status == 0">
+                                        <span translate="button.details"></span>
+                                        <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
+                                        <md-icon class="material-icons" aria-label="details">description</md-icon>
+                                    </md-button>
+                                    <md-button aria-label="refresh" ng-click="generateRequest(endpoint)" style="min-width: 10px;">
+                                        <span hide show-gt-sm translate="button.refresh"></span>
+                                        <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
+                                        <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                                    </md-button>
+                                </div>
+                            </div>
+                            <hr ng-show="!$last">
                         </div>
-                        <div>{{ endpoint.description}} </div>
-                        <div>
-                            <md-button aria-label="details" class="md-raised md-primary" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.loaded || endpoint.status == 0">
-                                <span translate="button.details"></span>
-                                <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
-                                <md-icon class="material-icons" aria-label="details">description</md-icon>
-                            </md-button>
-                            <md-button aria-label="refresh" ng-click="generateRequest(endpoint)" style="min-width: 10px;">
-                                <span hide show-gt-sm translate="button.refresh"></span>
-                                <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
-                                <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
-                            </md-button>
-                        </div>
-                    </div>
-                    <hr ng-show="!$last">
-                    </div>
-                </article>
-            </div>
+
+                    </article>
+                </md-content>
+
+            </section>
         </md-tab>
 
 
@@ -81,69 +105,69 @@
 
                     <div>
                         <div md-whiteframe="1">
-                        <md-toolbar style="min-height: 30px">
-                            <div class="md-toolbar-tools" style="height: 30px">
-                                <h3 style="font-size: 70%; height: 30px" class="md-title">Create Presence Webhook</h3>
-                                <span flex></span>
-                                <span class='badge badge-warning' ng-show="!webhook.register.loaded">Loading...</span>
-                                <span class='badge badge-unknown' ng-show="webhook.register.loaded && webhook.register.status == 0">Not yet started</span>
-                                <span class='badge badge-success' ng-show="webhook.register.loaded && webhook.register.status == 200">Success</span>
-                                <span class='badge badge-danger' ng-show="webhook.register.loaded && webhook.register.status != 200 && webhook.register.status != 0">Error - HTTP {{webhook.register.status}}</span>
-                                <md-button aria-label="details" ng-click="showDetails(webhook.register)" style="min-width: 10px;" ng-disabled="!webhook.register.loaded || webhook.register.status == 0">
-                                    <span hide show-gt-sm translate="button.details"></span>
-                                    <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
-                                    <md-icon class="material-icons" aria-label="details">description</md-icon>
-                                </md-button>
+                            <md-toolbar style="min-height: 30px">
+                                <div class="md-toolbar-tools" style="height: 30px">
+                                    <h3 style="font-size: 70%; height: 30px" class="md-title">Create Presence Webhook</h3>
+                                    <span flex></span>
+                                    <span class='badge badge-warning' ng-show="!webhook.register.loaded">Loading...</span>
+                                    <span class='badge badge-unknown' ng-show="webhook.register.loaded && webhook.register.status == 0">Not yet started</span>
+                                    <span class='badge badge-success' ng-show="webhook.register.loaded && webhook.register.status == 200">Success</span>
+                                    <span class='badge badge-danger' ng-show="webhook.register.loaded && webhook.register.status != 200 && webhook.register.status != 0">Error - HTTP {{webhook.register.status}}</span>
+                                    <md-button aria-label="details" ng-click="showDetails(webhook.register)" style="min-width: 10px;" ng-disabled="!webhook.register.loaded || webhook.register.status == 0">
+                                        <span hide show-gt-sm translate="button.details"></span>
+                                        <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
+                                        <md-icon class="material-icons" aria-label="details">description</md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                            <div layout-padding>
+                                <div> <b>Endpoint: </b><i>{{ webhook.register.endpoint}}</i> </div>
+                                <div> <b>Description: </b>{{ webhook.register.description}} </div>
                             </div>
-                        </md-toolbar>
-                        <div layout-padding>
-                        <div> <b>Endpoint: </b><i>{{ webhook.register.endpoint}}</i> </div>
-                        <div> <b>Description: </b>{{ webhook.register.description}} </div>
-                        </div>
                         </div>
                         <div md-whiteframe="1">
-                         <md-toolbar style="min-height: 30px">
-                            <div class="md-toolbar-tools" style="height: 30px">
-                                <h3 style="font-size: 70%; height: 30px" class="md-title">Remove Presence Webhook</h3>
-                                <span flex></span>
-                                <span class='badge badge-warning' ng-show="!webhook.remove.loaded">Loading...</span>
-                                <span class='badge badge-unknown' ng-show="webhook.remove.loaded && webhook.remove.status == 0">Not yet started</span>
-                                <span class='badge badge-success' ng-show="webhook.remove.loaded && webhook.remove.status == 200">Success</span>
-                                <span class='badge badge-danger' ng-show="webhook.remove.loaded && webhook.remove.status != 200 && webhook.remove.status != 0">Error - HTTP {{webhook.remove.status}}</span>
-                                <md-button aria-label="details" ng-click="showDetails(webhook.remove)" style="min-width: 10px;" ng-disabled="!webhook.remove.loaded || webhook.remove.status == 0">
-                                    <span hide show-gt-sm translate="button.details"></span>
-                                    <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
-                                    <md-icon class="material-icons" aria-label="details">description</md-icon>
-                                </md-button>
+                            <md-toolbar style="min-height: 30px">
+                                <div class="md-toolbar-tools" style="height: 30px">
+                                    <h3 style="font-size: 70%; height: 30px" class="md-title">Remove Presence Webhook</h3>
+                                    <span flex></span>
+                                    <span class='badge badge-warning' ng-show="!webhook.remove.loaded">Loading...</span>
+                                    <span class='badge badge-unknown' ng-show="webhook.remove.loaded && webhook.remove.status == 0">Not yet started</span>
+                                    <span class='badge badge-success' ng-show="webhook.remove.loaded && webhook.remove.status == 200">Success</span>
+                                    <span class='badge badge-danger' ng-show="webhook.remove.loaded && webhook.remove.status != 200 && webhook.remove.status != 0">Error - HTTP {{webhook.remove.status}}</span>
+                                    <md-button aria-label="details" ng-click="showDetails(webhook.remove)" style="min-width: 10px;" ng-disabled="!webhook.remove.loaded || webhook.remove.status == 0">
+                                        <span hide show-gt-sm translate="button.details"></span>
+                                        <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
+                                        <md-icon class="material-icons" aria-label="details">description</md-icon>
+                                    </md-button>
 
+                                </div>
+                            </md-toolbar>
+                            <div layout-padding>
+                                <div> <b>Endpoint: </b><i>{{ webhook.remove.endpoint}}</i> </div>
+                                <div> <b>Description: </b>{{ webhook.remove.description}} </div>
                             </div>
-                        </md-toolbar>
-                        <div layout-padding>
-                        <div> <b>Endpoint: </b><i>{{ webhook.remove.endpoint}}</i> </div>
-                        <div> <b>Description: </b>{{ webhook.remove.description}} </div>
-                        </div>
                         </div>
                         <div md-whiteframe="1">
-                         <md-toolbar style="min-height: 30px">
-                            <div class="md-toolbar-tools" style="height: 30px">
-                                <h3 style="font-size: 70%; height: 30px" class="md-title">Result From Presence Webhook</h3>
-                                <span flex></span>
-                                <span class='badge badge-warning' ng-show="webhook.ready && !webhook.reponse">Waiting for data...</span>
-                                <span class='badge badge-unknown' ng-show="!webhook.ready">Not yet started</span>
-                                <span class='badge badge-success' ng-show="webhook.success==true">Success</span>
-                                <span class='badge badge-danger' ng-show="webhook.success==false">Success</span>
+                            <md-toolbar style="min-height: 30px">
+                                <div class="md-toolbar-tools" style="height: 30px">
+                                    <h3 style="font-size: 70%; height: 30px" class="md-title">Result From Presence Webhook</h3>
+                                    <span flex></span>
+                                    <span class='badge badge-warning' ng-show="webhook.ready && !webhook.reponse">Waiting for data...</span>
+                                    <span class='badge badge-unknown' ng-show="!webhook.ready">Not yet started</span>
+                                    <span class='badge badge-success' ng-show="webhook.success==true">Success</span>
+                                    <span class='badge badge-danger' ng-show="webhook.success==false">Success</span>
+                                </div>
+                            </md-toolbar>
+                            <div layout-padding>
+                                <div ng-show="!webhook.reponse && !webhook.ready" style="text-align: center">Please start the Webhook listener</div>
+                                <div ng-show="!webhook.reponse && webhook.ready" style="text-align: center">
+                                    <div>Waiting for data from the ACS... This can take up to 10min...</div>
+                                    <div>Timeout: <b>{{timeout*1000 | date:'mm:ss'}}</b></div>
+                                </div>
+                                <div ng-show="webhood.success==false" style="text-align=center"></div>
+                                <pre ng-show="webhook.reponse"> {{ webhook.data | json }}</pre>
                             </div>
-                        </md-toolbar>
-                        <div layout-padding>
-                        <div ng-show="!webhook.reponse && !webhook.ready" style="text-align: center">Please start the Webhook listener</div>
-                        <div ng-show="!webhook.reponse && webhook.ready" style="text-align: center">
-                            <div>Waiting for data from the ACS... This can take up to 10min...</div>
-                            <div>Timeout: <b>{{timeout*1000 | date:'mm:ss'}}</b></div>
                         </div>
-                        <div ng-show="webhood.success==false" style="text-align=center"></div>
-                        <pre ng-show="webhook.reponse"> {{ webhook.data | json }}</pre>
-                        </div>
-                    </div>
                     </div>
                 </article>
             </div>

@@ -10,21 +10,31 @@ function checkApi(req, res, next) {
 }
 
 
+function sendError(res, request, err) {
+    var errStatus = 500;
+    if (err.status) errStatus = err.status;
+    res.status(err.status).send({ error: err, request: request });
+}
+function sendSuccess(res, response, request) {
+    res.json({ response: response, request: request });
+}
+function sendReponse(res, err, response, request) {
+        if (err) sendError(res, request, err);
+        else sendSuccess(res, response, request);
+}
 /**
  * CONFIGURATION Location
  */
 router.get("/configuration/apiLocationFolder", checkApi, function (req, res) {
     if (req.query.locationId) {
         API.configuration.locations.location(req.session.xapi, devAccount, req.query.locationId, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(500).send({ error: "locationId has to passed into request query." });
 })
 router.get("/configuration/apiLocationFolders", checkApi, function (req, res, next) {
     API.configuration.locations.locations(req.session.xapi, devAccount, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
+        sendReponse(res, err, response, request);
     })
 })
 /**
@@ -33,39 +43,34 @@ router.get("/configuration/apiLocationFolders", checkApi, function (req, res, ne
 router.get("/configuration/device/ssids", checkApi, function (req, res, next) {
     if (req.query.deviceId) {
         API.configuration.ssids.ssidForDevice(req.session.xapi, devAccount, req.query.deviceId, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(500).send({ error: "deviceId has to passed into request query." });
 })
 router.get("/configuration/ssid/psk", checkApi, function (req, res, next) {
     if (req.query.ssidProfileId) {
         API.configuration.ssids.pskForSsid(req.session.xapi, devAccount, req.query.ssidProfileId, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(500).send({ error: "ssidProfileId has to passed into request query." });
 })
 router.get("/configuration/ssids", checkApi, function (req, res, next) {
     API.configuration.ssids.ssidProfiles(req.session.xapi, devAccount, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
+        sendReponse(res, err, response, request);
     })
 })
 
 router.get("/configuration/ssids/filters", checkApi, function (req, res, next) {
     if (req.query.ssidProfileId) {
         API.configuration.ssidFilters.ssidForDevice(req.session.xapi, devAccount, req.query.ssidProfileId, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(500).send({ error: "ssidProfileId has to passed into request query." });
 })
 
 router.get("/configuration/webhooks", checkApi, function (req, res, next) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
+        sendReponse(res, err, response, request)
     })
 })
 function checkWebhook(req, callback) {
@@ -101,8 +106,7 @@ router.post("/configuration/webhooks", checkApi, function (req, res, next) {
             if (err) {
                 if (err.code == "core.service.data.can.not.persist.object") {
                     checkWebhook(req, function (err2, response2) {
-                        if (err2) res.status(err.status).send(err);
-                        else res.json({ response: response2, request: request });
+                        sendReponse(res, err2, response2, request);                        
                     });
                 } else res.status(err.status).send({ error: err, request: request });
             } else {
@@ -117,8 +121,7 @@ router.delete("/configuration/webhooks", checkApi, function (req, res, next) {
     if (req.session.webhookId) {
         io.sockets.in(req.session.webhookId).emit("message", "test");
         API.configuration.webhooks.remove(req.session.xapi, devAccount, req.session.webhookId, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status("404").send("webhookId not present in session.");
 })
@@ -127,14 +130,12 @@ router.delete("/configuration/webhooks", checkApi, function (req, res, next) {
  */
 router.get("/identity/credentials", checkApi, function (req, res, next) {
     API.identity.credentials.getCredentials(req.session.xapi, devAccount, null, null, null, null, null, null, null, null, null, null, null, null, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
+        sendReponse(res, err, response, request);
     })
 })
 router.get("/identity/userGroups", checkApi, function (req, res, next) {
     API.identity.userGroups.getUserGroups(req.session.xapi, devAccount, null, null, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
+        sendReponse(res, err, response, request);
     })
 })
 
@@ -156,30 +157,26 @@ router.get("/location/clients", checkApi, function (req, res, next) {
 router.get("/monitor/client", checkApi, function (req, res, next) {
     if (req.query.clientId) {
         API.monitor.clients.client(req.session.xapi, devAccount, req.query.clientId, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(500).send({ error: "clientId has to passed into request query." });
 })
 router.get("/monitor/clients", checkApi, function (req, res, next) {
     API.monitor.clients.clients(req.session.xapi, devAccount, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
+        sendReponse(res, err, response, request);
     })
 })
 
 router.get("/monitor/device", checkApi, function (req, res, next) {
     if (req.query.deviceId) {
         API.monitor.devices.device(req.session.xapi, devAccount, req.query.deviceId, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(500).send({ error: "deviceId has to passed into request query." });
 })
 router.get("/monitor/devices", checkApi, function (req, res, next) {
     API.monitor.devices.devices(req.session.xapi, devAccount, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
+        sendReponse(res, err, response, request);
     })
 })
 
@@ -191,8 +188,7 @@ router.get("/presence/clientcount", checkApi, function (req, res, next) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         API.clientlocation.clientcount(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
 })
@@ -202,8 +198,7 @@ router.get("/presence/clientpresence",  checkApi,function (req, res, next) {
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         var timeUnit = "OneHour";
         API.clientlocation.clientpresence(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
 })
@@ -212,8 +207,7 @@ router.get("/presence/clientsessions", checkApi, function (req, res, next) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         API.clientlocation.clientsessions(req.session.xapi, devAccount, req.query.locationId, true, startTime, endTime, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
 })
@@ -223,8 +217,7 @@ router.get("/presence/clienttimeseries",  checkApi,function (req, res, next) {
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         var timeUnit = "OneHour";
         API.clientlocation.clienttimeseries(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
 })
@@ -233,8 +226,7 @@ router.get("/presence/waypoints", checkApi, function (req, res, next) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         API.clientlocation.waypoints(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, function (err, response, request) {
-            if (err) res.status(err.status).send({ error: err, request: request });
-            else res.json({ response: response, request: request });
+            sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
 })

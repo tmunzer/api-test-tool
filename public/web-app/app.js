@@ -52,7 +52,9 @@ att
             .usePostCompiling(true)
             .useSanitizeValueStrategy("escapeParameters");
 
-    });
+    }).run(['$anchorScroll', function ($anchorScroll) {
+        $anchorScroll.yOffset = 150;   // always scroll by 50 extra pixels
+    }]);
 
 
 
@@ -77,6 +79,8 @@ att.controller("HeaderCtrl", function ($scope, $location) {
         if (path === $location.path().toString().split("/")[2]) return true;
         else return false;
     };
+
+
 });
 
 

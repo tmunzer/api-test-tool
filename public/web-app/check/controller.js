@@ -1,9 +1,12 @@
-angular.module('Check').controller("CheckCtrl", function($scope, $mdDialog, endpointService) {
+angular.module('Check').controller("CheckCtrl", function ($scope, $location, $anchorScroll) {
+    $scope.goTo = function (anchor) {
+        $anchorScroll(anchor);
+    };
 });
-angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, endpointService) {
+angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, endpointService) {
     var locationId, deviceId, clientId, ssidProfileId, apMacs;
     var requests = {};
-
+    var initialized = false;
 
     $scope.apiCalls = {
         configurationLocations: {
@@ -333,45 +336,45 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         }
     };
 
-    $scope.apiCallSuccess = function(apiCall) {
+    $scope.apiCallSuccess = function (apiCall) {
         var done = 0;
-        apiCall.endpoints.forEach(function(endpoint) {
+        apiCall.endpoints.forEach(function (endpoint) {
             if (endpoint.response) done++;
         })
         return done;
     }
-    $scope.apiCallError = function(apiCall) {
+    $scope.apiCallError = function (apiCall) {
         var error = 0;
-        apiCall.endpoints.forEach(function(endpoint) {
+        apiCall.endpoints.forEach(function (endpoint) {
             if (endpoint.error) error++;
         })
         return error;
     }
-    $scope.apiCallFinished = function(apiCall) {
+    $scope.apiCallFinished = function (apiCall) {
         var finished = 0;
-        apiCall.endpoints.forEach(function(endpoint) {
+        apiCall.endpoints.forEach(function (endpoint) {
             if (endpoint.loaded) finished++;
         })
-        return apiCall.endpoints.length == finished;
+        return finished;
     }
 
-    $scope.refreshApiCall = function(apiCall) {
-        apiCall.endpoints.forEach(function(endpoint) {
+    $scope.refreshApiCall = function (apiCall) {
+        apiCall.endpoints.forEach(function (endpoint) {
             $scope.generateRequest(endpoint);
         })
-    }    
+    }
 
-    $scope.generateRequest = function(endpoint) {
+    $scope.generateRequest = function (endpoint) {
         if (requests[endpoint.name]) requests[endpoint.name].abort();
         endpoint.loaded = false;
         endpoint.started = true;
         if (endpoint.locationId == true) requests[endpoint.name] = endpointService.locationId(endpoint, locationId);
         else if (endpoint.deviceId == true) requests[endpoint.name] = endpointService.deviceId(endpoint, deviceId);
         else if (endpoint.clientId == true) requests[endpoint.name] = endpointService.clientId(endpoint, clientId);
-        else if (endpoint.ssidProfileId == true) requests[endpoint.name] = endpointService.ssidProfileId(endpoint, ssidProfileId);  
-        else if (endpoint.apMacs == true) requests[endpoint.name] = endpointService.apMacs(endpoint, apMacs);      
+        else if (endpoint.ssidProfileId == true) requests[endpoint.name] = endpointService.ssidProfileId(endpoint, ssidProfileId);
+        else if (endpoint.apMacs == true) requests[endpoint.name] = endpointService.apMacs(endpoint, apMacs);
         else requests[endpoint.name] = endpointService.noId(endpoint);
-        requests[endpoint.name].then(function(promise) {
+        requests[endpoint.name].then(function (promise) {
             if (promise) {
                 endpoint.status = promise.status;
                 endpoint.response = promise.data.response;
@@ -382,19 +385,19 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                 if (endpoint.action == "locationId") setLocationId(endpoint.status, endpoint.response);
                 else if (endpoint.action == "deviceId") setDeviceId(endpoint.status, endpoint.response);
                 else if (endpoint.action == "clientId") setClientId(endpoint.status, endpoint.response);
-                else if (endpoint.action == "ssidProfileId") setSsidProfileId(endpoint.status, endpoint.response); 
-                else if (endpoint.action == "apMacs") setApMacs(endpoint.status, endpoint.response); 
+                else if (endpoint.action == "ssidProfileId") setSsidProfileId(endpoint.status, endpoint.response);
+                else if (endpoint.action == "apMacs") setApMacs(endpoint.status, endpoint.response);
             }
         });
     }
 
 
-    function setLocationId(status, response) {       
+    function setLocationId(status, response) {
         if (status == 200) {
             locationId = response.id;
             for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
-                    if (endpoint.locationId == true) $scope.generateRequest(endpoint);
+                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                    if (endpoint.locationId == true && endpoint.started == false) $scope.generateRequest(endpoint);
                 })
             }
         }
@@ -403,8 +406,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         if (status == 200 && response.length > 0) {
             deviceId = response[0].deviceId;
             for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
-                    if (endpoint.deviceId == true) $scope.generateRequest(endpoint);
+                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                    if (endpoint.deviceId == true && endpoint.started == false) $scope.generateRequest(endpoint);
                 })
             }
         }
@@ -413,8 +416,8 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         if (status == 200 && response.length > 0) {
             clientId = response[0].clientId;
             for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
-                    if (endpoint.clientId == true) $scope.generateRequest(endpoint);
+                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                    if (endpoint.clientId == true && endpoint.started == false) $scope.generateRequest(endpoint);
                 })
             }
         }
@@ -426,10 +429,10 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
                 if (response[i].name != "ssid0") ssidProfileId = response[i].id;
                 else i++;
             }
-            
+
             for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
-                    if (endpoint.ssidProfileId == true) $scope.generateRequest(endpoint);
+                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                    if (endpoint.ssidProfileId == true && endpoint.started == false) $scope.generateRequest(endpoint);
                 })
             }
         }
@@ -438,14 +441,14 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         if (status == 200) {
             apMacs = response.macAddress;
             for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
-                    if (endpoint.apMacs == true) $scope.generateRequest(endpoint);
+                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                    if (endpoint.apMacs == true && endpoint.started == false) $scope.generateRequest(endpoint);
                 })
             }
         }
     }
 
-    $scope.showDetails = function(endpoint) {
+    $scope.showDetails = function (endpoint) {
         $mdDialog.show({
             controller: 'DialogDetailsController',
             templateUrl: 'modals/modalDetailsContent.html',
@@ -455,21 +458,24 @@ angular.module('Check').controller("EndpointCtrl", function($scope, $mdDialog, e
         });
     };
 
-// entry point
-    for (var apiCall in $scope.apiCalls) {
-        $scope.apiCalls[apiCall].endpoints.forEach(function(endpoint) {
-            if (!endpoint.locationId
-                && !endpoint.deviceId
-                && !endpoint.clientId
-                && !endpoint.ssidProfileId
-                && !endpoint.apMacs
-            ) $scope.generateRequest(endpoint);
-        })
-    }    
+    // entry point
+    if (!initialized) {
+        initialized = true;
+        for (var apiCall in $scope.apiCalls) {
+            $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                if (!endpoint.locationId
+                    && !endpoint.deviceId
+                    && !endpoint.clientId
+                    && !endpoint.ssidProfileId
+                    && !endpoint.apMacs
+                ) $scope.generateRequest(endpoint);
+            })
+        }
+    }
 });
 
 
-angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $interval, webhookService, socketio) {
+angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, socketio) {
     var requestWebhook;
     $scope.timeout = 900;
     $scope.format = "mm:ss";
@@ -506,12 +512,12 @@ angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $i
         success: null
     }
 
-    $scope.start = function() {
+    $scope.start = function () {
         if (!$scope.webhook.ready) {
             if (requestWebhook) requestWebhook.abort();
             $scope.webhook.register.loaded = false;
             requestWebhook = webhookService.createWebhook();
-            requestWebhook.then(function(promise) {
+            requestWebhook.then(function (promise) {
                 if (promise) {
                     $scope.webhook.register.status = promise.status;
                     $scope.webhook.register.response = promise.data.response;
@@ -525,7 +531,7 @@ angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $i
                         $scope.webhook.success = null;
                         var wid = $scope.webhook.register.response.id;
                         socketio.emit("webhook", wid);
-                        countdown = $interval(function() {
+                        countdown = $interval(function () {
                             if ($scope.timeout > 0) $scope.timeout--;
                             else $scope.stop();
                         }, 1000);
@@ -534,13 +540,13 @@ angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $i
             });
         }
     }
-    $scope.stop = function() {
+    $scope.stop = function () {
         if ($scope.webhook.ready) {
             $interval.cancel(countdown);
             if (requestWebhook) requestWebhook.abort();
             $scope.webhook.remove.loaded = false;
             requestWebhook = webhookService.deleteWebhook();
-            requestWebhook.then(function(promise) {
+            requestWebhook.then(function (promise) {
                 if (promise) {
                     $scope.webhook.remove.status = promise.status;
                     $scope.webhook.remove.response = promise.data.response;
@@ -554,29 +560,29 @@ angular.module('Check').controller("WebhookCtrl", function($scope, $mdDialog, $i
         }
     }
 
-    $scope.showDetails = function(endpoint) {
+    $scope.showDetails = function (endpoint) {
         $mdDialog.show({
             controller: 'DialogDetailsController',
             templateUrl: 'modals/modalDetailsContent.html',
             locals: {
                 items: endpoint
             }
-        }).then(function() {
+        }).then(function () {
             getClassrooms();
         });
     };
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
         // Make sure that the interval is destroyed too
         $scope.stop();
     });
 
 
-    socketio.on('data', function(obj) {
+    socketio.on('data', function (obj) {
         webhook.reponse = obj;
 
     });
-    socketio.on('message', function(data) {
+    socketio.on('message', function (data) {
         console.log('Incoming message:', data);
     });
 });

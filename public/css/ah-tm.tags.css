@@ -9,10 +9,6 @@
     }
 }
 
-md-sidenav {
-    min-width: 250px;
-    max-width: 250px;
-}
 
 .clearfix {
     margin-top: 10px;
@@ -105,16 +101,6 @@ h3, .h3 {
 .header .md-button:hover {
     border: none;
     background-color: transparent;
-}
-
-@media (min-width: 1280px) {
-    md-sidenav {
-        margin-top: -145px;
-    }
-}
-
-md-sidenav {
-    padding-top: 70px;
 }
 
 input.search-tool {
