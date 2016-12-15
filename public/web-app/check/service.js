@@ -128,16 +128,26 @@ angular.module('Check').factory("webhookService", function ($http, $q) {
         return httpRequest(request);
     }
 
-    function deleteWebhook() {
+    function deleteWebhook(webhookId) {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/configuration/webhooks/",
             method: "DELETE",
+            params: {webhookId: webhookId},
             timeout: canceller.promise
         });
         return httpRequest(request);
     }
 
+    function getCurrent() {
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/configuration/webhooks/",
+            method: "GET",
+            timeout: canceller.promise
+        });
+        return httpRequest(request);
+    }    
 
     function httpRequest(request) {
         var promise = request.then(
@@ -166,6 +176,7 @@ angular.module('Check').factory("webhookService", function ($http, $q) {
 
     return {
         createWebhook: createWebhook,
-        deleteWebhook: deleteWebhook
+        deleteWebhook: deleteWebhook,
+        getCurrent: getCurrent
     }
 });

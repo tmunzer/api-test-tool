@@ -15,7 +15,7 @@
     "ngSanitize": "^0.0.2",
     "angular-material": "^1.0.8",
     "angular-messages": "~1.5.5",
-    "angular-material-data-table": "^0.10.9",
+    "angular-material-data-table": "^0.10.10",
     "jquery": "^2.2.3",
     "bootstrap": "^3.3.6",
     "material-design-icons": "^2.2.3",

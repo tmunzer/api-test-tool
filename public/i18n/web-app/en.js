@@ -20,6 +20,7 @@ var en = {
         search: "Search",
         refresh: "Refresh",
         refreshAll: "Refresh All",
+        delete: "Delete",
         reset: "Reset",
         cancel: "Cancel",
         yes: "Yes",

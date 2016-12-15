@@ -134,13 +134,19 @@ router.post("/configuration/webhooks", checkApi, function (req, res, next) {
     } else res.status("404").send("ownerId not present in session.");
 })
 router.delete("/configuration/webhooks", checkApi, function (req, res, next) {
-    if (req.session.webhookId) {
+    var webhookId;
+    if (req.query.webhookId) webhookId = req.query.webhookId;
+    else if (req.session.webhookId) {
+        webhookId = req.session.webhookId;
         io.sockets.in(req.session.webhookId).emit("message", "test");
-        API.configuration.webhooks.remove(req.session.xapi, devAccount, req.session.webhookId, function (err, response, request) {
+    }
+    if (webhookId) {   
+        API.configuration.webhooks.remove(req.session.xapi, devAccount, webhookId, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
     } else res.status("404").send("webhookId not present in session.");
 })
+
 /**
  * IDENTITY
  */

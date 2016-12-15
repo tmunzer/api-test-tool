@@ -86,6 +86,6 @@ module.exports.create = function (xapi, devAccount, subscription, callback) {
  * @param {String} subscriptionId - The subscription parameters
  *  */
 module.exports.remove = function (xapi, devAccount, subscriptionId, callback) {
-    var path = "/xapi/beta/configuration/webhooks/" + subscriptionId;
+    var path = "/xapi/beta/configuration/webhooks/" + subscriptionId + "/?ownerId=" + xapi.ownerId;
     api.DELETE(xapi, devAccount, path, callback);
 };

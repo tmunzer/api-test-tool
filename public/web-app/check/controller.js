@@ -129,7 +129,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     loaded: false,
                     action: "eventType"
                 },
-                 { 
+                {
                     name: "configuration/webhooks/messageTypes",
                     method: "GET",
                     endpoint: "/beta/configuration/webhooks/messageTypes{?ownerId,eventType}",
@@ -143,7 +143,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     loaded: false,
                     eventType: true
                 },
-                 {
+                {
                     name: "configuration/webhooks",
                     method: "GET",
                     endpoint: "/beta/configuration/webhooks{?ownerId}",
@@ -155,7 +155,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     error: null,
                     started: false,
                     loaded: false
-                } 
+                }
             ]
         },
         identityCredentials: {
@@ -401,7 +401,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         else if (endpoint.clientId == true) requests[endpoint.name] = endpointService.clientId(endpoint, clientId);
         else if (endpoint.ssidProfileId == true) requests[endpoint.name] = endpointService.ssidProfileId(endpoint, ssidProfileId);
         else if (endpoint.apMacs == true) requests[endpoint.name] = endpointService.apMacs(endpoint, apMacs);
-        else if (endpoint.eventType == true) requests[endpoint.name] = endpointService.eventType(endpoint, eventType);    
+        else if (endpoint.eventType == true) requests[endpoint.name] = endpointService.eventType(endpoint, eventType);
         else requests[endpoint.name] = endpointService.noId(endpoint);
         requests[endpoint.name].then(function (promise) {
             if (promise) {
@@ -517,6 +517,42 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
 
 angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, socketio) {
     var requestWebhook;
+
+    $scope.requestCurrentWebhook = undefined;
+    $scope.selectedCurrentWebhooks = [];
+    $scope.currentWebhooks = undefined;
+    $scope.query = {
+        order: 'application',
+        limit: 5,
+        page: 1
+    };
+
+    function success(desserts) {
+        $scope.desserts = desserts;
+    }
+
+    $scope.getCurrentWebhooks = function () {
+        if ($scope.requestCurrentWebhook) $scope.requestCurrentWebhook.abort();
+        $scope.requestCurrentWebhook = webhookService.getCurrent();
+        $scope.requestCurrentWebhook.then(function (promise) {
+            if (promise && promise.error) apiWarning(promise.error);
+            else $scope.currentWebhooks = promise.data.response;
+        });
+    };
+
+    $scope.deleteCurrentWebhooks = function () {
+        $scope.selectedCurrentWebhooks.forEach(function (toDelete) {
+            var request = webhookService.deleteWebhook(toDelete);
+            request.then(function (promise) {
+                if (promise) {
+                    $scope.getCurrentWebhooks();
+                }
+            });
+        })
+    }
+
+    if ($scope.currentWebhooks == undefined) $scope.getCurrentWebhooks();
+
     $scope.timeout = 900;
     $scope.format = "mm:ss";
     var countdown;
@@ -581,23 +617,23 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
         }
     }
     $scope.stop = function () {
-        if ($scope.webhook.ready) {
-            $interval.cancel(countdown);
-            if (requestWebhook) requestWebhook.abort();
-            $scope.webhook.remove.loaded = false;
-            requestWebhook = webhookService.deleteWebhook();
-            requestWebhook.then(function (promise) {
-                if (promise) {
-                    $scope.webhook.remove.status = promise.status;
-                    $scope.webhook.remove.response = promise.data.response;
-                    $scope.webhook.remove.request = promise.data.request;
-                    $scope.webhook.remove.error = promise.data.error;
-                    $scope.webhook.remove.body = promise.data.body;
-                    $scope.webhook.remove.loaded = true;
-                    if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
-                }
-            });
-        }
+        //if ($scope.webhook.ready) {
+        $interval.cancel(countdown);
+        if (requestWebhook) requestWebhook.abort();
+        $scope.webhook.remove.loaded = false;
+        requestWebhook = webhookService.deleteWebhook();
+        requestWebhook.then(function (promise) {
+            if (promise) {
+                $scope.webhook.remove.status = promise.status;
+                $scope.webhook.remove.response = promise.data.response;
+                $scope.webhook.remove.request = promise.data.request;
+                $scope.webhook.remove.error = promise.data.error;
+                $scope.webhook.remove.body = promise.data.body;
+                $scope.webhook.remove.loaded = true;
+                if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
+            }
+        });
+        //}
     }
 
     $scope.showDetails = function (endpoint) {

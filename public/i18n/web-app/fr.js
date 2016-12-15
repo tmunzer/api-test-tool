@@ -20,6 +20,7 @@ var fr = {
         search: "Rechercher",
         refresh: "Rafraichir",
         refreshAll: "Tout Rafraichir",
+        delete: "Supprimer",
         reset: "Réinitialiser",
         cancel: "Annuler",
         yes: "Oui",
