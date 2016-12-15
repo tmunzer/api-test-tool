@@ -84,6 +84,22 @@
         <md-tab label="Webhooks" ng-disabled="true">
             <div ng-controller="WebhookCtrl">
                 <article md-whiteframe="2">
+                        <md-toolbar style="min-height: 50px">
+                            <div class="md-toolbar-tools" style="height: 50px">
+                                <h2 class="md-title">Register a new webhook </h2>
+                                <span flex></span>
+
+
+                                <md-button aria-label="refresh" ng-click="refreshApiCall(apiCall)" style="min-width: 10px;">
+                                    <span hide show-gt-sm translate="button.refreshAll"></span>
+                                    <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible"> {{"button.refreshAll" | translate}}</md-tooltip>
+                                    <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                                </md-button>
+                            </div>
+
+                        </md-toolbar>
+                        <div ng-repeat="endpoint in apiCall.endpoints">
+                <article md-whiteframe="2">
                     <md-toolbar style="min-height: 50px">
                         <div class="md-toolbar-tools" style="height: 50px">
                             <h2 class="md-title">Presence Webhook</h2>

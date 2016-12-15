@@ -67,7 +67,23 @@ router.get("/configuration/ssids/filters", checkApi, function (req, res, next) {
         })
     } else res.status(500).send({ error: "ssidProfileId has to passed into request query." });
 })
+/**
+ * CONFIGURATION webhooks
+ */
 
+router.get("/configuration/webhooks/eventTypes", checkApi, function (req, res, next) {
+    API.configuration.webhooks.eventTypes(req.session.xapi, devAccount, function (err, response, request) {
+        sendReponse(res, err, response, request)
+    })
+})
+router.get("/configuration/webhooks/messageTypes", checkApi, function (req, res, next) {
+
+    if (req.query.eventType) {
+    API.configuration.webhooks.messageTypes(req.session.xapi, devAccount, req.query.eventType, function (err, response, request) {
+        sendReponse(res, err, response, request)
+    })
+    } else res.status(500).send({ error: "eventType has to passed into request query." });    
+})
 router.get("/configuration/webhooks", checkApi, function (req, res, next) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
         sendReponse(res, err, response, request)
@@ -187,7 +203,7 @@ router.get("/presence/clientcount", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
-        API.clientlocation.clientcount(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, function (err, response, request) {
+        API.presence.clientlocation.clientcount(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
@@ -197,7 +213,7 @@ router.get("/presence/clientpresence",  checkApi,function (req, res, next) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         var timeUnit = "OneHour";
-        API.clientlocation.clientpresence(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
+        API.presence.clientlocation.clientpresence(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
@@ -206,7 +222,7 @@ router.get("/presence/clientsessions", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
-        API.clientlocation.clientsessions(req.session.xapi, devAccount, req.query.locationId, true, startTime, endTime, function (err, response, request) {
+        API.presence.clientlocation.clientsessions(req.session.xapi, devAccount, req.query.locationId, true, startTime, endTime, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
@@ -216,7 +232,7 @@ router.get("/presence/clienttimeseries",  checkApi,function (req, res, next) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
         var timeUnit = "OneHour";
-        API.clientlocation.clienttimeseries(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
+        API.presence.clientlocation.clienttimeseries(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");
@@ -225,7 +241,7 @@ router.get("/presence/waypoints", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
-        API.clientlocation.waypoints(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, function (err, response, request) {
+        API.presence.clientlocation.waypoints(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
     } else res.status(401).send("Error: no locationId");

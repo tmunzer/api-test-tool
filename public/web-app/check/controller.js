@@ -4,7 +4,7 @@ angular.module('Check').controller("CheckCtrl", function ($scope, $location, $an
     };
 });
 angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, endpointService) {
-    var locationId, deviceId, clientId, ssidProfileId, apMacs;
+    var locationId, deviceId, clientId, ssidProfileId, apMacs, eventType;
     var requests = {};
     var initialized = false;
 
@@ -116,6 +116,34 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             name: "Configuration Endpoints for Webhook Subscriptions",
             endpoints: [
                 {
+                    name: "configuration/webhooks/eventTypes",
+                    method: "GET",
+                    endpoint: "/beta/configuration/webhooks/eventTypes{?ownerId}",
+                    description: "rovides a list of all supported Event Types available for subscription.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    started: false,
+                    loaded: false,
+                    action: "eventType"
+                },
+                 { 
+                    name: "configuration/webhooks/messageTypes",
+                    method: "GET",
+                    endpoint: "/beta/configuration/webhooks/messageTypes{?ownerId,eventType}",
+                    description: "Provides a list of all supported Message Types for the specified Event Type.",
+                    status: 0,
+                    request: null,
+                    body: {},
+                    reponse: null,
+                    error: null,
+                    started: false,
+                    loaded: false,
+                    eventType: true
+                },
+                 {
                     name: "configuration/webhooks",
                     method: "GET",
                     endpoint: "/beta/configuration/webhooks{?ownerId}",
@@ -127,7 +155,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     error: null,
                     started: false,
                     loaded: false
-                }
+                } 
             ]
         },
         identityCredentials: {
@@ -373,6 +401,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         else if (endpoint.clientId == true) requests[endpoint.name] = endpointService.clientId(endpoint, clientId);
         else if (endpoint.ssidProfileId == true) requests[endpoint.name] = endpointService.ssidProfileId(endpoint, ssidProfileId);
         else if (endpoint.apMacs == true) requests[endpoint.name] = endpointService.apMacs(endpoint, apMacs);
+        else if (endpoint.eventType == true) requests[endpoint.name] = endpointService.eventType(endpoint, eventType);    
         else requests[endpoint.name] = endpointService.noId(endpoint);
         requests[endpoint.name].then(function (promise) {
             if (promise) {
@@ -387,6 +416,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                 else if (endpoint.action == "clientId") setClientId(endpoint.status, endpoint.response);
                 else if (endpoint.action == "ssidProfileId") setSsidProfileId(endpoint.status, endpoint.response);
                 else if (endpoint.action == "apMacs") setApMacs(endpoint.status, endpoint.response);
+                else if (endpoint.action == "eventType") setEventType(endpoint.status, endpoint.response);
             }
         });
     }
@@ -447,7 +477,16 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
             }
         }
     }
-
+    function setEventType(status, response) {
+        if (status == 200) {
+            eventType = response[0];
+            for (var apiCall in $scope.apiCalls) {
+                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                    if (endpoint.eventType == true && endpoint.started == false) $scope.generateRequest(endpoint);
+                })
+            }
+        }
+    }
     $scope.showDetails = function (endpoint) {
         $mdDialog.show({
             controller: 'DialogDetailsController',
@@ -468,6 +507,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     && !endpoint.clientId
                     && !endpoint.ssidProfileId
                     && !endpoint.apMacs
+                    && !endpoint.eventType
                 ) $scope.generateRequest(endpoint);
             })
         }

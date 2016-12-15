@@ -9,7 +9,7 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
         });
         return httpRequest(request);
     }
-    function locationId(endpoint, locationId) {        
+    function locationId(endpoint, locationId) {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/" + endpoint.name,
@@ -49,12 +49,22 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
         });
         return httpRequest(request);
     }
-        function apMacs(endpoint, apMacs) {
+    function apMacs(endpoint, apMacs) {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/" + endpoint.name,
             method: endpoint.method,
             params: { 'apMacs': apMacs },
+            timeout: canceller.promise
+        });
+        return httpRequest(request);
+    }
+    function eventType(endpoint, eventType) {
+        var canceller = $q.defer();
+        var request = $http({
+            url: "/api/" + endpoint.name,
+            method: endpoint.method,
+            params: { 'eventType': eventType },
             timeout: canceller.promise
         });
         return httpRequest(request);
@@ -100,7 +110,8 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
         deviceId: deviceId,
         clientId: clientId,
         ssidProfileId: ssidProfileId,
-        apMacs: apMacs
+        apMacs: apMacs,
+        eventType: eventType
     }
 });
 
