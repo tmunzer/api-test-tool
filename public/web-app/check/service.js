@@ -117,12 +117,12 @@ angular.module('Check').factory("endpointService", function ($http, $q) {
 
 angular.module('Check').factory("webhookService", function ($http, $q) {
 
-
-    function createWebhook() {
+    function createWebhook(webhook) {
         var canceller = $q.defer();
         var request = $http({
             url: "/api/configuration/webhooks/",
             method: "POST",
+            data: { webhook: webhook },
             timeout: canceller.promise
         });
         return httpRequest(request);
@@ -133,7 +133,7 @@ angular.module('Check').factory("webhookService", function ($http, $q) {
         var request = $http({
             url: "/api/configuration/webhooks/",
             method: "DELETE",
-            params: {webhookId: webhookId},
+            params: { webhookId: webhookId },
             timeout: canceller.promise
         });
         return httpRequest(request);
@@ -147,7 +147,7 @@ angular.module('Check').factory("webhookService", function ($http, $q) {
             timeout: canceller.promise
         });
         return httpRequest(request);
-    }    
+    }
 
     function httpRequest(request) {
         var promise = request.then(
@@ -177,6 +177,6 @@ angular.module('Check').factory("webhookService", function ($http, $q) {
     return {
         createWebhook: createWebhook,
         deleteWebhook: deleteWebhook,
-        getCurrent: getCurrent
+        getCurrent: getCurrent,
     }
 });

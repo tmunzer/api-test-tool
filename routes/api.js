@@ -111,13 +111,23 @@ function checkWebhook(req, callback) {
     })
 }
 router.post("/configuration/webhooks", checkApi, function (req, res, next) {
-    if (req.session.xapi.ownerId) {
-        var subscription = {
-            "application": "ApiTestTool",
-            "ownerId": req.session.xapi.ownerId,
+    var subscription;
+    if (req.body.webhook) subscription = {
+            "application": req.body.webhook.application,
+            "secret": req.body.webhook.secret,
+            "url": req.body.webhook.url,
+            "eventType": req.body.webhook.eventType,
+            "messageType": req.body.webhook.messageType
+    }
+    else subscription = {
+            "application": "ApiTestTool",            
             "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
-            "url": "https://check.ah-lab.fr/webhook/presence"
+            "url": "https://check.ah-lab.fr/webhook/presence",
+            "eventType": "LOCATION",
+            "messageType": "LOCATION_CLIENT_CENTRIC"
         }
+    if (req.session.xapi.ownerId) {
+        subscription.ownerId = req.session.xapi.ownerId;
         API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, response, request) {
             if (err) {
                 if (err.code == "core.service.data.can.not.persist.object") {

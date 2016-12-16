@@ -508,16 +508,17 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     && !endpoint.ssidProfileId
                     && !endpoint.apMacs
                     && !endpoint.eventType
-                ) $scope.generateRequest(endpoint);
+                ) a=1//$scope.generateRequest(endpoint);
             })
         }
     }
 });
 
 
-angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, socketio) {
+angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, endpointService, socketio) {
     var requestWebhook;
 
+    // Registered webhooks    
     $scope.requestCurrentWebhook = undefined;
     $scope.selectedCurrentWebhooks = [];
     $scope.currentWebhooks = undefined;
@@ -551,7 +552,69 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
         })
     }
 
+    // register new webhook
+    $scope.eventTypes = undefined;
+    $scope.messageTypes = ["Please select an \"Event Type\" first."];
+
+    $scope.webhook = {
+        application: "",
+        secret: "",
+        url: "",
+        eventType: undefined,
+        messageType: undefined
+    }
+
+    function getEventTypes() {
+        var request = endpointService.noId({ name: "configuration/webhooks/eventTypes", method: "GET" })
+        request.then(function (promise) {
+            if (promise && promise.err) alert(promise.err);
+            else $scope.eventTypes = promise.data.response;
+        })
+    }
+
+    $scope.$watch("webhook.eventType", function () {
+        if ($scope.webhook.eventType != undefined) {
+            var request = endpointService.eventType({ name: "configuration/webhooks/messageTypes", method: "GET" }, $scope.webhook.eventType)
+            request.then(function (promise) {
+                if (promise && promise.err) alert(promise.err);
+                else $scope.messageTypes = promise.data.response;
+            })
+        }
+    })
+
+    $scope.validateWebhook = function () {
+        if ($scope.webhook.application == "") return false;
+        else if ($scope.webhook.secret == "") return false;    
+        else if ($scope.webhook.url == "") return false;    
+        else if ($scope.webhook.eventType == undefined) return false;
+        else if ($scope.webhook.messageType == undefined || $scope.webhook.messageType == "Please select an \"Event Type\" first.") return false;
+        else return true;
+    }
+
+    $scope.saveWebhook = function () {
+        var request = webhookService.createWebhook($scope.webhook);
+        request.then(function (promise) {
+            if (promise && promise.err) alert(err);
+            else {
+                alert("done");
+                $scope.getCurrentWebhooks();
+                $scope.webhook = {
+                    application: "",
+                    secret: "",
+                    eventType: undefined,
+                    messageType: undefined
+                }
+            }
+        })
+    }
+
+    // ENTRY Point
     if ($scope.currentWebhooks == undefined) $scope.getCurrentWebhooks();
+    if ($scope.eventTypes == undefined) getEventTypes();
+
+
+    // webhook test
+
 
     $scope.timeout = 900;
     $scope.format = "mm:ss";
@@ -661,4 +724,6 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
     socketio.on('message', function (data) {
         console.log('Incoming message:', data);
     });
+
+
 });

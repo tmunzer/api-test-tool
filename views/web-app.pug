@@ -41,11 +41,11 @@ html
         script(src="/web-app/ng-sanitize.js")
         script(src="/bower_components/ng-csv/build/ng-csv.min.js")
 
-    body(ng-app="att" style="height: 100%;overflow: hidden;").icons-docs
+    body(ng-app="att" layout-fill).icons-docs
 
-        header.md-page-header(ng-controller="HeaderCtrl")
-            div.header
-            md-toolbar.header.fixed(layout='row')
+        header(ng-controller="HeaderCtrl")
+            div
+            md-toolbar(layout='row')
 
                 h1.logo.md-toolbar-tools
                     img(src="/images/logo_nav.png" alt="Aerohive")
@@ -82,5 +82,5 @@ html
 
 
         
-        ng-view
+        ng-view(layout-fill)
 
