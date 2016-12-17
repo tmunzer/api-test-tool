@@ -15,9 +15,9 @@ var att = angular.module("att", [
 ]);
 
 att
-    //.factory('socketio', function (socketFactory) {
-    //    return socketFactory();
-    //})
+    .factory('socketio', function (socketFactory) {
+        return socketFactory();
+    })
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette("blue", {
