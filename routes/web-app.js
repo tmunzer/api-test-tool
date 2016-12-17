@@ -20,8 +20,8 @@ function createSocket(req, res, next) {
 /*================================================================
  ENTRYU POINT
  ================================================================*/
-//router.get('/', createSocket, function (req, res) {
-router.get('/', function (req, res) {
+router.get('/', createSocket, function (req, res) {
+//router.get('/', function (req, res) {
     if (req.session.xapi) {
         res.render('web-app', {
             title: 'API Test Tool',
