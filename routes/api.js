@@ -19,7 +19,6 @@ function sendSuccess(res, response, request) {
     res.json({ response: response, request: request });
 }
 function sendReponse(res, err, response, request) {
-    console.log(response);
     if (err) sendError(res, request, err);
     else sendSuccess(res, response, request);
 }
