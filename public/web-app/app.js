@@ -15,9 +15,9 @@ var att = angular.module("att", [
 ]);
 
 att
-    .factory('socketio', function (socketFactory) {
-        return socketFactory();
-    })
+    //.factory('socketio', function (socketFactory) {
+    //    return socketFactory();
+    //})
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette("blue", {
@@ -26,7 +26,8 @@ att
             .accentPalette('green', {
                 'default': '400' // by default use shade 400 from the pink palette for primary intentions
             });
-    }).config(['$httpProvider', function ($httpProvider) {
+    })
+    .config(['$httpProvider', function ($httpProvider) {
         //initialize get if not there
         if (!$httpProvider.defaults.headers.get) {
             $httpProvider.defaults.headers.get = {};
@@ -40,7 +41,8 @@ att
         // extra
         $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
         $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
-    }]).config(function ($translateProvider) {
+    }])
+    .config(function ($translateProvider) {
         $translateProvider.useMissingTranslationHandlerLog();
         $translateProvider
             .translations('en', en)
@@ -52,7 +54,8 @@ att
             .usePostCompiling(true)
             .useSanitizeValueStrategy("escapeParameters");
 
-    }).run(['$anchorScroll', function ($anchorScroll) {
+    }
+    ).run(['$anchorScroll', function ($anchorScroll) {
         $anchorScroll.yOffset = 150;   // always scroll by 50 extra pixels
     }]);
 
