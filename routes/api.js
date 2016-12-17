@@ -228,7 +228,7 @@ router.get("/presence/clientcount", checkApi, function (req, res, next) {
 router.get("/presence/clientpresence", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
-        var startTime = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString();
+        var startTime = new Date(new Date().setHours(new Date().getHours() - 2)).toISOString();
         var timeUnit = "OneHour";
         API.presence.clientlocation.clientpresence(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
             sendReponse(res, err, response, request);
@@ -238,7 +238,7 @@ router.get("/presence/clientpresence", checkApi, function (req, res, next) {
 router.get("/presence/clientsessions", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
-        var startTime = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString();
+        var startTime = new Date(new Date().setHours(new Date().getHours() - 2)).toISOString();
         API.presence.clientlocation.clientsessions(req.session.xapi, devAccount, req.query.locationId, true, startTime, endTime, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
@@ -247,7 +247,7 @@ router.get("/presence/clientsessions", checkApi, function (req, res, next) {
 router.get("/presence/clienttimeseries", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
-        var startTime = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString();
+        var startTime = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString();
         var timeUnit = "OneHour";
         API.presence.clientlocation.clienttimeseries(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, timeUnit, function (err, response, request) {
             sendReponse(res, err, response, request);
@@ -257,7 +257,7 @@ router.get("/presence/clienttimeseries", checkApi, function (req, res, next) {
 router.get("/presence/waypoints", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
-        var startTime = new Date(new Date().setDate(new Date().getDate() - 2)).toISOString();
+        var startTime = new Date(new Date().setHours(new Date().getHours() - 2)).toISOString();
         API.presence.clientlocation.waypoints(req.session.xapi, devAccount, req.query.locationId, startTime, endTime, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
