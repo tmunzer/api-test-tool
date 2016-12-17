@@ -19,8 +19,9 @@ function sendSuccess(res, response, request) {
     res.json({ response: response, request: request });
 }
 function sendReponse(res, err, response, request) {
-        if (err) sendError(res, request, err);
-        else sendSuccess(res, response, request);
+    console.log(response);
+    if (err) sendError(res, request, err);
+    else sendSuccess(res, response, request);
 }
 /**
  * CONFIGURATION Location
@@ -79,10 +80,10 @@ router.get("/configuration/webhooks/eventTypes", checkApi, function (req, res, n
 router.get("/configuration/webhooks/messageTypes", checkApi, function (req, res, next) {
 
     if (req.query.eventType) {
-    API.configuration.webhooks.messageTypes(req.session.xapi, devAccount, req.query.eventType, function (err, response, request) {
-        sendReponse(res, err, response, request)
-    })
-    } else res.status(500).send({ error: "eventType has to passed into request query." });    
+        API.configuration.webhooks.messageTypes(req.session.xapi, devAccount, req.query.eventType, function (err, response, request) {
+            sendReponse(res, err, response, request)
+        })
+    } else res.status(500).send({ error: "eventType has to passed into request query." });
 })
 router.get("/configuration/webhooks", checkApi, function (req, res, next) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
@@ -113,26 +114,26 @@ function checkWebhook(req, callback) {
 router.post("/configuration/webhooks", checkApi, function (req, res, next) {
     var subscription;
     if (req.body.webhook) subscription = {
-            "application": req.body.webhook.application,
-            "secret": req.body.webhook.secret,
-            "url": req.body.webhook.url,
-            "eventType": req.body.webhook.eventType,
-            "messageType": req.body.webhook.messageType
+        "application": req.body.webhook.application,
+        "secret": req.body.webhook.secret,
+        "url": req.body.webhook.url,
+        "eventType": req.body.webhook.eventType,
+        "messageType": req.body.webhook.messageType
     }
     else subscription = {
-            "application": "ApiTestTool",            
-            "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
-            "url": "https://check.ah-lab.fr/webhook/presence",
-            "eventType": "LOCATION",
-            "messageType": "LOCATION_CLIENT_CENTRIC"
-        }
+        "application": "ApiTestTool",
+        "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
+        "url": "https://check.ah-lab.fr/webhook/presence",
+        "eventType": "LOCATION",
+        "messageType": "LOCATION_CLIENT_CENTRIC"
+    }
     if (req.session.xapi.ownerId) {
         subscription.ownerId = req.session.xapi.ownerId;
         API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, response, request) {
             if (err) {
                 if (err.code == "core.service.data.can.not.persist.object") {
                     checkWebhook(req, function (err2, response2) {
-                        sendReponse(res, err2, response2, request);                        
+                        sendReponse(res, err2, response2, request);
                     });
                 } else res.status(err.status).send({ error: err, request: request });
             } else {
@@ -150,7 +151,7 @@ router.delete("/configuration/webhooks", checkApi, function (req, res, next) {
         webhookId = req.session.webhookId;
         io.sockets.in(req.session.webhookId).emit("message", "test");
     }
-    if (webhookId) {   
+    if (webhookId) {
         API.configuration.webhooks.remove(req.session.xapi, devAccount, webhookId, function (err, response, request) {
             sendReponse(res, err, response, request);
         })
@@ -176,10 +177,10 @@ router.get("/identity/userGroups", checkApi, function (req, res, next) {
  */
 router.get("/location/clients", checkApi, function (req, res, next) {
     if (req.query.apMacs) {
-    API.location.clients(req.session.xapi, devAccount, req.query.apMacs, function (err, response, request) {
-        if (err) res.status(err.status).send({ error: err, request: request });
-        else res.json({ response: response, request: request });
-    })
+        API.location.clients(req.session.xapi, devAccount, req.query.apMacs, function (err, response, request) {
+            if (err) res.status(err.status).send({ error: err, request: request });
+            else res.json({ response: response, request: request });
+        })
     } else res.status(500).send({ error: "apMacs has to passed into request query." });
 })
 
@@ -224,7 +225,7 @@ router.get("/presence/clientcount", checkApi, function (req, res, next) {
         })
     } else res.status(401).send("Error: no locationId");
 })
-router.get("/presence/clientpresence",  checkApi,function (req, res, next) {
+router.get("/presence/clientpresence", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
@@ -243,7 +244,7 @@ router.get("/presence/clientsessions", checkApi, function (req, res, next) {
         })
     } else res.status(401).send("Error: no locationId");
 })
-router.get("/presence/clienttimeseries",  checkApi,function (req, res, next) {
+router.get("/presence/clienttimeseries", checkApi, function (req, res, next) {
     if (req.query.locationId) {
         var endTime = new Date().toISOString();
         var startTime = new Date(new Date().setDate(new Date().getDate() - 7)).toISOString();
