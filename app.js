@@ -3,6 +3,7 @@ var path = require('path');
 global.appRoot = path.resolve(__dirname);
 
 var express = require('express');
+var morgan = require('morgan')
 var parseurl = require('parseurl');
 //var session = require('express-session');
 var favicon = require('serve-favicon');
@@ -16,9 +17,9 @@ var bodyParser = require('body-parser');
 
 var events = require('events');
 global.eventEmitter = new events.EventEmitter();
-var morgan = require('morgan')
 
 var app = express();
+app.use(morgan('combined'))
 
 global.session = require("express-session")({
   secret: 'Aerohive Identity Ref APP Secret',
