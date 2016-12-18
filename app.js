@@ -16,7 +16,7 @@ var bodyParser = require('body-parser');
 
 var events = require('events');
 global.eventEmitter = new events.EventEmitter();
-
+var morgan = require('morgan')
 
 var app = express();
 
