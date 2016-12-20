@@ -4,7 +4,7 @@
         <md-tab>
             <md-tab-label>Endpoints</md-tab-label>
 
-            <md-tab-body layout="column" flex="100">
+            <md-tab-body layout="column">
                 <section layout="row" ng-controller="EndpointCtrl">
                     <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="4">
                         <md-toolbar>
@@ -28,7 +28,7 @@
 
 
                     <md-content flex layout="column">
-
+                        <div>
                         <article md-whiteframe="2" ng-repeat="apiCall in apiCalls" id="{{apiCall.key}}">
                             <md-toolbar style="min-height: 50px">
                                 <div class="md-toolbar-tools" style="height: 50px">
@@ -70,6 +70,7 @@
                                 <hr ng-show="!$last">
                             </div>
                         </article>
+                        </div>
                     </md-content>
 
                 </section>
