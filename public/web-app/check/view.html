@@ -61,7 +61,7 @@
                                             <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
                                             <md-icon class="material-icons" aria-label="details">description</md-icon>
                                         </md-button>
-                                        <md-button aria-label="refresh" ng-click="generateRequest(endpoint)" style="min-width: 10px;">
+                                        <md-button aria-label="refresh" ng-click="generateRequest(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.loaded">
                                             <span hide show-gt-sm translate="button.refresh"></span>
                                             <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
                                             <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
