@@ -664,6 +664,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
                     $scope.webhook.register.error = promise.data.error;
                     $scope.webhook.register.body = promise.data.body;
                     $scope.webhook.register.loaded = true;
+                    $scope.getCurrentWebhooks();
                     if ($scope.webhook.register.status == 200) {
                         $scope.webhook.ready = true;
                         $scope.webhook.response = null;
