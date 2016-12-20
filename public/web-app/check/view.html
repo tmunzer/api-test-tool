@@ -10,10 +10,9 @@
                         <md-toolbar>
                             <h1 class="md-toolbar-tools">Endpoint Categories</h1>
                         </md-toolbar>
-                        <md-content layout-padding layout="column" style="padding: 0;">
-                            <div layout="row" ng-repeat="apiCall in apiCalls" layout="column" style="padding:0;">
-                                <md-button style="margin:0;width: 100%;" ng-click="goTo(apiCall.key)">
-                                    <div  layout="row">
+                        <md-content layout-padding layout="column" style="padding: 0;">                            
+                            <md-button style="margin:0;width: 100%;" ng-click="goTo(apiCall.key)" ng-repeat="apiCall in apiCalls">
+                                <div layout="row" style="padding:0;">
                                     <span style="font-size:0.8em;">{{apiCall.key}}</span>
                                     <span flex></span>
                                     <span layout="row">
@@ -22,9 +21,8 @@
                                         <md-progress-circular md-diameter="20px" style="margin:auto;" class='md-warn' md-mode="determinate" value="{{(apiCallError(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
                                         <md-tooltip md-visible="tooltipVisible">Done: {{apiCallFinished(apiCall)}} / Success: {{apiCallSuccess(apiCall)}} / Error: {{apiCallError(apiCall)}}</md-tooltip>
                                     </span>
-                                    </div>
-                                </md-button>
-                            </div>
+                                </div>
+                            </md-button>                            
                         </md-content>
                     </md-sidenav>
 
@@ -80,7 +78,6 @@
 
 
 
-
         <md-tab>
             <md-tab-label>Webhooks</md-tab-label>
             <md-tab-body layout="column" flex="100">
@@ -89,24 +86,41 @@
                     <md-toolbar>
                         <h1 class="md-toolbar-tools">Menu</h1>
                     </md-toolbar>
-                    <md-content layout-padding style="padding: 0;">
-                        <div layout="column" style="padding:0;">
-                            <md-button layout="row" style="margin:0" ng-click="goTo('registeredWebhook')">
+                     <md-content layout-padding layout="column" style="padding: 0;">
+                        <md-button style="margin:0;width: 100%;" ng-click="goTo('registeredWebhook')">
+                            <div layout="row" style="padding:0;">
                                 <span style="font-size:0.8em">Registered Webhook</span>
-                            </md-button>
-                        </div>
-                        <div layout="column" style="padding:0;">
-                            <md-button layout="row" style="margin:0" ng-click="goTo('registerNewWebhook')">
+                            </div>
+                        </md-button>
+                        <md-button style="margin:0;width: 100%;" ng-click="goTo('registerNewWebhook')">
+                            <div layout="row" style="padding:0;">
                                 <span style="font-size:0.8em">Register New Webhook</span>
-                            </md-button>
-                        </div>
-                        <div layout="column" style="padding:0;">
-                            <md-button layout="row" style="margin:0" ng-click="goTo('testWebhook')">
+                            </div>
+                        </md-button>
+                        <md-button style="margin:0;width: 100%;" ng-click="goTo('testWebhook')">
+                            <div layout="row" style="padding:0;">
                                 <span style="font-size:0.8em">Test Webhook</span>
-                            </md-button>
-                        </div>
+                            </div>
+                        </md-button>
                     </md-content>
                 </md-sidenav>
+
+                                       
+                            <div layout="row" ng-repeat="apiCall in apiCalls" layout="column" style="padding:0;">
+                                <md-button style="margin:0;width: 100%;" ng-click="goTo(apiCall.key)">
+                                    <div  layout="row">
+                                    <span style="font-size:0.8em;">{{apiCall.key}}</span>
+                                    <span flex></span>
+                                    <span layout="row">
+                                        <md-progress-circular md-diameter="20px" style="margin:auto;" md-mode="determinate" value="{{(apiCallFinished(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                        <md-progress-circular md-diameter="20px" style="margin:auto;" class="md-accent" md-mode="determinate" value="{{(apiCallSuccess(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                        <md-progress-circular md-diameter="20px" style="margin:auto;" class='md-warn' md-mode="determinate" value="{{(apiCallError(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                        <md-tooltip md-visible="tooltipVisible">Done: {{apiCallFinished(apiCall)}} / Success: {{apiCallSuccess(apiCall)}} / Error: {{apiCallError(apiCall)}}</md-tooltip>
+                                    </span>
+                                    </div>
+                                </md-button>
+                            </div>
+                        </md-content>
 
                 <md-content flex layout="column">
                     <article md-whiteframe="2" id="registeredWebhook">
