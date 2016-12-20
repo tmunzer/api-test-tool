@@ -12,7 +12,7 @@ function checkApi(req, res, next) {
 
 function sendError(res, request, err) {
     var errStatus = 500;
-    if (err.status) errStatus = err.status;
+    if (err.status > 0 && err.status < 500) errStatus = err.status;
     res.status(err.status).send({ error: err, request: request });
 }
 function sendSuccess(res, response, request) {

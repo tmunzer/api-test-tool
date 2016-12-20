@@ -1,26 +1,28 @@
-<md-content ng-controller="CheckCtrl" layout="column">
+<md-content ng-controller="CheckCtrl" layout="column" layout-fill>
     <md-tabs flex="100">
 
         <md-tab>
             <md-tab-label>Endpoints</md-tab-label>
 
             <md-tab-body layout="column" flex="100">
-                <section flex layout="row" ng-controller="EndpointCtrl">
+                <section layout="row" ng-controller="EndpointCtrl">
                     <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="4">
                         <md-toolbar>
                             <h1 class="md-toolbar-tools">Endpoint Categories</h1>
                         </md-toolbar>
-                        <md-content layout-padding style="padding: 0;">
-                            <div ng-repeat="apiCall in apiCalls" layout="column" style="padding:0;">
-                                <md-button layout="row" style="margin:0" ng-click="goTo(apiCall.key)">
-                                    <span style="font-size:0.8em">{{apiCall.key}}</span>
+                        <md-content layout-padding layout="column" style="padding: 0;">
+                            <div layout="row" ng-repeat="apiCall in apiCalls" layout="column" style="padding:0;">
+                                <md-button style="margin:0;width: 100%;" ng-click="goTo(apiCall.key)">
+                                    <div  layout="row">
+                                    <span style="font-size:0.8em;">{{apiCall.key}}</span>
                                     <span flex></span>
                                     <span layout="row">
-                                        <md-progress-circular md-diameter="20px" md-mode="determinate" value="{{(apiCallFinished(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
-                                        <md-progress-circular md-diameter="20px" class="md-accent" md-mode="determinate" value="{{(apiCallSuccess(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
-                                        <md-progress-circular md-diameter="20px" class='md-warn' md-mode="determinate" value="{{(apiCallError(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                        <md-progress-circular md-diameter="20px" style="margin:auto;" md-mode="determinate" value="{{(apiCallFinished(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                        <md-progress-circular md-diameter="20px" style="margin:auto;" class="md-accent" md-mode="determinate" value="{{(apiCallSuccess(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
+                                        <md-progress-circular md-diameter="20px" style="margin:auto;" class='md-warn' md-mode="determinate" value="{{(apiCallError(apiCall)/apiCall.endpoints.length)*100}}"></md-progress-circular>
                                         <md-tooltip md-visible="tooltipVisible">Done: {{apiCallFinished(apiCall)}} / Success: {{apiCallSuccess(apiCall)}} / Error: {{apiCallError(apiCall)}}</md-tooltip>
                                     </span>
+                                    </div>
                                 </md-button>
                             </div>
                         </md-content>
