@@ -124,3 +124,8 @@ md-input-container.search-tool {
     display: flex;
     padding-left: 150px;
 }
+
+ng-view {
+     margin-top: -64px !important; 
+     padding-top: 64px !important;
+}

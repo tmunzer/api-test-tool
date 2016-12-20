@@ -508,7 +508,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     && !endpoint.ssidProfileId
                     && !endpoint.apMacs
                     && !endpoint.eventType
-                ) $scope.generateRequest(endpoint);
+                ) a=2//$scope.generateRequest(endpoint);
             })
         }
     }

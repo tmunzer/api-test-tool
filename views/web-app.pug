@@ -41,43 +41,43 @@ html
         script(src="/web-app/ng-sanitize.js")
         script(src="/bower_components/ng-csv/build/ng-csv.min.js")
 
-    body(ng-app="att" layout-fill).icons-docs
+    body(ng-app="att" layout-fill style="max-height: 100%").icons-docs
 
         header(ng-controller="HeaderCtrl")
             div
-            md-toolbar(layout='row')
+                md-toolbar(layout='row')
 
-                h1.logo.md-toolbar-tools
-                    img(src="/images/logo_nav.png" alt="Aerohive")
-                span(flex)
-                md-menu
-                    md-button(ng-hide="true" aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
-                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"button.language" | translate}}
-                        md-icon(class="material-icons" aria-label="language") language
-                    md-menu-content
-                        md-menu-item
-                            md-button(ng-controller="ModalCtrl" ng-click="translate('en')")
-                                span(style="display: inline-flex; margin-right: 5px;")
-                                    div.iti-flag.gb
-                                span English
-                        md-menu-item
-                            md-button(ng-controller="ModalCtrl" ng-click="translate('fr')")
-                                span(style="display: inline-flex; margin-right: 5px;")
-                                    div.iti-flag.fr
-                                span Francais
-                md-menu
-                    md-button(aria-label="menu" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
-                        md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"button.menu" | translate}}
-                        md-icon(class="material-icons" aria-label="menu") more_vert
-                    md-menu-content
-                        md-menu-item
-                            md-button(ng-controller="ModalCtrl" ng-click="open('about')")
-                                md-icon.material-icons(md-menu-align-target) info
-                                span(translate="layout.accountDetails")
-                        md-menu-item
-                            md-button(href="/logout/")
-                                md-icon(md-menu-align-target) exit_to_app
-                                span(translate="layout.logout")
+                    h1.logo.md-toolbar-tools
+                        img(src="/images/logo_nav.png" alt="Aerohive" style="max-height: 40px;")
+                    span(flex)
+                    md-menu
+                        md-button(ng-hide="true" aria-label="language" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                            md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"button.language" | translate}}
+                            md-icon(class="material-icons" aria-label="language") language
+                        md-menu-content
+                            md-menu-item
+                                md-button(ng-controller="ModalCtrl" ng-click="translate('en')")
+                                    span(style="display: inline-flex; margin-right: 5px;")
+                                        div.iti-flag.gb
+                                    span English
+                            md-menu-item
+                                md-button(ng-controller="ModalCtrl" ng-click="translate('fr')")
+                                    span(style="display: inline-flex; margin-right: 5px;")
+                                        div.iti-flag.fr
+                                    span Francais
+                    md-menu
+                        md-button(aria-label="menu" ng-click="openMenu($mdOpenMenu, $event)" style="min-width: 20px;")
+                            md-tooltip(md-direction="bottom" md-visible="tooltipVisible") {{"button.menu" | translate}}
+                            md-icon(class="material-icons" aria-label="menu") more_vert
+                        md-menu-content
+                            md-menu-item
+                                md-button(ng-controller="ModalCtrl" ng-click="open('about')")
+                                    md-icon.material-icons(md-menu-align-target) info
+                                    span(translate="layout.accountDetails")
+                            md-menu-item
+                                md-button(href="/logout/")
+                                    md-icon(md-menu-align-target) exit_to_app
+                                    span(translate="layout.logout")
 
 
 

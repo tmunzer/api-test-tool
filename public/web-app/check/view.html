@@ -1,4 +1,4 @@
-<md-content ng-controller="CheckCtrl" layout="column" layout-fill>
+<md-content ng-controller="CheckCtrl" layout="column" flex>
     <md-tabs flex="100">
 
         <md-tab>
@@ -60,7 +60,6 @@
                                     <div>
                                         <md-button aria-label="details" class="md-raised md-primary" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.loaded || endpoint.status == 0">
                                             <span translate="button.details"></span>
-                                            <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
                                             <md-icon class="material-icons" aria-label="details">description</md-icon>
                                         </md-button>
                                         <md-button aria-label="refresh" ng-click="generateRequest(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.loaded">
