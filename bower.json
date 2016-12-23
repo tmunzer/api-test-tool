@@ -1,12 +1,12 @@
 {
-  "name": "API Test Tool",
+  "name": "api-test-tool",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "angular": "~1.5.5",
+    "angular": "^1.5.5",
     "angular-animate": "~1.5.5",
     "angular-route": "~1.5.5",
     "angular-translate": "^2.11.0",
