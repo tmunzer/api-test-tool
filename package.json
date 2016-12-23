@@ -1,5 +1,5 @@
 {
-  "name": "api test tool",
+  "name": "api-test-tool",
   "description": "Web APP to test Aerohive APIs status",
   "version": "0.0.0",
   "private": true,

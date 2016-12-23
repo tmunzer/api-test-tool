@@ -6,7 +6,6 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "angular": "~1.6.1",
     "angular-animate": "~1.5.10",
     "angular-route": "~1.5.10",
     "angular-translate": "^2.13.1",
@@ -21,6 +20,7 @@
     "material-design-icons": "^2.2.3",
     "angular-translate-loader-url": "^2.13.0",
     "angular-translate-loader-static-files": "^2.13.0",
-    "angular-socket-io": "^0.7.0"
+    "angular-socket-io": "^0.7.0",
+    "angular": "^1.6.1"
   }
 }
