@@ -4,7 +4,6 @@ var att = angular.module("att", [
     "ngRoute",
     'ui.bootstrap',
     'ngSanitize',
-    'ngCsv',
     'ngMaterial',
     'ngMessages',
     'md.data.table',
