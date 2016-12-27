@@ -433,8 +433,14 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         }
     }
     function setDeviceId(status, response) {
-        if (status == 200 && response.length > 0) {
-            deviceId = response[0].deviceId;
+        if (status == 200 && response.length > 0) {            
+            for (var i = 0; i <= response.length; i++){
+                if (response[i].simType=="REAL" && response[i].model.indexOf("AP")==0) {
+                    deviceId = response[i].deviceId;
+                    i = response.length;
+                }
+                i++;
+            }            
             for (var apiCall in $scope.apiCalls) {
                 $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
                     if (endpoint.deviceId == true && endpoint.started == false) $scope.generateRequest(endpoint);
