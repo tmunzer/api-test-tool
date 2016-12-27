@@ -139,8 +139,8 @@ ng-view {
      padding-top: 64px !important;
 }
 
-md-tab-content > div,
-md-tab-content > div > section {
+.custom-scroll md-tab-content > div,
+.custom-scroll md-tab-content > div > section {
     max-height: 100%;
     height: 100%
 }
