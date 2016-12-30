@@ -61,8 +61,8 @@ html
                                     md-input-container
                                         label(for="vpcUrlOl" translate="TOKEN.SERVER")
                                         md-select(id="vpcUrlOl" name="vpcUrl" ng-model="vpcUrl")
-                                        for apiServer is apiServers
-                                            md-option(value=apiServer)= apiServers 
+                                            each apiServer in apiServers
+                                                md-option(value=apiServer)= apiServer
                                     form(id="ATOl" action="/" method="post")
                                         input(type="hidden" name="vpcUrl" value='{{vpcUrl}}')
                                         md-input-container.md-block.flex-gt-sm

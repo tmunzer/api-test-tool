@@ -19,6 +19,7 @@ router.get('/', function (req, res, next) {
             title: 'API Test Tool',
             errorcode: errorcode,
             client_id: devAccount.clientID,
+            apiServers: apiServers,
             redirect_uri: devAccount.redirectUrl
         });
     }
@@ -38,7 +39,6 @@ router.post('/', function (req, res, next) {
             vpcUrl: req.body["vpcUrl"],
             ownerId: req.body["ownerId"],
             accessToken: req.body["accessToken"].trim(),
-            apiServers: apiServers,
             hmngType: "public"
         };
         res.redirect('/web-app/');
@@ -57,7 +57,6 @@ router.post('/op', function (req, res, next) {
             vpcUrl: req.body["vpcUrl"],
             ownerId: req.body["ownerId"],
             accessToken: req.body["accessToken"].trim(),
-            apiServers: apiServers,
             hmngType: "private"
         };
         res.redirect('/web-app/');
