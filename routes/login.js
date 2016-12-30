@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var devAccount = require("../config").devAccount;
 
+var apiServers = ["cloud-va.aerohive.com", "cloud-va2.aerohive.com", "cloud-ie.aerohive.com"];
 
 /*================================================================
  ROUTES
@@ -25,7 +26,6 @@ router.get('/', function (req, res, next) {
 router.post('/', function (req, res, next) {
     var ownerIdRegexp = new RegExp("^[0-9]*$");
     var accessTokenRegexp = new RegExp("^[^ ]{40}$");
-    var apiServers = ["cloud-va.aerohive.com", "cloud-va2.aerohive.com", "cloud-ie.aerohive.com"];
     if (!(req.body.vpcUrl && apiServers.indexOf(req.body["vpcUrl"]) >= 0)) {
         res.redirect("/?errorcode=1");
     } else if (!(req.body.ownerId && ownerIdRegexp.test(req.body['ownerId']))) {
@@ -38,6 +38,7 @@ router.post('/', function (req, res, next) {
             vpcUrl: req.body["vpcUrl"],
             ownerId: req.body["ownerId"],
             accessToken: req.body["accessToken"].trim(),
+            apiServers: apiServers,
             hmngType: "public"
         };
         res.redirect('/web-app/');
@@ -46,7 +47,6 @@ router.post('/', function (req, res, next) {
 router.post('/op', function (req, res, next) {
     var ownerIdRegexp = new RegExp("^[0-9]*$");
     var accessTokenRegexp = new RegExp("^[a-zA-Z0-9]{40}$");
-    var apiServers = ["cloud-va.aerohive.com", "cloud-va2.aerohive.com", "cloud-ie.aerohive.com"];
     if (!(req.body.vpcUrl && req.body["vpcUrl"] != "")) res.redirect("/?errorcode=1");
     else if (!(req.body.ownerId) && ownerIdRegexp.test(req.body['ownerId'])) res.redirect("/?errorcode=2");
     else if (!(req.body.accessToken && accessTokenRegexp.test(req.body["accessToken"].trim()))) res.redirect("/?errorcode=3");
@@ -57,13 +57,18 @@ router.post('/op', function (req, res, next) {
             vpcUrl: req.body["vpcUrl"],
             ownerId: req.body["ownerId"],
             accessToken: req.body["accessToken"].trim(),
+            apiServers: apiServers,
             hmngType: "private"
         };
         res.redirect('/web-app/');
     }
 });
 router.get('/howto/', function (req, res, next) {
-    res.render('howto', { title: 'Api Test Tool', clientID: devAccount.clientID });
+    res.render('howto', {
+        title: 'Api Test Tool',
+        clientID: devAccount.clientID,
+        apiServers: apiServers
+    });
 });
 router.get('/logout/', function (req, res, next) {
     req.session.destroy(function (err) {
