@@ -63,7 +63,7 @@ router.post('/op', function (req, res, next) {
     }
 });
 router.get('/howto/', function (req, res, next) {
-    res.render('howto', { title: 'Identity' });
+    res.render('howto', { title: 'Api Test Tool', clientID: devAccount.clientID });
 });
 router.get('/logout/', function (req, res, next) {
     req.session.destroy(function (err) {

@@ -26,9 +26,9 @@ global.session = require("express-session")({
   resave: true,
   saveUninitialized: true,
   //defines how long the session will live in milliseconds. After that, the cookie is invalidated and will need to be set again.
-  //duration: 1 * 60 * 1000,
+  duration: 5 * 60 * 1000,
   // allows users to lengthen their session by interacting with the site
-  //activeDuration: 1 * 60 * 1000,
+  activeDuration: 60 * 60 * 1000,
   //prevents browser JavaScript from accessing cookies.
   httpOnly: true,
   //ensures cookies are only used over HTTPS
