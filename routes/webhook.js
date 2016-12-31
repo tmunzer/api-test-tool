@@ -1,7 +1,7 @@
 
 var express = require('express');
 var router = express.Router();
-var io = require('socket.io')(server);
+//var io = require('socket.io')(server);
 
 
 /* GET users listing. */
