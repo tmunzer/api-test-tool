@@ -7,7 +7,7 @@ var router = express.Router();
 /* GET users listing. */
 router.post('/presence', function (req, res, next) {    
     console.log(req);
-    io.sockets.in(req.session.webhookId).emit("webhook data", req.body)
+    io.sockets.in(req.body.data.ownerId).emit("webhook data", req.body)
     res.send();
 });
 
