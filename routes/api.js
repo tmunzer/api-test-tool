@@ -124,7 +124,7 @@ router.post("/configuration/webhooks", checkApi, function (req, res, next) {
         "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
         "url": "https://check.ah-lab.fr/webhook/presence",
         "eventType": "LOCATION",
-        "messageType": "LOCATION_CLIENT_CENTRIC"
+        "messageType": "LOCATION_AP_CENTRIC"
     }
     if (req.session.xapi.ownerId) {
         subscription.ownerId = req.session.xapi.ownerId;
