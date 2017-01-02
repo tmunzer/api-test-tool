@@ -24,22 +24,13 @@ global.session = require("express-session")({
   secret: 'Aerohive Identity Ref APP Secret',
   resave: true,
   saveUninitialized: true,
-  //defines how long the session will live in milliseconds. After that, the cookie is invalidated and will need to be set again.
-  //duration: 5 * 60 * 1000,
-  // allows users to lengthen their session by interacting with the site
-  //activeDuration: 60 * 60 * 1000,
-  maxAge: 60000,
-  //prevents browser JavaScript from accessing cookies.
-  httpOnly: true,
-  //ensures cookies are only used over HTTPS
-  secure: true,
-  //deletes the cookie when the browser is closed. Ephemeral cookies are particularly important if you your app lends itself to use on public computers.
-  ephemeral: true
+  cookie: {
+    maxAge: 30 * 60 * 1000 // 30 minutes
+  }
 });
 
 // Use express-session middleware for express
-app.use(session); ;
-
+app.use(session);;
 
 
 // view engine setup
@@ -52,7 +43,7 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components',  express.static(appRoot + '/bower_components'));
+app.use('/bower_components', express.static(appRoot + '/bower_components'));
 
 var routes = require('./routes/login');
 var webapp = require('./routes/web-app');
@@ -74,11 +65,11 @@ app.get('/fail', function (req, res, next) {
     res.send('Hello World');
   }, 1000);
 });
-app.get('*', function(req, res) {
-    res.redirect('/');
+app.get('*', function (req, res) {
+  res.redirect('/');
 });
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -89,7 +80,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -100,7 +91,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
