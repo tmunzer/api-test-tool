@@ -4,6 +4,9 @@ html
         title= title
         meta(name="viewport" content="width=device-width, initial-scale=1")
 
+        script.
+            var nsp=#{ownerId};
+
         script(src="/i18n/web-app/en.js")
         script(src="/i18n/web-app/fr.js")
 
@@ -39,7 +42,7 @@ html
         script(src="/web-app/check/service.js")
         script(src="/web-app/modals/controller.js")
         script(src="/web-app/modals/service.js")
-
+    
     body(ng-app="att" layout-fill style="max-height: 100%").icons-docs
 
         header(ng-controller="HeaderCtrl")

@@ -4,25 +4,25 @@ var router = express.Router();
 /*================================================================
  CREATE SOCKET.IO
  ================================================================*/
-function createSocket(req, res, next) {
-    io.on('connection', function (socket) {
-        req.session.socketio = socket.id;
-        req.session.save();
-        io.sockets.connected[req.session.socketio].emit("hi", req.session.socketio, "test");
+function createSocket(req) {
+    var nsp = io.of("/"+req.session.xapi.ownerId);
+    nsp.on('connection', function (socket) {
+        console.log("==========");
+        console.log("new socket connection on "+req.session.xapi.ownerId);        
         socket.on("webhook", function (wid) {
             socket.join(wid);
-            io.sockets.in(wid).emit("message", "new user");
+            
         })
     });
-
-    next();
+    nsp.emit("message", "new user");
 }
 /*================================================================
  ENTRYU POINT
  ================================================================*/
 //router.get('/', createSocket, function (req, res) {
-router.get('/', createSocket, function (req, res) {
+router.get('/', function (req, res) {
     if (req.session.xapi) {
+        createSocket(req);
         res.render('web-app', {
             title: 'API Test Tool',
             vpcUrl: req.session.xapi.vpcUrl,

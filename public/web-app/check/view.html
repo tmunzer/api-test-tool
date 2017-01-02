@@ -250,9 +250,9 @@
                                     <div class="md-toolbar-tools" style="height: 30px">
                                         <h3 style="font-size: 70%; height: 30px" class="md-title">Create Presence Webhook</h3>
                                         <span flex></span>
-                                        <span class='badge badge-unknown' ng-show="!webhook.register.started && webhook.test == undefined">Not yet started</span>
-                                        <span class='badge badge-warning' ng-show="webhook.register.started && !webhook.register.loaded">Loading...</span>
+                                        <span class='badge badge-unknown' ng-show="!webhook.register.loaded && !webhook.register.started && webhook.test == undefined">Not yet started</span>
                                         <span class='badge badge-success' ng-show="!webhook.register.started && webhook.test != undefined">Already started</span>
+                                        <span class='badge badge-warning' ng-show="webhook.register.started && !webhook.register.loaded">Loading...</span>
                                         <span class='badge badge-success' ng-show="webhook.register.loaded && webhook.register.status == 200">Success</span>
                                         <span class='badge badge-danger' ng-show="webhook.register.loaded && webhook.register.status != 200 && webhook.register.status != 0">Error - HTTP {{webhook.register.status}}</span>
                                         <md-button aria-label="details" ng-click="showDetails(webhook.register)" style="min-width: 10px;" ng-disabled="!webhook.register.loaded || webhook.register.status == 0">
@@ -293,20 +293,27 @@
                                     <div class="md-toolbar-tools" style="height: 30px">
                                         <h3 style="font-size: 70%; height: 30px" class="md-title">Result From Presence Webhook</h3>
                                         <span flex></span>
-                                        <span class='badge badge-warning' ng-show="webhook.test != undefined">Waiting for data...</span>
-                                        <span class='badge badge-unknown' ng-show="webhook.test == undefined">Not yet started</span>
-                                        <span class='badge badge-success' ng-show="webhook.success==true">Success</span>
+                                        <span class='badge badge-warning' ng-show="webhook.test != undefined && webhook.response.length == 0">Waiting for data...</span>
+                                        <span class='badge badge-unknown' ng-show="webhook.test == undefined && webhook.response.length == 0">Not started</span>
+                                        <span class='badge badge-success' ng-show="webhook.response.length > 0">Success</span>
                                         <span class='badge badge-danger' ng-show="webhook.success==false">Error</span>
                                     </div>
                                 </md-toolbar>
                                 <div layout-padding>
-                                    <div ng-show="!webhook.reponse && webhook.test == undefined" style="text-align: center">Please start the Webhook listener</div>
-                                    <div ng-show="!webhook.reponse && webhook.test != undefined" style="text-align: center">
+                                    <div ng-show="webhook.response.length == 0 && webhook.test == undefined" style="text-align: center">Please start the Webhook listener</div>
+                                    <div ng-show="webhook.response.length == 0 && webhook.test != undefined" style="text-align: center">
                                         <div>Waiting for data from the ACS... This can take up to 10min...</div>
                                         <div>Timeout: <b>{{timeout*1000 | date:'mm:ss'}}</b></div>
                                     </div>
-                                    <div ng-show="webhook.success==false" style="text-align:center;"></div>
-                                    <pre ng-show="webhook.reponse"> {{ webhook.data | json }}</pre>
+                                    <div ng-show="webhook.response.length == 0" style="text-align:center;"></div>
+                                    
+                                    <md-content>
+                                        <div ng-repeat="response in webhook.response">
+                                            <div>Message received # {{response.id}}</div>
+                                            <pre> {{ response | json }}</pre>
+                                        </div>
+                                        </md-content>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>

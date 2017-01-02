@@ -15,7 +15,12 @@ var att = angular.module("att", [
 
 att
     .factory('socketio', function (socketFactory) {
-        return socketFactory();
+        var socket = io.connect('/'+nsp);
+        var factory = socketFactory({
+            ioSocket: socket
+        });
+        return factory
+        //return socketFactory();
     })
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
@@ -67,7 +72,7 @@ att.controller("HeaderCtrl", function ($scope, $rootScope, $location, $mdDialog)
         accessToken: angular.element("#accessToken").val(),
     }
 
-    $scope.about = function(){
+    $scope.about = function () {
         $mdDialog.show({
             controller: 'DialogDetailsController',
             templateUrl: 'modals/modalXapiInfo.html',

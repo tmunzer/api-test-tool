@@ -663,11 +663,12 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         },
         test: undefined,
         started: false,
-        response: null,
+        response: [],
         success: null
     }
 
     $scope.start = function () {
+        $scope.timeout = 900;
         $scope.webhook.register.started = true;
         if (!$scope.webhook.started) {
             if (requestWebhook) requestWebhook.abort();
@@ -684,15 +685,9 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
                     $scope.getCurrentWebhooks();
                     if ($scope.webhook.register.status == 200) {
                         $scope.webhook.started = true;
-                        $scope.webhook.response = null;
+                        $scope.webhook.response = [];
                         $scope.webhook.success = null;
                         $scope.webhook.test = $scope.webhook.register.response;
-                        var wid = $scope.webhook.register.response.id;
-                        socketio.emit("webhook", wid);
-                        countdown = $interval(function () {
-                            if ($scope.timeout > 0) $scope.timeout--;
-                            else $scope.stop();
-                        }, 1000);
                     }
                 }
             });
@@ -730,10 +725,23 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
             locals: {
                 items: endpoint
             }
-        }).then(function () {
-            getClassrooms();
         });
     };
+
+    $scope.$watch("webhook.test", function (newValue, oldValue) {
+        console.log($scope.webhook);
+        if ($scope.webhook.test == undefined) a = 1;
+        else {
+            var wid = $scope.webhook.test.id;
+            socketio.emit("webhook", wid);
+            if (countdown) $interval.cancel(countdown);
+            countdown = $interval(function () {
+                if ($scope.timeout > 0) $scope.timeout--;
+                else $scope.stop();
+            }, 1000);
+        }
+    })
+
 
     $scope.$on('$destroy', function () {
         // Make sure that the interval is destroyed too
@@ -742,7 +750,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
 
 
     socketio.on('data', function (obj) {
-        webhook.reponse = obj;
+        $scope.webhook.response.push(obj);
 
     });
     socketio.on('message', function (data) {
