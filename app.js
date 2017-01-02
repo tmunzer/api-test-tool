@@ -12,7 +12,6 @@ var favicon = require('serve-favicon');
 global.console = require('winston');
 console.level = 'debug';
 
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var events = require('events');
@@ -26,9 +25,10 @@ global.session = require("express-session")({
   resave: true,
   saveUninitialized: true,
   //defines how long the session will live in milliseconds. After that, the cookie is invalidated and will need to be set again.
-  duration: 5 * 60 * 1000,
+  //duration: 5 * 60 * 1000,
   // allows users to lengthen their session by interacting with the site
-  activeDuration: 60 * 60 * 1000,
+  //activeDuration: 60 * 60 * 1000,
+  maxAge: 60000,
   //prevents browser JavaScript from accessing cookies.
   httpOnly: true,
   //ensures cookies are only used over HTTPS
@@ -51,7 +51,6 @@ app.set('view engine', 'pug');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static(appRoot + '/bower_components'));
 
