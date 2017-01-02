@@ -3,6 +3,7 @@ var router = express.Router();
 var API = require("./../bin/aerohive/api/main");
 
 var devAccount = require("../config").devAccount;
+var serverHostname = require("../config.js").appServer.vhost;
 
 function checkApi(req, res, next) {
     if (req.session.xapi) next();
@@ -99,7 +100,7 @@ function checkWebhook(req, callback) {
                     wh.ownerId == req.session.xapi.ownerId
                     //&& wh.application == "ApiTestTool"
                     //&& wh.secret == req.session.xapi.vpcUrl + req.session.xapi.ownerId
-                    && wh.url == "https://check.ah-lab.fr/webhook/presence"
+                    && wh.url == "https://"+serverHostname+"/webhook/presence"
                 ) {
                     webhook = wh;
                     req.session.webhookId = wh.id;
@@ -122,7 +123,7 @@ router.post("/configuration/webhooks", checkApi, function (req, res, next) {
     else subscription = {
         "application": "ApiTestTool",
         "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
-        "url": "https://check.ah-lab.fr/webhook/presence",
+        "url": "https://"+serverHostname+"/webhook/presence",
         "eventType": "LOCATION",
         "messageType": "LOCATION_AP_CENTRIC"
     }
