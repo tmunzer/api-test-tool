@@ -57,14 +57,6 @@ app.use('/oauth/', oauth);
 app.use('/webhook/', webhook);
 
 
-app.get('/fail', function (req, res, next) {
-  setTimeout(function () {
-    var nu = null;
-    nu.access();
-
-    res.send('Hello World');
-  }, 1000);
-});
 app.get('*', function (req, res) {
   res.redirect('/');
 });
