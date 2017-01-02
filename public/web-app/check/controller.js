@@ -433,14 +433,14 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         }
     }
     function setDeviceId(status, response) {
-        if (status == 200 && response.length > 0) {            
-            for (var i = 0; i <= response.length; i++){
-                if (response[i].simType=="REAL" && response[i].model.indexOf("AP")==0) {
+        if (status == 200 && response.length > 0) {
+            for (var i = 0; i <= response.length; i++) {
+                if (response[i].simType == "REAL" && response[i].model.indexOf("AP") == 0) {
                     deviceId = response[i].deviceId;
                     i = response.length;
                 }
                 i++;
-            }            
+            }
             for (var apiCall in $scope.apiCalls) {
                 $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
                     if (endpoint.deviceId == true && endpoint.started == false) $scope.generateRequest(endpoint);
@@ -521,7 +521,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
 });
 
 
-angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $interval, webhookService, endpointService, socketio) {
+angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, $location, $mdDialog, $interval, webhookService, endpointService, socketio) {
     var requestWebhook;
 
     // Registered webhooks    
@@ -543,7 +543,16 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
         $scope.requestCurrentWebhook = webhookService.getCurrent();
         $scope.requestCurrentWebhook.then(function (promise) {
             if (promise && promise.error) apiWarning(promise.error);
-            else $scope.currentWebhooks = promise.data.response;
+            else {
+                $scope.currentWebhooks = promise.data.response;
+                $scope.currentWebhooks.forEach(function (webhook) {
+                    if (webhook.application == "ApiTestTool"
+                        && webhook.ownerId == $rootScope.xapi.ownerId
+                        && webhook.secret == $rootScope.xapi.vpcUrl + $rootScope.xapi.ownerId
+                        && webhook.url == $location.protocol() + "://" + $location.host() + "/webhook/presence")
+                        $scope.webhook.test = webhook;
+                })
+            }
         });
     };
 
@@ -590,8 +599,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
 
     $scope.validateWebhook = function () {
         if ($scope.webhook.application == "") return false;
-        else if ($scope.webhook.secret == "") return false;    
-        else if ($scope.webhook.url == "") return false;    
+        else if ($scope.webhook.secret == "") return false;
+        else if ($scope.webhook.url == "") return false;
         else if ($scope.webhook.eventType == undefined) return false;
         else if ($scope.webhook.messageType == undefined || $scope.webhook.messageType == "Please select an \"Event Type\" first.") return false;
         else return true;
@@ -652,13 +661,15 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
             loaded: false,
             locationId: false
         },
-        ready: false,
+        test: undefined,
+        started: false,
         response: null,
         success: null
     }
 
     $scope.start = function () {
-        if (!$scope.webhook.ready) {
+        $scope.webhook.register.started = true;
+        if (!$scope.webhook.started) {
             if (requestWebhook) requestWebhook.abort();
             $scope.webhook.register.loaded = false;
             requestWebhook = webhookService.createWebhook();
@@ -672,9 +683,10 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
                     $scope.webhook.register.loaded = true;
                     $scope.getCurrentWebhooks();
                     if ($scope.webhook.register.status == 200) {
-                        $scope.webhook.ready = true;
+                        $scope.webhook.started = true;
                         $scope.webhook.response = null;
                         $scope.webhook.success = null;
+                        $scope.webhook.test = $scope.webhook.register.response;
                         var wid = $scope.webhook.register.response.id;
                         socketio.emit("webhook", wid);
                         countdown = $interval(function () {
@@ -687,11 +699,15 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
         }
     }
     $scope.stop = function () {
-        //if ($scope.webhook.ready) {
+        var webhookId;
+        if ($scope.webhook.test) webhookId = $scope.webhook.test.id;
+        $scope.webhook.remove.started = true;
+        //if ($scope.webhook.started) {
         $interval.cancel(countdown);
+        $scope.webhook.test = undefined;
         if (requestWebhook) requestWebhook.abort();
         $scope.webhook.remove.loaded = false;
-        requestWebhook = webhookService.deleteWebhook();
+        requestWebhook = webhookService.deleteWebhook(webhookId);
         requestWebhook.then(function (promise) {
             if (promise) {
                 $scope.webhook.remove.status = promise.status;
@@ -700,7 +716,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $mdDialog, $
                 $scope.webhook.remove.error = promise.data.error;
                 $scope.webhook.remove.body = promise.data.body;
                 $scope.webhook.remove.loaded = true;
-                if ($scope.webhook.remove.status == 200) $scope.webhook.ready = false;
+                if ($scope.webhook.remove.status == 200) $scope.webhook.started = false;
+                $scope.getCurrentWebhooks();
             }
         });
         //}
