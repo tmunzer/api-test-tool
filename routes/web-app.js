@@ -25,7 +25,7 @@ router.get('/', createSocket, function (req, res) {
     if (req.session.xapi) {
         res.render('web-app', {
             title: 'API Test Tool',
-            server: req.session.xapi.vpcUrl,
+            vpcUrl: req.session.xapi.vpcUrl,
             ownerId: req.session.xapi.ownerId,
             accessToken: req.session.xapi.accessToken,
             type: req.session.xapi.type

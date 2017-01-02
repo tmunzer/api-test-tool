@@ -60,7 +60,23 @@ att
 
 
 
-att.controller("HeaderCtrl", function ($scope, $location) {
+att.controller("HeaderCtrl", function ($scope, $rootScope, $location, $mdDialog) {
+    $rootScope.xapi = {
+        vpcUrl: angular.element("#vpcUrl").val(),
+        ownerId: angular.element("#ownerId").val(),
+        accessToken: angular.element("#accessToken").val(),
+    }
+
+    $scope.about = function(){
+        $mdDialog.show({
+            controller: 'DialogDetailsController',
+            templateUrl: 'modals/modalXapiInfo.html',
+            locals: {
+                items: $rootScope.xapi
+            }
+        });
+    }
+
     $scope.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
         $mdOpenMenu(ev);

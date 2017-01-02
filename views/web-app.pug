@@ -43,6 +43,9 @@ html
     body(ng-app="att" layout-fill style="max-height: 100%").icons-docs
 
         header(ng-controller="HeaderCtrl")
+            input(type='hidden' id='vpcUrl' value=vpcUrl ng-model="vpcUrl")
+            input(type='hidden' id='ownerId' value=ownerId ng-model="ownerId")
+            input(type='hidden' id='accessToken' value=accessToken ng-model="accessToken")
             div
                 md-toolbar(layout='row')
 
@@ -70,7 +73,7 @@ html
                             md-icon(class="material-icons" aria-label="menu") more_vert
                         md-menu-content
                             md-menu-item
-                                md-button(ng-controller="ModalCtrl" ng-click="open('about')")
+                                md-button(ng-controller="ModalCtrl" ng-click="about()")
                                     md-icon.material-icons(md-menu-align-target) info
                                     span(translate="layout.accountDetails")
                             md-menu-item
@@ -83,3 +86,5 @@ html
         
         ng-view(layout-fill layout="column")
 
+        
+        
