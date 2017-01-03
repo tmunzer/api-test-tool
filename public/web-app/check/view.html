@@ -22,7 +22,12 @@
                                         <md-tooltip md-visible="tooltipVisible">Done: {{apiCallFinished(apiCall)}} / Success: {{apiCallSuccess(apiCall)}} / Error: {{apiCallError(apiCall)}}</md-tooltip>
                                     </span>
                                 </div>
-                            </md-button>                            
+                            </md-button>  
+                            <md-button class="md-primary md-raised" ng-click="testAllCategories()" style="min-width: 10px;">
+                                        <span hide show-gt-sm translate="button.testAllCategories"></span>
+                                        <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible"> {{"button.testAllCategories" | translate}}</md-tooltip>
+                                        <md-icon class="material-icons" aria-label="test all">play_circle_outline</md-icon>
+                                    </md-button>                   
                         </md-content>
                     </md-sidenav>
 
@@ -34,10 +39,10 @@
                                 <div class="md-toolbar-tools" style="height: 50px">
                                     <h2 class="md-title">{{apiCall.name}}</h2>
                                     <span flex></span>
-                                    <md-button aria-label="refresh" ng-click="refreshApiCall(apiCall)" style="min-width: 10px;">
-                                        <span hide show-gt-sm translate="button.refreshAll"></span>
-                                        <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible"> {{"button.refreshAll" | translate}}</md-tooltip>
-                                        <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                                    <md-button aria-label="test all" ng-click="testApiCall(apiCall)" style="min-width: 10px;">
+                                        <span hide show-gt-sm translate="button.testAll"></span>
+                                        <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible"> {{"button.testAll" | translate}}</md-tooltip>
+                                        <md-icon class="material-icons" aria-label="test all">play_circle_outline</md-icon>
                                     </md-button>
                                 </div>
                             </md-toolbar>
@@ -45,11 +50,7 @@
                                 <div layout-padding>
                                     <div>
                                         <b class="badge badge-primary">{{endpoint.method}}</b><b> {{ endpoint.endpoint}}</b> <span flex></span>
-                                        <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.locationId">Waiting for locationId from other API call...</span>
-                                        <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.deviceId">Waiting for deviceId from other API call...</span>
-                                        <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.clientId">Waiting for clientId from other API call...</span>
-                                        <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.ssidProfileId">Waiting for ssidProfileId from other API call...</span>
-                                        <span class='badge badge-unknown' ng-show="!endpoint.started && endpoint.apMacs">Waiting for apMacs from other API call...</span>
+                                        <span class='badge badge-unknown' ng-show="waitingForOtherCalls(endpoint)">Waiting for {{waitingForOtherCalls(endpoint)}} from other API call...</span>                                        
                                         <span class='badge badge-warning' ng-show="endpoint.started && !endpoint.loaded">Loading...</span>
                                         <span class='badge badge-success' ng-show="endpoint.loaded && endpoint.status == 200">Success</span>
                                         <span class='badge badge-danger' ng-show="endpoint.loaded && endpoint.status != 200 && endpoint.status != 0">Error - HTTP {{endpoint.status}}</span>
@@ -60,10 +61,10 @@
                                             <span translate="button.details"></span>
                                             <md-icon class="material-icons" aria-label="details">description</md-icon>
                                         </md-button>
-                                        <md-button aria-label="refresh" ng-click="generateRequest(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.loaded">
-                                            <span hide show-gt-sm translate="button.refresh"></span>
-                                            <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.refresh" | translate}}</md-tooltip>
-                                            <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                                        <md-button aria-label="test" ng-click="generateRequest(endpoint)" style="min-width: 10px;" ng-disabled="waitingForOtherCalls(endpoint)">
+                                            <span hide show-gt-sm translate="button.test"></span>
+                                            <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.test" | translate}}</md-tooltip>
+                                            <md-icon class="material-icons" aria-label="test">play_arrow</md-icon>
                                         </md-button>
                                     </div>
                                 </div>

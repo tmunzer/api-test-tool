@@ -288,7 +288,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         },
         presenceAnalytics: {
             key: "presence-analytics",
-            name: " Presence Analytics Endpoints",
+            name: "Presence Analytics Endpoints",
             endpoints: [
                 {
                     name: "presence/clientcount",
@@ -364,6 +364,16 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         }
     };
 
+    $scope.waitingForOtherCalls = function (endpoint) {
+        if (endpoint.locationId && !locationId) return "locationId";
+        else if (endpoint.deviceId && !deviceId) return "deviceId";
+        else if (endpoint.clientId && !clientId) return "clientId";
+        else if (endpoint.ssidProfileId && !ssidProfileId) return "ssidProfileId";
+        else if (endpoint.apMacs && !apMacs) return "apMacs";
+        else if (endpoint.eventType && !eventType) return "eventType";
+        else return false;
+    }
+
     $scope.apiCallSuccess = function (apiCall) {
         var done = 0;
         apiCall.endpoints.forEach(function (endpoint) {
@@ -386,13 +396,22 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         return finished;
     }
 
-    $scope.refreshApiCall = function (apiCall) {
+    $scope.testApiCall = function (apiCall) {
         apiCall.endpoints.forEach(function (endpoint) {
-            $scope.generateRequest(endpoint);
+                if (!$scope.waitingForOtherCalls(endpoint)) $scope.generateRequest(endpoint, true);
         })
     }
 
-    $scope.generateRequest = function (endpoint) {
+    $scope.testAllCategories = function () {
+        initialized = true;
+        for (var apiCall in $scope.apiCalls) {
+            $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                if (!$scope.waitingForOtherCalls(endpoint)) $scope.generateRequest(endpoint, true);
+            })
+        }
+    }
+
+    $scope.generateRequest = function (endpoint, recursive) {
         if (requests[endpoint.name]) requests[endpoint.name].abort();
         endpoint.loaded = false;
         endpoint.started = true;
@@ -411,28 +430,29 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                 endpoint.request = promise.data.request;
                 endpoint.body = promise.data.body;
                 endpoint.loaded = true;
-                if (endpoint.action == "locationId") setLocationId(endpoint.status, endpoint.response);
-                else if (endpoint.action == "deviceId") setDeviceId(endpoint.status, endpoint.response);
-                else if (endpoint.action == "clientId") setClientId(endpoint.status, endpoint.response);
-                else if (endpoint.action == "ssidProfileId") setSsidProfileId(endpoint.status, endpoint.response);
-                else if (endpoint.action == "apMacs") setApMacs(endpoint.status, endpoint.response);
-                else if (endpoint.action == "eventType") setEventType(endpoint.status, endpoint.response);
+                if (endpoint.action == "locationId") setLocationId(endpoint.status, endpoint.response, recursive);
+                else if (endpoint.action == "deviceId") setDeviceId(endpoint.status, endpoint.response, recursive);
+                else if (endpoint.action == "clientId") setClientId(endpoint.status, endpoint.response, recursive);
+                else if (endpoint.action == "ssidProfileId") setSsidProfileId(endpoint.status, endpoint.response, recursive);
+                else if (endpoint.action == "apMacs") setApMacs(endpoint.status, endpoint.response, recursive);
+                else if (endpoint.action == "eventType") setEventType(endpoint.status, endpoint.response, recursive);
             }
         });
     }
 
 
-    function setLocationId(status, response) {
+    function setLocationId(status, response, recursive) {
         if (status == 200) {
             locationId = response.id;
-            for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
-                    if (endpoint.locationId == true && endpoint.started == false) $scope.generateRequest(endpoint);
-                })
-            }
+            if (recursive)
+                for (var apiCall in $scope.apiCalls) {
+                    $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                        if (endpoint.locationId == true && endpoint.started == false) $scope.generateRequest(endpoint);
+                    })
+                }
         }
     }
-    function setDeviceId(status, response) {
+    function setDeviceId(status, response, recursive) {
         if (status == 200 && response.length > 0) {
             for (var i = 0; i <= response.length; i++) {
                 if (response[i].simType == "REAL" && response[i].model.indexOf("AP") == 0) {
@@ -441,24 +461,26 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                 }
                 i++;
             }
-            for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
-                    if (endpoint.deviceId == true && endpoint.started == false) $scope.generateRequest(endpoint);
-                })
-            }
+            if (recursive)
+                for (var apiCall in $scope.apiCalls) {
+                    $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                        if (endpoint.deviceId == true && endpoint.started == false) $scope.generateRequest(endpoint);
+                    })
+                }
         }
     }
-    function setClientId(status, response) {
+    function setClientId(status, response, recursive) {
         if (status == 200 && response.length > 0) {
             clientId = response[0].clientId;
-            for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
-                    if (endpoint.clientId == true && endpoint.started == false) $scope.generateRequest(endpoint);
-                })
-            }
+            if (recursive)
+                for (var apiCall in $scope.apiCalls) {
+                    $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                        if (endpoint.clientId == true && endpoint.started == false) $scope.generateRequest(endpoint);
+                    })
+                }
         }
     }
-    function setSsidProfileId(status, response) {
+    function setSsidProfileId(status, response, recursive) {
         if (status == 200 && response.length > 0) {
             var i = 0;
             while (ssidProfileId == undefined) {
@@ -466,31 +488,34 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                 else i++;
             }
 
-            for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
-                    if (endpoint.ssidProfileId == true && endpoint.started == false) $scope.generateRequest(endpoint);
-                })
-            }
+            if (recursive)
+                for (var apiCall in $scope.apiCalls) {
+                    $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                        if (endpoint.ssidProfileId == true && endpoint.started == false) $scope.generateRequest(endpoint);
+                    })
+                }
         }
     }
-    function setApMacs(status, response) {
+    function setApMacs(status, response, recursive) {
         if (status == 200) {
             apMacs = response.macAddress;
-            for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
-                    if (endpoint.apMacs == true && endpoint.started == false) $scope.generateRequest(endpoint);
-                })
-            }
+            if (recursive)
+                for (var apiCall in $scope.apiCalls) {
+                    $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                        if (endpoint.apMacs == true && endpoint.started == false) $scope.generateRequest(endpoint);
+                    })
+                }
         }
     }
-    function setEventType(status, response) {
+    function setEventType(status, response, recursive) {
         if (status == 200) {
             eventType = response[0];
-            for (var apiCall in $scope.apiCalls) {
-                $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
-                    if (endpoint.eventType == true && endpoint.started == false) $scope.generateRequest(endpoint);
-                })
-            }
+            if (recursive)
+                for (var apiCall in $scope.apiCalls) {
+                    $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
+                        if (endpoint.eventType == true && endpoint.started == false) $scope.generateRequest(endpoint);
+                    })
+                }
         }
     }
     $scope.showDetails = function (endpoint) {
@@ -503,21 +528,6 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
         });
     };
 
-    // entry point
-    if (!initialized) {
-        initialized = true;
-        for (var apiCall in $scope.apiCalls) {
-            $scope.apiCalls[apiCall].endpoints.forEach(function (endpoint) {
-                if (!endpoint.locationId
-                    && !endpoint.deviceId
-                    && !endpoint.clientId
-                    && !endpoint.ssidProfileId
-                    && !endpoint.apMacs
-                    && !endpoint.eventType
-                ) a = 1;//$scope.generateRequest(endpoint);
-            })
-        }
-    }
 });
 
 
