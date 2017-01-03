@@ -514,7 +514,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     && !endpoint.ssidProfileId
                     && !endpoint.apMacs
                     && !endpoint.eventType
-                ) a=1;//$scope.generateRequest(endpoint);
+                ) a = 1;//$scope.generateRequest(endpoint);
             })
         }
     }
@@ -534,10 +534,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         page: 1
     };
 
-    function success(desserts) {
-        $scope.desserts = desserts;
-    }
-
+    //retrieve the list of registered webhooks
     $scope.getCurrentWebhooks = function () {
         if ($scope.requestCurrentWebhook) $scope.requestCurrentWebhook.abort();
         $scope.requestCurrentWebhook = webhookService.getCurrent();
@@ -545,6 +542,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
             if (promise && promise.error) apiWarning(promise.error);
             else {
                 $scope.currentWebhooks = promise.data.response;
+                $scope.webhook.test = undefined;
                 $scope.currentWebhooks.forEach(function (webhook) {
                     if (webhook.application == "ApiTestTool"
                         && webhook.ownerId == $rootScope.xapi.ownerId
@@ -556,6 +554,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         });
     };
 
+    // remove one or many webhook registrations
     $scope.deleteCurrentWebhooks = function () {
         $scope.selectedCurrentWebhooks.forEach(function (toDelete) {
             var request = webhookService.deleteWebhook(toDelete);
@@ -579,6 +578,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         messageType: undefined
     }
 
+    // retrieve the webhook eventType list
     function getEventTypes() {
         var request = endpointService.noId({ name: "configuration/webhooks/eventTypes", method: "GET" })
         request.then(function (promise) {
@@ -587,6 +587,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         })
     }
 
+    // retrieve the webhook messageTypes list each time the eventType value is changing
     $scope.$watch("webhook.eventType", function () {
         if ($scope.webhook.eventType != undefined) {
             var request = endpointService.eventType({ name: "configuration/webhooks/messageTypes", method: "GET" }, $scope.webhook.eventType)
@@ -597,6 +598,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         }
     })
 
+    // validate the form values
     $scope.validateWebhook = function () {
         if ($scope.webhook.application == "") return false;
         else if ($scope.webhook.secret == "") return false;
@@ -606,6 +608,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         else return true;
     }
 
+    // register a new webhook endpoint
     $scope.saveWebhook = function () {
         var request = webhookService.createWebhook($scope.webhook);
         request.then(function (promise) {
@@ -665,50 +668,62 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         success: null
     }
     $scope.displayedResponse = -1;
-    $scope.showResponse = function(index){
+
+    // change the webhook data to display
+    $scope.showResponse = function (index) {
         if ($scope.displayedResponse == index) $scope.displayedResponse = -1;
         else $scope.displayedResponse = index;
     }
-    $scope.isDisplayed = function(index){
+    // manage the webhook data to display/hide
+    $scope.isDisplayed = function (index) {
         return $scope.displayedResponse == index;
     }
 
+    //start the test
     $scope.start = function () {
-        $scope.timeout = 900;
+        // indicate to the UI that the starting process is initiated        
         $scope.webhook.register.started = true;
-        if (!$scope.webhook.started) {
-            if (requestWebhook) requestWebhook.abort();
-            $scope.webhook.register.loaded = false;
-            requestWebhook = webhookService.createWebhook();
-            requestWebhook.then(function (promise) {
-                if (promise) {
-                    $scope.webhook.register.status = promise.status;
-                    $scope.webhook.register.response = promise.data.response;
-                    $scope.webhook.register.request = promise.data.request;
-                    $scope.webhook.register.error = promise.data.error;
-                    $scope.webhook.register.body = promise.data.body;
-                    $scope.webhook.register.loaded = true;
-                    $scope.getCurrentWebhooks();
-                    if ($scope.webhook.register.status == 200) {
-                        $scope.webhook.started = true;
-                        $scope.webhook.response = [];
-                        $scope.webhook.success = null;
-                        $scope.webhook.test = $scope.webhook.register.response;
-                    }
+        // start the process
+        if (requestWebhook) requestWebhook.abort();
+        $scope.webhook.register.loaded = false;
+        requestWebhook = webhookService.createWebhook();
+        requestWebhook.then(function (promise) {
+            if (promise) {
+                // once the response from the server is received, send a "start" message into the socket to inform everyone
+                socketio.emit("update", "start");
+                //retrieve the response data
+                $scope.webhook.register.status = promise.status;
+                $scope.webhook.register.response = promise.data.response;
+                $scope.webhook.register.request = promise.data.request;
+                $scope.webhook.register.error = promise.data.error;
+                $scope.webhook.register.body = promise.data.body;
+                $scope.webhook.register.loaded = true;
+                if ($scope.webhook.register.status == 200) {
+                    $scope.webhook.started = true;
+                    $scope.webhook.response = [];
+                    $scope.webhook.success = null;
+                    $scope.webhook.test = $scope.webhook.register.response;
                 }
-            });
-        }
+            }
+        });
     }
+
+    // stop the test
     $scope.stop = function () {
         var webhookId;
+        // try to get the webhook id from the local data
         if ($scope.webhook.test) webhookId = $scope.webhook.test.id;
-        $scope.webhook.remove.started = true;        
-        $scope.webhook.test = undefined;
+        // indicates to the UI that the stop process is started
+        $scope.webhook.remove.started = true;
+        // starts the stop process
         if (requestWebhook) requestWebhook.abort();
         $scope.webhook.remove.loaded = false;
         requestWebhook = webhookService.deleteWebhook(webhookId);
         requestWebhook.then(function (promise) {
             if (promise) {
+                // once the response from the server is received, send a "stop" message into the socket to inform everyone
+                socketio.emit("update", "stop");
+                //retrieve the response data
                 $scope.webhook.remove.status = promise.status;
                 $scope.webhook.remove.response = promise.data.response;
                 $scope.webhook.remove.request = promise.data.request;
@@ -716,12 +731,11 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
                 $scope.webhook.remove.body = promise.data.body;
                 $scope.webhook.remove.loaded = true;
                 if ($scope.webhook.remove.status == 200) $scope.webhook.started = false;
-                $scope.getCurrentWebhooks();
             }
         });
-        //}
     }
 
+    // manage the modal to display the webhook endpoints details
     $scope.showDetails = function (endpoint) {
         $mdDialog.show({
             controller: 'DialogDetailsController',
@@ -732,10 +746,10 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         });
     };
 
+    // 
     $scope.$watch("webhook.test", function (newValue, oldValue) {
         if ($scope.webhook.test == undefined && $scope.webhook.socket == true) {
             $scope.webhook.socket = false;
-            socketio.disconnect();
         }
         else if ($scope.webhook.test != undefined && $scope.webhook.socket == false) {
             $scope.webhook.socket = true;
@@ -744,13 +758,19 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         }
     })
 
+    // receive webhook test data
     socketio.on('data', function (obj) {
         $scope.webhook.response.push(obj);
-
     });
+
+    // debug logs to check the socket connection
     socketio.on('message', function (data) {
         console.log('Incoming message:', data);
     });
 
+    // update the list of registerd webhooks when someone with the same ownerId starts the test
+    socketio.on("update", function (data) {
+        $scope.getCurrentWebhooks();
+    })
 
 });

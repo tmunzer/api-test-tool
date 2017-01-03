@@ -11,7 +11,11 @@ function createSocket(req) {
             console.log("==========");
             console.log("new socket connection on " + req.session.xapi.ownerId);
             socket.emit("message", "You are now connected to the socket!");
-        });
+            socket.on('update', function(action){
+                socket.emit("update", action); // send the update message to the sender
+                socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
+            })
+        });        
     }
 }
 /*================================================================
