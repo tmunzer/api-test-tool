@@ -25,7 +25,7 @@ global.session = require("express-session")({
   resave: true,
   saveUninitialized: true,
   cookie: {
-    maxAge: 30 * 60 * 1000 // 30 minutes
+    maxAge: 60 * 60 * 1000 // 60 minutes
   }
 });
 
