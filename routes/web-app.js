@@ -5,16 +5,14 @@ var router = express.Router();
  CREATE SOCKET.IO
  ================================================================*/
 function createSocket(req) {
-    var nsp = io.of("/"+req.session.xapi.ownerId);
-    nsp.on('connection', function (socket) {
-        console.log("==========");
-        console.log("new socket connection on "+req.session.xapi.ownerId);        
-        socket.on("webhook", function (wid) {
-            socket.join(wid);
-            
-        })
-    });
-    nsp.emit("message", "new user");
+    if (!io.nsps["/" + req.session.xapi.ownerId]) {
+        var nsp = io.of("/" + req.session.xapi.ownerId);
+        nsp.on('connection', function (socket) {
+            console.log("==========");
+            console.log("new socket connection on " + req.session.xapi.ownerId);
+            socket.emit("message", "You are now connected to the socket!");
+        });
+    }
 }
 /*================================================================
  ENTRYU POINT

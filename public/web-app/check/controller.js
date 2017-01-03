@@ -514,14 +514,14 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     && !endpoint.ssidProfileId
                     && !endpoint.apMacs
                     && !endpoint.eventType
-                ) $scope.generateRequest(endpoint);
+                ) a=1;//$scope.generateRequest(endpoint);
             })
         }
     }
 });
 
 
-angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, $location, $mdDialog, $interval, webhookService, endpointService, socketio) {
+angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, $location, $mdDialog, webhookService, endpointService, socketio) {
     var requestWebhook;
 
     // Registered webhooks    
@@ -631,9 +631,6 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     // webhook test
 
 
-    $scope.timeout = 900;
-    $scope.format = "mm:ss";
-    var countdown;
     $scope.webhook = {
         register: {
             name: "Presence - Get Client Time Series",
@@ -663,8 +660,17 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         },
         test: undefined,
         started: false,
+        socket: false,
         response: [],
         success: null
+    }
+    $scope.displayedResponse = -1;
+    $scope.showResponse = function(index){
+        if ($scope.displayedResponse == index) $scope.displayedResponse = -1;
+        else $scope.displayedResponse = index;
+    }
+    $scope.isDisplayed = function(index){
+        return $scope.displayedResponse == index;
     }
 
     $scope.start = function () {
@@ -696,9 +702,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     $scope.stop = function () {
         var webhookId;
         if ($scope.webhook.test) webhookId = $scope.webhook.test.id;
-        $scope.webhook.remove.started = true;
-        //if ($scope.webhook.started) {
-        $interval.cancel(countdown);
+        $scope.webhook.remove.started = true;        
         $scope.webhook.test = undefined;
         if (requestWebhook) requestWebhook.abort();
         $scope.webhook.remove.loaded = false;
@@ -729,25 +733,16 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     };
 
     $scope.$watch("webhook.test", function (newValue, oldValue) {
-        console.log($scope.webhook);
-        if ($scope.webhook.test == undefined) a = 1;
-        else {
+        if ($scope.webhook.test == undefined && $scope.webhook.socket == true) {
+            $scope.webhook.socket = false;
+            socketio.disconnect();
+        }
+        else if ($scope.webhook.test != undefined && $scope.webhook.socket == false) {
+            $scope.webhook.socket = true;
             var wid = $scope.webhook.test.id;
             socketio.emit("webhook", wid);
-            if (countdown) $interval.cancel(countdown);
-            countdown = $interval(function () {
-                if ($scope.timeout > 0) $scope.timeout--;
-                else $scope.stop();
-            }, 1000);
         }
     })
-
-
-    $scope.$on('$destroy', function () {
-        // Make sure that the interval is destroyed too
-        $scope.stop();
-    });
-
 
     socketio.on('data', function (obj) {
         $scope.webhook.response.push(obj);

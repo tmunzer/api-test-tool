@@ -2,7 +2,6 @@ angular.module("Check", []);
 angular.module("Modals", []);
 var att = angular.module("att", [
     "ngRoute",
-    'ui.bootstrap',
     'ngSanitize',
     'ngMaterial',
     'ngMessages',
@@ -10,6 +9,7 @@ var att = angular.module("att", [
     'Check',
     'Modals',
     'btford.socket-io',
+    'ui.bootstrap',
     'pascalprecht.translate'
 ]);
 
