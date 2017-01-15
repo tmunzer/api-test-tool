@@ -303,7 +303,8 @@
                                 <div layout-padding>
                                     <div ng-show="webhook.response.length == 0 && webhook.test == undefined" style="text-align: center">Please start the Webhook listener</div>
                                     <div ng-show="webhook.response.length == 0 && webhook.test != undefined" style="text-align: center">
-                                        <div>Waiting for data from the ACS... This can take up to 10min...</div>                                        
+                                        <div>Waiting for data from the ACS... This can take some time...</div>                                       
+                                        <div>And no need to refresh this page. If I'm receiving something, I will automatically display it here!</div> 
                                     </div>
                                     <div ng-show="webhook.response.length == 0" style="text-align:center;"></div>  
                                     <div ng-show="webhook.response.length > 0">                                                          
