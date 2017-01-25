@@ -12,11 +12,11 @@ function createSocket(req) {
             console.log("new socket connection on " + req.session.xapi.ownerId);
             console.log(socket.nsp);
             socket.emit("message", "You are now connected to the socket!");
-            socket.on('update', function (action) {
+            socket.on("update", function (action) {
                 socket.emit("update", action); // send the update message to the sender
                 socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
             });
-            socket.on('disconnect', function () {
+            socket.on("disconnect", function () {
                 console.log("disconnected!!!!Yah!!!");
             })
         });
