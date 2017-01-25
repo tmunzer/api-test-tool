@@ -31,7 +31,8 @@ function createSocket(req) {
                         devAccount,
                         req.query.webhookId,
                         function (err, response, request) {
-                            sendReponse(res, err, response, request);
+                            if (err) console.log(err);
+                            else console.log("Webhook removed for account " + req.session.xapi.ownerId);
                         })
             }, 5000);
 
