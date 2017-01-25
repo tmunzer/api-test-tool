@@ -18,14 +18,17 @@ function createSocket(req) {
         });
         socket.on("disconnect", function () {
             console.log("==========");
-            console.log("connection to namespace /" + req.session.xapi.ownerId + "closed");
+            console.log("connection to namespace /" + req.session.xapi.ownerId + " closed");
             setTimeout(function () {
                 var count = 0;
                 for (var prop in socket.nsp.connected) {
                     if (obj.hasOwnProperty(prop))
                         ++count;
                 }
-                if (count == 0)
+                if (count == 0) {
+                    console.log(req.session.xapi);
+                    console.log(devAccount);
+                    console.log(req.query.webhookId);
                     API.configuration.webhooks.remove(
                         req.session.xapi,
                         devAccount,
@@ -34,8 +37,8 @@ function createSocket(req) {
                             if (err) console.log(err);
                             else console.log("Webhook removed for account " + req.session.xapi.ownerId);
                         })
+                }
             }, 5000);
-
         });
 
         console.log("==========");
