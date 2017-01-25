@@ -6,25 +6,31 @@ var router = express.Router();
  ================================================================*/
 function createSocket(req) {
     //if (!io.nsps["/" + req.session.xapi.ownerId]) {
-        var nsp = io.of("/" + req.session.xapi.ownerId);
-        nsp.on('connection', function (socket) {
-            socket.emit("message", "You are now connected to the socket!");
-            socket.on("update", function (action) {
-                socket.emit("update", action); // send the update message to the sender
-                socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
-            });
-            socket.on("disconnect", function () {
-                console.log("disconnected!!!!Yah!!!");
-                
-                    console.log(socket.nsp.connected);
-                    if (socket.nsp.connected == {}) console.log("nobody left...");
-                
-            });
-
-            console.log("==========");
-            console.log("new socket connection on " + req.session.xapi.ownerId);
-            
+    var nsp = io.of("/" + req.session.xapi.ownerId);
+    nsp.on('connection', function (socket) {
+        socket.emit("message", "You are now connected to the socket!");
+        socket.on("update", function (action) {
+            socket.emit("update", action); // send the update message to the sender
+            socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
         });
+        socket.on("disconnect", function () {
+            console.log("disconnected!!!!Yah!!!");
+
+            console.log(socket.nsp.connected);
+            var count = 0;
+
+            for (var prop in socket.nsp.connected) {
+                if (obj.hasOwnProperty(prop))
+                    ++count;
+            }
+            if (count == 0) console.log("nobody left...");
+
+        });
+
+        console.log("==========");
+        console.log("new socket connection on " + req.session.xapi.ownerId);
+
+    });
 
     //}
 }
