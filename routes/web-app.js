@@ -15,7 +15,10 @@ function createSocket(req) {
             });
             socket.on("disconnect", function () {
                 console.log("disconnected!!!!Yah!!!");
-                console.log(socket.connected);
+                socket.nsp.forEach(function(test){
+                    if (test.name == "/"+req.session.xapi.ownerId) console.log(test.connected);
+                })
+                
             });
 
             console.log("==========");
