@@ -15,11 +15,12 @@ function createSocket(req) {
             socket.on('update', function (action) {
                 socket.emit("update", action); // send the update message to the sender
                 socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
-            });            
+            });
+            socket.on('disconnect', function () {
+                console.log("disconnected!!!!Yah!!!");
+            })
         });
-        nsp.on('disconnect', function(socket){
-            console.log("disconnected");
-        })
+
     }
 }
 /*================================================================
