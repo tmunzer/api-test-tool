@@ -26,13 +26,10 @@ function createSocket(req) {
                         ++count;
                 }
                 if (count == 0) {
-                    console.log(req.session.xapi);
-                    console.log(devAccount);
-                    console.log(req.query.webhookId);
                     API.configuration.webhooks.remove(
                         req.session.xapi,
                         devAccount,
-                        req.query.webhookId,
+                        req.session.webhookId,
                         function (err, response, request) {
                             if (err) console.log(err);
                             else console.log("Webhook removed for account " + req.session.xapi.ownerId);
