@@ -187,25 +187,25 @@
                                 <label>
                                     <span>Application Name<span style="color: red">*</span>
                                 </label>
-                                <input type="text" ng-model="webhook.application" />
+                                <input type="text" ng-model="customWebhook.application" />
                             </md-input-container>
                             <md-input-container style="margin: 5px 5px 0 5px;padding: 0;">
                                 <label>
                                     <span>Application Secret<span style="color: red">*</span>
                                     </label>
-                                <input type="text" ng-model="webhook.secret" />
+                                <input type="text" ng-model="customWebhook.secret" />
                             </md-input-container>
                             <md-input-container style="margin: 5px 5px 0 5px;padding: 0;">
                                 <label>
                                     <span>POST URL<span style="color: red">*</span>
                                 </label>
-                                <input type="text" ng-model="webhook.url" />
+                                <input type="text" ng-model="customWebhook.url" />
                             </md-input-container>
                             <md-input-container style="margin: 5px 5px 0 5px;">
                                 <label>
                                     <span>Event Type</span><span style="color: red">*</span>
                                 </label>
-                                <md-select ng-model="webhook.eventType">
+                                <md-select ng-model="customWebhook.eventType">
                                     <md-option ng-repeat="eventType in eventTypes" ng-value="eventType">{{eventType}}</md-option>
                                 </md-select>
                             </md-input-container>
@@ -213,12 +213,12 @@
                                 <label>
                                     <span>Event Message</span><span style="color: red">*</span>
                                 </label>
-                                <md-select ng-model="webhook.messageType">
+                                <md-select ng-model="customWebhook.messageType">
                                     <md-option ng-repeat="messageType in messageTypes" ng-value="messageType">{{messageType}}</md-option>
                                 </md-select>
                             </md-input-container>
                             <md-input-container layout="row">
-                                <md-button aria-label="save webhook" ng-click="saveWebhook()" class="md-raised md-primary" ng-disabled="!validateWebhook()">
+                                <md-button aria-label="save webhook" ng-click="saveCustomWebhook()" class="md-raised md-primary" ng-disabled="!validateWebhook()">
                                     Save
                                 </md-button>
                             </md-input-container>

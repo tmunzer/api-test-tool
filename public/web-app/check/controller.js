@@ -580,7 +580,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     $scope.eventTypes = undefined;
     $scope.messageTypes = ["Please select an \"Event Type\" first."];
 
-    $scope.webhook = {
+    $scope.customWebhook = {
         application: "",
         secret: "",
         url: "",
@@ -598,9 +598,9 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     }
 
     // retrieve the webhook messageTypes list each time the eventType value is changing
-    $scope.$watch("webhook.eventType", function () {
-        if ($scope.webhook.eventType != undefined) {
-            var request = endpointService.eventType({ name: "configuration/webhooks/messageTypes", method: "GET" }, $scope.webhook.eventType)
+    $scope.$watch("customWebhook.eventType", function () {
+        if ($scope.customWebhook.eventType != undefined) {
+            var request = endpointService.eventType({ name: "configuration/webhooks/messageTypes", method: "GET" }, $scope.customWebhook.eventType)
             request.then(function (promise) {
                 if (promise && promise.err) alert(promise.err);
                 else $scope.messageTypes = promise.data.response;
@@ -610,26 +610,29 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
 
     // validate the form values
     $scope.validateWebhook = function () {
-        if ($scope.webhook.application == "") return false;
-        else if ($scope.webhook.secret == "") return false;
-        else if ($scope.webhook.url == "") return false;
-        else if ($scope.webhook.eventType == undefined) return false;
-        else if ($scope.webhook.messageType == undefined || $scope.webhook.messageType == "Please select an \"Event Type\" first.") return false;
+        if ($scope.customWebhook.application == "") return false;
+        else if ($scope.customWebhook.secret == "") return false;
+        else if ($scope.customWebhook.url == "") return false;
+        else if ($scope.customWebhook.eventType == undefined) return false;
+        else if ($scope.customWebhook.messageType == undefined || $scope.customWebhook.messageType == "Please select an \"Event Type\" first.") return false;
         else return true;
     }
 
     // register a new webhook endpoint
-    $scope.saveWebhook = function () {
-        var request = webhookService.createWebhook($scope.webhook);
+    $scope.saveCustomWebhook = function () {
+        var request = webhookService.createWebhook($scope.customWebhook);
         request.then(function (promise) {
             if (promise && promise.err) alert(err);
             else {
                 alert("done");
                 $scope.getCurrentWebhooks();
-                $scope.webhook.application = "";
-                $scope.webhook.secret = "";
-                $scope.webhook.eventType = undefined;
-                $scope.webhook.messageType = undefined;
+                $scope.customWebhook = {
+                    application: "",
+                    secret : "",
+                    url : "",
+                    eventType : undefined,
+                    messageType : undefined,
+                }
             }
         })
     }
