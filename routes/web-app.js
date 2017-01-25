@@ -15,6 +15,7 @@ function createSocket(req) {
             });
             socket.on("disconnect", function () {
                 console.log("disconnected!!!!Yah!!!");
+                console.log(socket.connected);
             });
 
             console.log("==========");
