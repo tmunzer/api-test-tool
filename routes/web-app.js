@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+var API = require("./../bin/aerohive/api/main");
+var devAccount = require("../config").devAccount;
+
 /*================================================================
  CREATE SOCKET.IO
  ================================================================*/
@@ -14,21 +17,28 @@ function createSocket(req) {
             socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
         });
         socket.on("disconnect", function () {
-            console.log("disconnected!!!!Yah!!!");
-
-            console.log(socket.nsp.connected);
-            var count = 0;
-
-            for (var prop in socket.nsp.connected) {
-                if (obj.hasOwnProperty(prop))
-                    ++count;
-            }
-            if (count == 0) console.log("nobody left...");
+            console.log("==========");
+            console.log("connection to namespace /" + req.session.xapi.ownerId + "closed");
+            setTimeout(function () {
+                var count = 0;
+                for (var prop in socket.nsp.connected) {
+                    if (obj.hasOwnProperty(prop))
+                        ++count;
+                }
+                if (count == 0)
+                    API.configuration.webhooks.remove(
+                        req.session.xapi,
+                        devAccount,
+                        req.query.webhookId,
+                        function (err, response, request) {
+                            sendReponse(res, err, response, request);
+                        })
+            }, 5000);
 
         });
 
         console.log("==========");
-        console.log("new socket connection on " + req.session.xapi.ownerId);
+        console.log("new socket connection on namespace /" + req.session.xapi.ownerId);
 
     });
 
