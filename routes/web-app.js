@@ -16,9 +16,6 @@ function createSocket(req) {
                 socket.emit("update", action); // send the update message to the sender
                 socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
             });
-            socket.on('disconnect', function () {
-                console.log('user disconnected');
-            });
         });
     }
 }
