@@ -17,13 +17,13 @@ function createSocket(req) {
                 console.log("disconnected!!!!Yah!!!");
                 
                     console.log(socket.nsp.connected);
-                
+                    if (socket.nsp.connected == {}) console.log("nobody left...");
                 
             });
 
             console.log("==========");
             console.log("new socket connection on " + req.session.xapi.ownerId);
-            console.log(socket.nsp.connected);
+            
         });
 
     //}
