@@ -15,7 +15,9 @@ var att = angular.module("att", [
 
 att
     .factory('socketio', function (socketFactory) {
-        var socket = io.connect('/'+nsp);
+        var socket = io.connect('/' + nsp, {
+            'sync disconnect on unload': true
+        });
         var factory = socketFactory({
             ioSocket: socket
         });
