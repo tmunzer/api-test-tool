@@ -55,7 +55,7 @@ function createSocket(req) {
                 if (count == 0) {
                     removeTestWebhook(req);
                 }
-            }, 10000);
+            }, 30000);
         });
         console.log("==========");
         console.log("new socket connection on namespace /" + req.session.xapi.ownerId);
