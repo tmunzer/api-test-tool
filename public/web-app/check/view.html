@@ -230,15 +230,15 @@
                             <div class="md-toolbar-tools" style="height: 50px">
                                 <h2 class="md-title">Test Presence Webhook</h2>
                                 <span flex></span>
-                                <md-button aria-label="details" ng-click="start()" style="min-width: 10px;" ng-disabled="webhook.test != undefined">
+                                <md-button aria-label="details" ng-click="startWh()" style="min-width: 10px;" ng-disabled="webhook.test != undefined">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.start" | translate}}</md-tooltip>
                                     <md-icon class="material-icons" aria-label="details">play_arrow</md-icon>
                                 </md-button>
-                                    <md-button aria-label="refresh" ng-click="stop()" style="min-width: 10px;" ng-disabled="webhook.test == undefined">
+                                    <md-button aria-label="refresh" ng-click="stopWh()" style="min-width: 10px;" ng-disabled="webhook.test == undefined">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.stop" | translate}}</md-tooltip>
                                     <md-icon class="material-icons" aria-label="refresh">stop</md-icon>
                                 </md-button>
-                                    <md-button aria-label="refresh" ng-click="restart()" ng-disabled="webhook.test != undefined" style="min-width: 10px;">
+                                    <md-button aria-label="refresh" ng-click="restartWh()" ng-disabled="webhook.test == undefined" style="min-width: 10px;">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.restart" | translate}}</md-tooltip>
                                     <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
                                 </md-button>

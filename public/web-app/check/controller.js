@@ -690,7 +690,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     }
 
     //start the test
-    $scope.start = function () {
+    $scope.startWh = function () {
         // indicate to the UI that the starting process is initiated        
         $scope.webhook.register.started = true;
         // start the process
@@ -719,7 +719,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     }
 
     // stop the test
-    $scope.stop = function () {
+    $scope.stopWh = function () {
         var webhookId;
         // try to get the webhook id from the local data
         if ($scope.webhook.test) webhookId = $scope.webhook.test.id;
