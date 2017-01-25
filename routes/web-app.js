@@ -5,7 +5,7 @@ var router = express.Router();
  CREATE SOCKET.IO
  ================================================================*/
 function createSocket(req) {
-    if (!io.nsps["/" + req.session.xapi.ownerId]) {
+    //if (!io.nsps["/" + req.session.xapi.ownerId]) {
         var nsp = io.of("/" + req.session.xapi.ownerId);
         nsp.on('connection', function (socket) {
             socket.emit("message", "You are now connected to the socket!");
@@ -22,7 +22,7 @@ function createSocket(req) {
             console.log(socket.nsp);
         });
 
-    }
+    //}
 }
 /*================================================================
  ENTRYU POINT
