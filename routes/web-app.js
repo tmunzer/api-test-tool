@@ -10,7 +10,7 @@ function createSocket(req) {
         nsp.on('connection', function (socket) {
             console.log("==========");
             console.log("new socket connection on " + req.session.xapi.ownerId);
-            console.log(nsp);
+            console.log(socket);
             socket.emit("message", "You are now connected to the socket!");
             socket.on('update', function (action) {
                 socket.emit("update", action); // send the update message to the sender
