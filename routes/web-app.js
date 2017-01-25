@@ -5,11 +5,37 @@ var API = require("./../bin/aerohive/api/main");
 var devAccount = require("../config").devAccount;
 var serverHostname = require("../config.js").appServer.vhost;
 
+
+function removeTestWebhook(req) {
+    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
+        if (err) console.log(err);
+        else {
+            response.forEach(function (wh) {
+                if (
+                    wh.ownerId == req.session.xapi.ownerId
+                    && wh.url == "https://" + serverHostname + "/webhook/presence"
+                ) {
+                    API.configuration.webhooks.remove(
+                        req.session.xapi,
+                        devAccount,
+                        wh.id,
+                        function (err, response, request) {
+                            if (err) console.log(err);
+                            else {
+                                console.log("==========");
+                                console.log("Webhook " + wh.id + " removed for account " + req.session.xapi.ownerId);
+                            }
+                        })
+                };
+            });
+        }
+    })
+}
+
 /*================================================================
  CREATE SOCKET.IO
  ================================================================*/
 function createSocket(req) {
-    //if (!io.nsps["/" + req.session.xapi.ownerId]) {
     var nsp = io.of("/" + req.session.xapi.ownerId);
     nsp.on('connection', function (socket) {
         socket.emit("message", "You are now connected to the socket!");
@@ -27,37 +53,14 @@ function createSocket(req) {
                         ++count;
                 }
                 if (count == 0) {
-                    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
-                        if (err) console.log(err);
-                        else {
-                            response.forEach(function (wh) {
-                                if (
-                                    wh.ownerId == req.session.xapi.ownerId
-                                    && wh.url == "https://" + serverHostname + "/webhook/presence"
-                                ) {
-                                    API.configuration.webhooks.remove(
-                                        req.session.xapi,
-                                        devAccount,
-                                        wh.id,
-                                        function (err, response, request) {
-                                            if (err) console.log(err);
-                                            else {
-                                                console.log("==========");
-                                                console.log("Webhook " + wh.id + " removed for account " + req.session.xapi.ownerId);
-                                            }
-                                        })
-                                };
-                            });
-                        }
-                    })
+                    removeTestWebhook(req);
                 }
-            }, 5000);
+            }, 10000);
         });
         console.log("==========");
         console.log("new socket connection on namespace /" + req.session.xapi.ownerId);
     });
 
-    //}
 }
 /*================================================================
  ENTRYU POINT
