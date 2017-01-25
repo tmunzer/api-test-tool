@@ -398,7 +398,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
 
     $scope.testApiCall = function (apiCall) {
         apiCall.endpoints.forEach(function (endpoint) {
-                if (!$scope.waitingForOtherCalls(endpoint)) $scope.generateRequest(endpoint, true);
+            if (!$scope.waitingForOtherCalls(endpoint)) $scope.generateRequest(endpoint, true);
         })
     }
 
@@ -626,12 +626,10 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
             else {
                 alert("done");
                 $scope.getCurrentWebhooks();
-                $scope.webhook = {
-                    application: "",
-                    secret: "",
-                    eventType: undefined,
-                    messageType: undefined
-                }
+                $scope.webhook.application = "";
+                $scope.webhook.secret = "";
+                $scope.webhook.eventType = undefined;
+                $scope.webhook.messageType = undefined;
             }
         })
     }
