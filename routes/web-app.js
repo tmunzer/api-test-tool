@@ -8,9 +8,6 @@ function createSocket(req) {
     if (!io.nsps["/" + req.session.xapi.ownerId]) {
         var nsp = io.of("/" + req.session.xapi.ownerId);
         nsp.on('connection', function (socket) {
-            console.log("==========");
-            console.log("new socket connection on " + req.session.xapi.ownerId);
-            console.log(socket.nsp);
             socket.emit("message", "You are now connected to the socket!");
             socket.on("update", function (action) {
                 socket.emit("update", action); // send the update message to the sender
@@ -18,7 +15,11 @@ function createSocket(req) {
             });
             socket.on("disconnect", function () {
                 console.log("disconnected!!!!Yah!!!");
-            })
+            });
+
+            console.log("==========");
+            console.log("new socket connection on " + req.session.xapi.ownerId);
+            console.log(socket.nsp);
         });
 
     }
