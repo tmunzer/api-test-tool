@@ -10,12 +10,16 @@ function createSocket(req) {
         nsp.on('connection', function (socket) {
             console.log("==========");
             console.log("new socket connection on " + req.session.xapi.ownerId);
+            console.log(nsp);
             socket.emit("message", "You are now connected to the socket!");
-            socket.on('update', function(action){
+            socket.on('update', function (action) {
                 socket.emit("update", action); // send the update message to the sender
                 socket.broadcast.emit("update", action); // send the update message to everyone in this nsp BUT the sender
-            })
-        });        
+            });
+            socket.on('disconnect', function () {
+                console.log('user disconnected');
+            });
+        });
     }
 }
 /*================================================================
