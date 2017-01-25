@@ -23,7 +23,7 @@ function createSocket(req) {
 
             console.log("==========");
             console.log("new socket connection on " + req.session.xapi.ownerId);
-            console.log(socket.nsp);
+            console.log(socket);
         });
 
     //}
