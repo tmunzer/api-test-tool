@@ -10,8 +10,10 @@ function createSocket(req) {
         nsp.on('connection', function (socket) {
             console.log("==========");
             console.log("new socket connection on " + req.session.xapi.ownerId);
-            console.log(socket);
+            //console.log(socket);
             for (nspid in socket.nsp){
+                console.log(nspid)
+                console.log("_______");
                 if (nspid.name == "/"+req.session.xapi.ownerId){
                     console.log(nspid.server.connected);
                 }
