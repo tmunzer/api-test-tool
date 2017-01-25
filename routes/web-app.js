@@ -11,15 +11,6 @@ function createSocket(req) {
             console.log("==========");
             console.log("new socket connection on " + req.session.xapi.ownerId);
             console.log(socket);
-            console.log('______');
-            console.log(req.session);
-            /*for (nspid in socket.nsp){
-                console.log(nspid)
-                console.log("_______");
-                if (nspid.name == "/"+req.session.xapi.ownerId){
-                    console.log(nspid.server.connected);
-                }
-            }*/
             socket.emit("message", "You are now connected to the socket!");
             socket.on('update', function (action) {
                 socket.emit("update", action); // send the update message to the sender
