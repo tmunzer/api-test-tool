@@ -8,6 +8,7 @@ var serverHostname = require("../config.js").appServer.vhost;
 
 function removeTestWebhook(req) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
+        var removed = false;
         if (err) console.log(err);
         else {
             response.forEach(function (wh) {
@@ -15,6 +16,7 @@ function removeTestWebhook(req) {
                     wh.ownerId == req.session.xapi.ownerId
                     && wh.url == "https://" + serverHostname + "/webhook/presence"
                 ) {
+                    removed = true;
                     API.configuration.webhooks.remove(
                         req.session.xapi,
                         devAccount,
@@ -27,6 +29,10 @@ function removeTestWebhook(req) {
                             }
                         })
                 };
+                if (!removed) {
+                    console.log("==========");
+                    console.log("There is no Webhook to remove for account " + req.session.xapi.ownerId);
+                }
             });
         }
     })
@@ -51,9 +57,11 @@ function createSocket(req) {
                 setTimeout(function () {
                     var count = 0;
                     for (var prop in socket.nsp.connected) {
+                        console.log(prop);
                         if (prop)
                             ++count;
                     }
+                    console.log("remaining connections to namespace /" + req.session.xapi.ownerId + ": " + count);
                     if (count == 0) {
                         removeTestWebhook(req);
                     }
