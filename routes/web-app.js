@@ -8,32 +8,30 @@ var serverHostname = require("../config.js").appServer.vhost;
 
 function removeTestWebhook(req) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
-        var removed = false;
+        var whToRemove = false;
         if (err) console.log(err);
         else {
             response.forEach(function (wh) {
                 if (
                     wh.ownerId == req.session.xapi.ownerId
                     && wh.url == "https://" + serverHostname + "/webhook/presence"
-                ) {
-                    removed = true;
-                    API.configuration.webhooks.remove(
-                        req.session.xapi,
-                        devAccount,
-                        wh.id,
-                        function (err, response, request) {
-                            if (err) console.log(err);
-                            else {
-                                console.log("==========");
-                                console.log("Webhook " + wh.id + " removed for account " + req.session.xapi.ownerId);
-                            }
-                        })
-                };
-                if (!removed) {
-                    console.log("==========");
-                    console.log("There is no Webhook to remove for account " + req.session.xapi.ownerId);
-                }
+                ) whToRemove = true;
             });
+            if (whToRemove) API.configuration.webhooks.remove(
+                req.session.xapi,
+                devAccount,
+                wh.id,
+                function (err, response, request) {
+                    if (err) console.log(err);
+                    else {
+                        console.log("==========");
+                        console.log("Webhook " + wh.id + " removed for account " + req.session.xapi.ownerId);
+                    }
+                })
+            else {
+                console.log("==========");
+                console.log("There is no Webhook to remove for account " + req.session.xapi.ownerId);
+            }
         }
     })
 }
