@@ -51,7 +51,7 @@ function createSocket(req) {
                 setTimeout(function () {
                     var count = 0;
                     for (var prop in socket.nsp.connected) {
-                        if (obj.prop)
+                        if (prop)
                             ++count;
                     }
                     if (count == 0) {
