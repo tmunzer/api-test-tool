@@ -16,8 +16,8 @@
     "jquery": "~2.2.4",
     "bootstrap": "~3.3.7",
     "material-design-icons": "~3.0.1",
-    "angular-translate-loader-url": "~2.13.0",
-    "angular-translate-loader-static-files": "~2.13.0",
+    "angular-translate-loader-url": "~2.14.0",
+    "angular-translate-loader-static-files": "~2.14.0",
     "angular-socket-io": "~0.7.0",
     "angular": "~1.6.2",
     "angular-bootstrap": "^2.4.0"
