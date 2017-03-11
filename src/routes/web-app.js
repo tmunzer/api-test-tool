@@ -9,7 +9,7 @@ var serverHostname = require("../config.js").appServer.vhost;
 function removeTestWebhook(req) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
         var whToRemove = false;
-        if (err) console.log(err);
+        if (err) console.error("\x1b[31mERROR\x1b[0m:", error);
         else {
             response.forEach(function (wh) {
                 if (
@@ -22,15 +22,15 @@ function removeTestWebhook(req) {
                 devAccount,
                 wh.id,
                 function (err, response, request) {
-                    if (err) console.log(err);
+                    if (err) console.error("\x1b[31mERROR\x1b[0m:", error);
                     else {
                         console.log("==========");
-                        console.log("Webhook " + wh.id + " removed for account " + req.session.xapi.ownerId);
+                        console.info("\x1b[33mwarn\x1b[0m:", "Webhook " + wh.id + " removed for account " + req.session.xapi.ownerId);
                     }
                 })
             else {
                 console.log("==========");
-                console.log("There is no Webhook to remove for account " + req.session.xapi.ownerId);
+                console.info("\x1b[33mwarn\x1b[0m:", "There is no Webhook to remove for account " + req.session.xapi.ownerId);
             }
         }
     })
@@ -51,7 +51,7 @@ function createSocket(req) {
             });
             socket.on("disconnect", function () {
                 console.log("==========");
-                console.log("connection to namespace /" + req.session.xapi.ownerId + " closed");
+                console.info("\x1b[33mwarn\x1b[0m:", "connection to namespace /" + req.session.xapi.ownerId + " closed");
                 setTimeout(function () {
                     var count = 0;
                     for (var prop in socket.nsp.connected) {
@@ -59,14 +59,14 @@ function createSocket(req) {
                         if (prop)
                             ++count;
                     }
-                    console.log("remaining connections to namespace /" + req.session.xapi.ownerId + ": " + count);
+                    console.info("\x1b[33mwarn\x1b[0m:", "remaining connections to namespace /" + req.session.xapi.ownerId + ": " + count);
                     if (count == 0) {
                         removeTestWebhook(req);
                     }
                 }, 30000);
             });
             console.log("==========");
-            console.log("new socket connection on namespace /" + req.session.xapi.ownerId);
+            console.info("\x1b[33mwarn\x1b[0m:","new socket connection on namespace /" + req.session.xapi.ownerId);
         });
     }
 }
