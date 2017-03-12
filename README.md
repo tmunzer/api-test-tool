@@ -2,6 +2,10 @@
 This is a free Reference APP built to provide a usefull tool for developers to validate APIs availibility with detailed information about API requests and responses.
 This app also provide a tool to test or register webhooks. 
 
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
 This application is publicly available [here](https://check.ah-lab.fr) (You will need a HiveManager NG account).
 ![api-test-tool](https://github.com/tmunzer/api-test-tool/blob/master/api-test-tool.png?raw=true)
 
