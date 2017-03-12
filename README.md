@@ -1,6 +1,10 @@
 # API Test Tool
-This is a free Reference APP built to provide a usefull tool for developers to validate APIs availibility with detailed information about API requests and responses.
+This is a free Reference APP built to provide a useful tool for developers to validate APIs availability with detailed information about API requests and responses.
 This app also provide a tool to test or register webhooks. 
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 This application is publicly available [here](https://check.ah-lab.fr) (You will need a HiveManager NG account).
 ![api-test-tool](https://github.com/tmunzer/api-test-tool/blob/master/api-test-tool.png?raw=true)
@@ -41,4 +45,4 @@ To use this script, just download it [here](https://github.com/tmunzer/api-test-
 #### Manual deployment
 If you are manually deploying this container, you will need to a reverse proxy to manage HTTPS.
 
-`docker create -v <path_to_config.js>/config.js:/app/config.js:ro --name="<container_name>" -p 51362:80 tmunzer/api-test-tool`
+`docker create -v <path_to_config.js>/config.js:/app/config.js:ro --name="<container_name>" -p 51363:80 tmunzer/api-test-tool`
