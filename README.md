@@ -1,5 +1,5 @@
 # API Test Tool
-This is a free Reference APP built to provide a usefull tool for developers to validate APIs availibility with detailed information about API requests and responses.
+This is a free Reference APP built to provide a useful tool for developers to validate APIs availability with detailed information about API requests and responses.
 This app also provide a tool to test or register webhooks. 
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
