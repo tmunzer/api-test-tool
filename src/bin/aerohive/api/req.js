@@ -150,8 +150,8 @@ function httpRequest(options, callback, body) {
             if (body) request.body = JSON.parse(body);
             else request.body = {};
             if (data != '') {
-                if (data.length > 400) console.info("\x1b[34mREQUEST DATA\x1b[0m:", data.substr(0, 400) + '...');
-                else console.info("\x1b[34mREQUEST DATA\x1b[0m:", data);   
+                if (data.length > 400) console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data.substr(0, 400) + '...');
+                else console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data);   
                 var dataJSON = JSON.parse(data);
                 result.data = dataJSON.data;
                 result.error = dataJSON.error;
@@ -163,7 +163,7 @@ function httpRequest(options, callback, body) {
                     break;
                 default:
                     var error = {};
-                    console.error("\x1b[31mREQUEST ERROR\x1b[0m:", JSON.stringify(error));
+                    console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(error));
                     callback(result.error, result.data, request);
                     break;
 
