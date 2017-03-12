@@ -41,4 +41,4 @@ To use this script, just download it [here](https://github.com/tmunzer/api-test-
 #### Manual deployment
 If you are manually deploying this container, you will need to a reverse proxy to manage HTTPS.
 
-`docker create -v <path_to_config.js>/config.js:/app/config.js:ro --name="<container_name>" -p 51362:80 tmunzer/api-test-tool`
+`docker create -v <path_to_config.js>/config.js:/app/config.js:ro --name="<container_name>" -p 51363:80 tmunzer/api-test-tool`
