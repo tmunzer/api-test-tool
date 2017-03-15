@@ -9,7 +9,7 @@ var serverHostname = require("../config.js").appServer.vhost;
 function removeTestWebhook(req) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
         var whToRemove = false;
-        if (err) console.error("\x1b[31mERROR\x1b[0m:", error);
+        if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
         else {
             response.forEach(function (wh) {
                 if (
@@ -22,7 +22,7 @@ function removeTestWebhook(req) {
                 devAccount,
                 wh.id,
                 function (err, response, request) {
-                    if (err) console.error("\x1b[31mERROR\x1b[0m:", error);
+                    if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
                     else {
                         console.log("==========");
                         console.info("\x1b[33mwarn\x1b[0m:", "Webhook " + wh.id + " removed for account " + req.session.xapi.ownerId);
