@@ -43,7 +43,7 @@ httpsServer.on('listening', onListening);
  */
 global.io = require('socket.io')(httpsServer);
 var sharedsession = require("express-socket.io-session");
-io.use(sharedsession(app.session, {
+io.use(sharedsession(session, {
     autoSave:true
 }));
 /**

@@ -33,7 +33,7 @@ var mongoSession = session({
 
 // Use express-session middleware for express
 app.use(mongoSession);
-module.exports.session = mongoSession;
+global.session = mongoSession;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
