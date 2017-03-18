@@ -5,7 +5,6 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('att:server');
 var http = require('http');
 
 
@@ -44,7 +43,7 @@ httpsServer.on('listening', onListening);
  */
 global.io = require('socket.io')(httpsServer);
 var sharedsession = require("express-socket.io-session");
-io.use(sharedsession(session, {
+io.use(sharedsession(app.session, {
     autoSave:true
 }));
 /**

@@ -60,9 +60,9 @@ EMAIL_SRV_ENABLE=false
 # mongoDB server configuration
 # uncomment if needed by the app
 
-#DB_FOLDER="mongoDB"
-#DB_NAME="ah-mongo"
-#DB_IMG="mongo"
+DB_FOLDER="mongoDB"
+DB_NAME="ah-mongo"
+DB_IMG="mongo"
 
 # =========================================================
 # NGINX server configuration

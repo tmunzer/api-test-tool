@@ -1,28 +1,30 @@
-
 var path = require('path');
 var express = require('express');
 var morgan = require('morgan')
 var parseurl = require('parseurl');
-//var session = require('express-session');
+var session = require('express-session');
 var favicon = require('serve-favicon');
-
-
-global.console = require('winston');
-console.level = 'debug';
-
 var bodyParser = require('body-parser');
+var MongoDBStore = require('connect-mongodb-session')(session);
 
 var events = require('events');
 global.eventEmitter = new events.EventEmitter();
 
 var app = express();
 app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
-  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0 && req.originalUrl.indexOf("/webhook") < 0}
+  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0 && req.originalUrl.indexOf("/webhook") < 0 }
 }));
 
-global.session = require("express-session")({
-  secret: 'Aerohive Identity Ref APP Secret',
+
+//  session to mongoDB 
+var mongoConfig = require('./config').mongoConfig;
+var mongoSession = session({
+  secret: 'ZHxiqtUpjxVYsap5NvY8yuZGFPUg',
   resave: true,
+  store: new MongoDBStore({
+    uri: 'mongodb://' + mongoConfig.host + '/express-session',
+    collection: 'api-test-tool'
+  }),
   saveUninitialized: true,
   cookie: {
     maxAge: 60 * 60 * 1000 // 60 minutes
@@ -30,7 +32,8 @@ global.session = require("express-session")({
 });
 
 // Use express-session middleware for express
-app.use(session);;
+app.use(mongoSession);
+module.exports.session = mongoSession;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -56,9 +59,6 @@ app.use('/oauth/', oauth);
 app.use('/webhook/', webhook);
 
 
-app.get('*', function (req, res) {
-  res.redirect('/');
-});
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
@@ -71,6 +71,8 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
+  console.log("dev");
+  console.log(app.get('env'));
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -79,12 +81,17 @@ if (app.get('env') === 'development') {
     });
   });
 }
-
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
+  console.log("no dev");
+  console.log(err.message);
+  console.log(err.status);
+  console.log(req.originalUrl);
+  if (err.status == 404) err.message = "The requested url "+req.originalUrl+" was not found on this server.";
   res.status(err.status || 500);
   res.render('error', {
+    status: err.status,
     message: err.message,
     error: {}
   });
