@@ -34,3 +34,9 @@ module.exports.devAccount = {
     clientSecret: "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
     clientID: "xxxxxxxxx"
 }
+/******************************************************************************
+ *                MongoDB (used to store sessions)                           *
+******************************************************************************/
+module.exports.mongoConfig = {
+    host: "localhost"
+}
