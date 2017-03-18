@@ -71,8 +71,6 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  console.log("dev");
-  console.log(app.get('env'));
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -84,10 +82,6 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
-  console.log("no dev");
-  console.log(err.message);
-  console.log(err.status);
-  console.log(req.originalUrl);
   if (err.status == 404) err.message = "The requested url "+req.originalUrl+" was not found on this server.";
   res.status(err.status || 500);
   res.render('error', {

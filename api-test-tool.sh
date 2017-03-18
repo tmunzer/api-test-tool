@@ -17,6 +17,7 @@ function create_app_container
       $DOCKER create \
       --security-opt label:disable \
       -v $PERSISTANT_FOLDER/$APP_NAME/config.js:/app/config.js:ro \
+      --link $DB_NAME:mongo \
       --name="$APP_NAME" \
       --restart="on-failure:5" \
       -e "VIRTUAL_HOST=$NODEJS_VHOST" \
