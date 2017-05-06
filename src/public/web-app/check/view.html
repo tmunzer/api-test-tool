@@ -26,7 +26,7 @@
                             <md-button class="md-primary md-raised" ng-click="testAllCategories()" style="min-width: 10px;">
                                         <span hide show-gt-sm translate="button.testAllCategories"></span>
                                         <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible"> {{"button.testAllCategories" | translate}}</md-tooltip>
-                                        <md-icon class="material-icons" aria-label="test all">play_circle_outline</md-icon>
+                                        <md-icon class="material-icons" aria-label="test all" md-svg-src="/images/icons/ic_play_circle_outline_white_24px.svg"></md-icon>
                                     </md-button>                   
                         </md-content>
                     </md-sidenav>
@@ -42,7 +42,7 @@
                                     <md-button aria-label="test all" ng-click="testApiCall(apiCall)" style="min-width: 10px;">
                                         <span hide show-gt-sm translate="button.testAll"></span>
                                         <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible"> {{"button.testAll" | translate}}</md-tooltip>
-                                        <md-icon class="material-icons" aria-label="test all">play_circle_outline</md-icon>
+                                        <md-icon class="material-icons" aria-label="test all" md-svg-src="/images/icons/ic_play_circle_outline_white_24px.svg"></md-icon>
                                     </md-button>
                                 </div>
                             </md-toolbar>
@@ -59,12 +59,12 @@
                                     <div>
                                         <md-button aria-label="details" class="md-raised md-primary" ng-click="showDetails(endpoint)" style="min-width: 10px;" ng-disabled="!endpoint.loaded || endpoint.status == 0">
                                             <span translate="button.details"></span>
-                                            <md-icon class="material-icons" aria-label="details">description</md-icon>
+                                            <md-icon class="material-icons" aria-label="details" md-svg-src="/images/icons/ic_description_24px.svg"></md-icon>
                                         </md-button>
                                         <md-button aria-label="test" ng-click="generateRequest(endpoint)" style="min-width: 10px;" ng-disabled="waitingForOtherCalls(endpoint)">
                                             <span hide show-gt-sm translate="button.test"></span>
                                             <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.test" | translate}}</md-tooltip>
-                                            <md-icon class="material-icons" aria-label="test">play_arrow</md-icon>
+                                            <md-icon class="material-icons" aria-label="test" md-svg-src="/images/icons/ic_play_arrow_24px.svg"></md-icon>
                                         </md-button>
                                     </div>
                                 </div>
@@ -132,11 +132,11 @@
                                 <span flex></span>
                                 <md-button aria-label="refresh" ng-click="deleteCurrentWebhooks()" style="min-width: 10px;" ng-disabled="selectedCurrentWebhooks.length == 0">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible"> {{"button.delete" | translate}}</md-tooltip>
-                                    <md-icon class="material-icons" aria-label="refresh">delete</md-icon>
+                                    <md-icon class="material-icons" aria-label="refresh" md-svg-src="/images/icons/ic_delete_24px.svg"></md-icon>
                                 </md-button>
                                 <md-button aria-label="refresh" ng-click="getCurrentWebhooks()" style="min-width: 10px;">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible"> {{"button.refresh" | translate}}</md-tooltip>
-                                    <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                                    <md-icon class="material-icons" aria-label="refresh" md-svg-src="/images/icons/ic_refresh_24px.svg"></md-icon>
                                 </md-button>
                             </div>
                         </md-toolbar>
@@ -232,15 +232,15 @@
                                 <span flex></span>
                                 <md-button aria-label="details" ng-click="startWh()" style="min-width: 10px;" ng-disabled="webhook.test != undefined">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.start" | translate}}</md-tooltip>
-                                    <md-icon class="material-icons" aria-label="details">play_arrow</md-icon>
+                                    <md-icon class="material-icons" aria-label="details" md-svg-src="/images/icons/ic_play_arrow_white_24px.svg"></md-icon>
                                 </md-button>
                                     <md-button aria-label="refresh" ng-click="stopWh()" style="min-width: 10px;" ng-disabled="webhook.test == undefined">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.stop" | translate}}</md-tooltip>
-                                    <md-icon class="material-icons" aria-label="refresh">stop</md-icon>
+                                    <md-icon class="material-icons" aria-label="refresh" md-svg-src="/images/icons/ic_stop_24px.svg"></md-icon>
                                 </md-button>
                                     <md-button aria-label="refresh" ng-click="restartWh()" ng-disabled="webhook.test == undefined" style="min-width: 10px;">
                                     <md-tooltip md-direction="bottom" md-visible="tooltipVisible" )> {{"button.restart" | translate}}</md-tooltip>
-                                    <md-icon class="material-icons" aria-label="refresh">refresh</md-icon>
+                                    <md-icon class="material-icons" aria-label="refresh" md-svg-src="/images/icons/ic_refresh_24px.svg"></md-icon>
                                 </md-button>
                             </div>
                         </md-toolbar>
@@ -259,7 +259,7 @@
                                         <md-button aria-label="details" ng-click="showDetails(webhook.register)" style="min-width: 10px;" ng-disabled="!webhook.register.loaded || webhook.register.status == 0">
                                             <span hide show-gt-sm translate="button.details"></span>
                                             <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
-                                            <md-icon class="material-icons" aria-label="details">description</md-icon>
+                                            <md-icon class="material-icons" aria-label="details" md-svg-src="/images/icons/ic_description_24px.svg"></md-icon>
                                         </md-button>
                                     </div>
                                 </md-toolbar>
@@ -280,7 +280,7 @@
                                         <md-button aria-label="details" ng-click="showDetails(webhook.remove)" style="min-width: 10px;" ng-disabled="!webhook.remove.loaded || webhook.remove.status == 0">
                                             <span hide show-gt-sm translate="button.details"></span>
                                             <md-tooltip hide-gt-sm md-direction="bottom" md-visible="tooltipVisible" )> {{"button.details" | translate}}</md-tooltip>
-                                            <md-icon class="material-icons" aria-label="details">description</md-icon>
+                                            <md-icon class="material-icons" aria-label="details" md-svg-src="/images/icons/ic_description_24px.svg"></md-icon>
                                         </md-button>
                                     </div>
                                 </md-toolbar>
