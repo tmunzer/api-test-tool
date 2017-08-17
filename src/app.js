@@ -28,7 +28,8 @@ var mongoSession = session({
   saveUninitialized: true,
   cookie: {
     maxAge: 60 * 60 * 1000 // 60 minutes
-  }
+  },
+  rolling: true
 });
 
 // Use express-session middleware for express
