@@ -119,7 +119,7 @@ angular.module('Check').controller("EndpointCtrl", function ($scope, $mdDialog, 
                     name: "configuration/webhooks/eventTypes",
                     method: "GET",
                     endpoint: "/beta/configuration/webhooks/eventTypes{?ownerId}",
-                    description: "rovides a list of all supported Event Types available for subscription.",
+                    description: "Provides a list of all supported Event Types available for subscription.",
                     status: 0,
                     request: null,
                     body: {},
@@ -549,7 +549,9 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         if ($scope.requestCurrentWebhook) $scope.requestCurrentWebhook.abort();
         $scope.requestCurrentWebhook = webhookService.getCurrent();
         $scope.requestCurrentWebhook.then(function (promise) {
-            if (promise && promise.error) apiWarning(promise.error);
+
+            if (promise && promise.error) $rootScope.$broadcast("apiError", promise.error);
+            else if (promise.status > 300) $rootScope.$broadcast("apiError", promise.data.error);
             else {
                 $scope.currentWebhooks = promise.data.response;
                 $scope.webhook.test = undefined;
@@ -592,7 +594,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     function getEventTypes() {
         var request = endpointService.noId({ name: "configuration/webhooks/eventTypes", method: "GET" })
         request.then(function (promise) {
-            if (promise && promise.err) alert(promise.err);
+            if (promise && promise.err) $rootScope.$broadcast("apiError", promise.err);
+            else if (promise.status > 300) $rootScope.$broadcast("apiError", promise.data.error);
             else $scope.eventTypes = promise.data.response;
         })
     }
@@ -602,7 +605,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         if ($scope.customWebhook.eventType != undefined) {
             var request = endpointService.eventType({ name: "configuration/webhooks/messageTypes", method: "GET" }, $scope.customWebhook.eventType)
             request.then(function (promise) {
-                if (promise && promise.err) alert(promise.err);
+                if (promise && promise.err) $rootScope.$broadcast("apiError", promise.err);
+                else if (promise.status > 300) $rootScope.$broadcast("apiError", promise.data.error);
                 else $scope.messageTypes = promise.data.response;
             })
         }

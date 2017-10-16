@@ -1,25 +1,30 @@
 <md-dialog aria-label="List dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>HTTP {{items.apiErrorStatus}}</h2>
+            <h2>HTTP {{items.errorStatus}}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content">
             <table style="text-align: left">
                 <tr>
-                    <th style="padding: 10px;"><span translate="modal.error.message"></span>:</th>
-                    <td>{{items.apiErrorMessage}}</td>
+                    <th style="padding: 10px;">Error message:</th>
+                    <td>{{items.errorMessage}}</td>
                 </tr>
                 <tr>
-                    <th style="padding: 10px;"><span translate="modal.error.code"></span>:</th>
-                    <td>{{items.apiErrorCode}}</td>
+                    <th style="padding: 10px;">Error code:</th>
+                    <td>{{items.errorCode}}</td>
                 </tr>
+                <tr ng-show="items.rawMessage">
+                    <td style="padding: 10px">Raw Message:</td>
+                    <td>{{items.rawMessage}}</td>
+                </tr>
+                
             </table>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button href="/web-app/" translate="modal.error.reload" aria-label="reload"></md-button>
-        <md-button href="/logout/" class="md-raised md-primary" translate="modal.error.other" aria-label="other"></md-button>
+        <md-button ng-if="false" href="/web-app/" aria-label="reload">Reload the page</md-button>
+        <md-button href="/logout/" class="md-raised md-primary" aria-label="other">Back to login page</md-button>
     </md-dialog-actions>
 </md-dialog>

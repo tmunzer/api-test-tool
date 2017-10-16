@@ -1,6 +1,6 @@
 angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $mdDialog) {
     $rootScope.displayed = false;
-    $scope.$on('apiError', function (event, apiError) {
+    $rootScope.$on('apiError', function (event, apiError) {
         if (!$rootScope.displayed) {
             $rootScope.displayed = true;
             $mdDialog.show({
@@ -9,9 +9,10 @@ angular.module('Modals').controller('ModalCtrl', function ($scope, $rootScope, $
                 escapeToClose: false,
                 locals: {
                     items: {
-                        apiErrorStatus: apiError.status,
-                        apiErrorMessage: apiError.message,
-                        apiErrorCode: apiError.code
+                        errorStatus: apiError.status,
+                        errorMessage: apiError.message,
+                        errorCode: apiError.code,
+                        rawMessage: apiError.rawMessage
                     }
                 }
             }).then(function () {
