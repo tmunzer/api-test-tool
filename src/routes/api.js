@@ -85,10 +85,15 @@ router.get("/configuration/webhooks/messageTypes", checkApi, function (req, res,
         })
     } else res.status(500).send({ error: "eventType has to passed into request query." });
 })
-router.get("/configuration/webhooks", checkApi, function (req, res, next) {
-    API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
-        sendReponse(res, err, response, request)
-    })
+router.get("/configuration/webhooks/:version", checkApi, function (req, res, next) {
+    if (req.params.version == "beta")
+        API.configuration.webhooks.get_beta(req.session.xapi, devAccount, function (err, response, request) {
+            sendReponse(res, err, response, request)
+        })
+    else
+        API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
+            sendReponse(res, err, response, request)
+        })
 })
 function checkWebhook(req, callback) {
     API.configuration.webhooks.get(req.session.xapi, devAccount, function (err, response, request) {
@@ -100,7 +105,7 @@ function checkWebhook(req, callback) {
                     wh.ownerId == req.session.xapi.ownerId
                     //&& wh.application == "ApiTestTool"
                     //&& wh.secret == req.session.xapi.vpcUrl + req.session.xapi.ownerId
-                    && wh.url == "https://"+serverHostname+"/webhook/presence"
+                    && wh.url == "https://" + serverHostname + "/webhook/presence"
                 ) {
                     webhook = wh;
                     req.session.webhookId = wh.id;
@@ -111,7 +116,7 @@ function checkWebhook(req, callback) {
         }
     })
 }
-router.post("/configuration/webhooks", checkApi, function (req, res, next) {
+router.post("/configuration/webhooks/:version", checkApi, function (req, res, next) {
     var subscription;
     if (req.body.webhook) subscription = {
         "application": req.body.webhook.application,
@@ -123,28 +128,43 @@ router.post("/configuration/webhooks", checkApi, function (req, res, next) {
     else subscription = {
         "application": "ApiTestTool",
         "secret": req.session.xapi.vpcUrl + req.session.xapi.ownerId,
-        "url": "https://"+serverHostname+"/webhook/presence",
+        "url": "https://" + serverHostname + "/webhook/presence",
         "eventType": "LOCATION",
         "messageType": "LOCATION_AP_CENTRIC"
     }
     if (req.session.xapi.ownerId) {
         subscription.ownerId = req.session.xapi.ownerId;
-        API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, response, request) {
-            if (err) {
-                if (err.code == "core.service.data.can.not.persist.object") {
-                    checkWebhook(req, function (err2, response2) {
-                        sendReponse(res, err2, response2, request);
-                    });
-                } else res.status(err.status).send({ error: err, request: request });
-            } else {
-                req.session.webhookId = response.id;
-                req.session.save();
-                res.json({ response: response, request: request });
-            }
-        })
+        if (req.params.version == "beta")
+            API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, response, request) {
+                if (err) {
+                    if (err.code == "core.service.data.can.not.persist.object") {
+                        checkWebhook(req, function (err2, response2) {
+                            sendReponse(res, err2, response2, request);
+                        });
+                    } else res.status(err.status).send({ error: err, request: request });
+                } else {
+                    req.session.webhookId = response.id;
+                    req.session.save();
+                    res.json({ response: response, request: request });
+                }
+            })
+        else
+            API.configuration.webhooks.create(req.session.xapi, devAccount, subscription, function (err, response, request) {
+                if (err) {
+                    if (err.code == "core.service.data.can.not.persist.object") {
+                        checkWebhook(req, function (err2, response2) {
+                            sendReponse(res, err2, response2, request);
+                        });
+                    } else res.status(err.status).send({ error: err, request: request });
+                } else {
+                    req.session.webhookId = response.id;
+                    req.session.save();
+                    res.json({ response: response, request: request });
+                }
+            })
     } else res.status("404").send("ownerId not present in session.");
 })
-router.delete("/configuration/webhooks", checkApi, function (req, res, next) {
+router.delete("/configuration/webhooks/:version", checkApi, function (req, res, next) {
     var webhookId;
     if (req.query.webhookId) webhookId = req.query.webhookId;
     else if (req.session.webhookId) {
@@ -152,9 +172,14 @@ router.delete("/configuration/webhooks", checkApi, function (req, res, next) {
         io.sockets.in(req.session.webhookId).emit("message", "test");
     }
     if (webhookId) {
-        API.configuration.webhooks.remove(req.session.xapi, devAccount, webhookId, function (err, response, request) {
-            sendReponse(res, err, response, request);
-        })
+        if (req.params.version == "beta")
+            API.configuration.webhooks.remove_beta(req.session.xapi, devAccount, webhookId, function (err, response, request) {
+                sendReponse(res, err, response, request);
+            })
+        else
+            API.configuration.webhooks.remove(req.session.xapi, devAccount, webhookId, function (err, response, request) {
+                sendReponse(res, err, response, request);
+            })
     } else res.status("404").send("webhookId not present in session.");
 })
 

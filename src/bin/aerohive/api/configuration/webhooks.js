@@ -15,6 +15,7 @@ module.exports.eventTypes = function (xapi, devAccount, callback) {
     var path = "/xapi/beta/configuration/webhooks/eventTypes?ownerId=" + xapi.ownerId;
     api.GET(xapi, devAccount, path, callback);
 };
+
 /**
  * Provides a list of all supported Message Types for the specified Event Type.
  * @param {Object} xapi - API credentials
@@ -43,6 +44,10 @@ module.exports.messageTypes = function (xapi, devAccount, eventType, callback) {
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
 module.exports.get = function (xapi, devAccount, callback) {
+    var path = "/xapi/v1/configuration/webhooks?ownerId=" + xapi.ownerId;
+    api.GET(xapi, devAccount, path, callback);
+};
+module.exports.get_beta = function (xapi, devAccount, callback) {
     var path = "/xapi/beta/configuration/webhooks?ownerId=" + xapi.ownerId;
     api.GET(xapi, devAccount, path, callback);
 };
@@ -64,6 +69,14 @@ module.exports.get = function (xapi, devAccount, callback) {
  * @param {String} subscription.url - The https URL to receive a callback as a result of the subscription
  *  */
 module.exports.create = function (xapi, devAccount, subscription, callback) {
+    var path = "/xapi/v1/configuration/webhooks";
+    subscription.ownerId = xapi.ownerId;
+    for (var key in subscription) {
+        if (subscription[key] === '') delete subscription[key];
+    }
+    api.POST(xapi, devAccount, path, subscription, callback);
+};
+module.exports.create_beta = function (xapi, devAccount, subscription, callback) {
     var path = "/xapi/beta/configuration/webhooks";
     subscription.ownerId = xapi.ownerId;
     for (var key in subscription) {
@@ -71,7 +84,6 @@ module.exports.create = function (xapi, devAccount, subscription, callback) {
     }
     api.POST(xapi, devAccount, path, subscription, callback);
 };
-
 
 /**
  * Deletes Webhook subscription
@@ -86,6 +98,10 @@ module.exports.create = function (xapi, devAccount, subscription, callback) {
  * @param {String} subscriptionId - The subscription parameters
  *  */
 module.exports.remove = function (xapi, devAccount, subscriptionId, callback) {
+    var path = "/xapi/v1/configuration/webhooks/" + subscriptionId + "/?ownerId=" + xapi.ownerId;
+    api.DELETE(xapi, devAccount, path, callback);
+};
+module.exports.remove_beta = function (xapi, devAccount, subscriptionId, callback) {
     var path = "/xapi/beta/configuration/webhooks/" + subscriptionId + "/?ownerId=" + xapi.ownerId;
     api.DELETE(xapi, devAccount, path, callback);
 };

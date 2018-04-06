@@ -536,6 +536,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
 
     // Registered webhooks    
     $scope.requestCurrentWebhook = undefined;
+    $scope.webhookVersion = "v1";
     $scope.selectedCurrentWebhooks = [];
     $scope.currentWebhooks = undefined;
     $scope.query = {
@@ -547,7 +548,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     //retrieve the list of registered webhooks
     $scope.getCurrentWebhooks = function () {
         if ($scope.requestCurrentWebhook) $scope.requestCurrentWebhook.abort();
-        $scope.requestCurrentWebhook = webhookService.getCurrent();
+        $scope.requestCurrentWebhook = webhookService.getCurrent($scope.webhookVersion);
         $scope.requestCurrentWebhook.then(function (promise) {
 
             if (promise && promise.error) $rootScope.$broadcast("apiError", promise.error);
@@ -569,10 +570,10 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     // remove one or many webhook registrations
     $scope.deleteCurrentWebhooks = function () {
         $scope.selectedCurrentWebhooks.forEach(function (toDelete) {
-            var request = webhookService.deleteWebhook(toDelete);
+            var request = webhookService.deleteWebhook(toDelete, $scope.webhookVersion);
             request.then(function (promise) {
                 if (promise) {
-                    $scope.getCurrentWebhooks();
+                    $scope.getCurrentWebhooks($scope.webhookVersion);
                 }
             });
         })
@@ -624,12 +625,12 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
 
     // register a new webhook endpoint
     $scope.saveCustomWebhook = function () {
-        var request = webhookService.createWebhook($scope.customWebhook);
+        var request = webhookService.createWebhook($scope.customWebhook, $scope.webhookVersion);
         request.then(function (promise) {
             if (promise && promise.err) alert(err);
             else {
                 alert("done");
-                $scope.getCurrentWebhooks();
+                $scope.getCurrentWebhooks($scope.webhookVersion);
                 $scope.customWebhook = {
                     application: "",
                     secret : "",
@@ -642,7 +643,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     }
 
     // ENTRY Point
-    if ($scope.currentWebhooks == undefined) $scope.getCurrentWebhooks();
+    if ($scope.currentWebhooks == undefined) $scope.getCurrentWebhooks($scope.webhookVersion);
     if ($scope.eventTypes == undefined) getEventTypes();
 
 
@@ -652,7 +653,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     $scope.webhook = {
         register: {
             name: "Presence - Get Client Time Series",
-            endpoint: "POST /beta/configuration/webhooks",
+            endpoint: "POST /v1/configuration/webhooks",
             description: "Creates a new Webhook subscription",
             status: 0,
             request: null,
@@ -665,7 +666,7 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         },
         remove: {
             name: "Presence - Get Client Time Series",
-            endpoint: "DELETE /beta/configuration/webhooks/{subscription}",
+            endpoint: "DELETE /v1/configuration/webhooks/{subscription}",
             description: "Deletes a Webhook subscription",
             status: 0,
             request: null,
@@ -762,6 +763,9 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
     };
 
     // 
+    $scope.$watch("webhookVersion", function(){
+        $scope.getCurrentWebhooks();
+    });
     $scope.$watch("webhook.test", function (newValue, oldValue) {
         if ($scope.webhook.test == undefined && $scope.webhook.socket == true) {
             $scope.webhook.socket = false;
