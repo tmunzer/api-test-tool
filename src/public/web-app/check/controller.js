@@ -618,8 +618,8 @@ angular.module('Check').controller("WebhookCtrl", function ($scope, $rootScope, 
         if ($scope.customWebhook.application == "") return false;
         else if ($scope.customWebhook.secret == "") return false;
         else if ($scope.customWebhook.url == "") return false;
-        else if ($scope.customWebhook.eventType == undefined) return false;
-        else if ($scope.customWebhook.messageType == undefined || $scope.customWebhook.messageType == "Please select an \"Event Type\" first.") return false;
+        //else if ($scope.customWebhook.eventType == undefined) return false;
+        //else if ($scope.customWebhook.messageType == undefined || $scope.customWebhook.messageType == "Please select an \"Event Type\" first.") return false;
         else return true;
     };
 
