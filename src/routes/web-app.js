@@ -17,7 +17,7 @@ function removeTestWebhook(req) {
                     && wh.url == "https://" + serverHostname + "/webhook/presence"
                 ) whToRemove = true;
             });
-            if (whToRemove) API.configuration.webhooks.remove(
+            if (whToRemove && wh.id) API.configuration.webhooks.remove(
                 req.session.xapi,
                 devAccount,
                 wh.id,
