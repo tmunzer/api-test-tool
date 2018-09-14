@@ -141,7 +141,7 @@
                         <md-content layout-padding layout="column">
                                 <md-input-container style="margin: 5px 5px 0 5px;">
                                 <md-radio-group ng-model="webhookVersion" layout="row">
-                                    <md-radio-button value="beta">Beta (Deprecated)</md-radio-button>
+                                    <md-radio-button value="beta" disabled="disabled">Beta (Deprecated)</md-radio-button>
                                     <md-radio-button value="v1">V1</md-radio-button>                                  
                                 </md-radio-group>
                                 </md-input-container>
@@ -224,6 +224,7 @@
                                 </label>
                                 <input type="text" ng-model="customWebhook.url" />
                             </md-input-container>
+                            <!--
                             <md-input-container style="margin: 5px 5px 0 5px;">
                                 <label>
                                     <span>Event Type</span><span style="color: red">*</span>
@@ -240,6 +241,7 @@
                                     <md-option ng-repeat="messageType in messageTypes" ng-value="messageType">{{messageType}}</md-option>
                                 </md-select>
                             </md-input-container>
+                            -->
                             <md-input-container layout="row">
                                 <md-button aria-label="save webhook" ng-click="saveCustomWebhook()" class="md-raised md-primary" ng-disabled="!validateWebhook()">
                                     Save
