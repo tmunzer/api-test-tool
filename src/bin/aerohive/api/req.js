@@ -175,9 +175,9 @@ function httpRequest(options, callback, body) {
                         if (result.error.code) error.code = result.error.code;
                         else error.code = "";
                         console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(error));
-                        callback(result.error, result.data, request);
+                        callback(error, result.data, request);
                         break;
-                }
+                }                       
             }
         });
     });
