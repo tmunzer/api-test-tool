@@ -1,3 +1,6 @@
+# NO LONGER MAINTAINED
+As of August 30, 2019 this project is no longer maintained. It should still (probably) work, but I am no longer providing support, fixing issues, or adding new features.
+
 # API Test Tool
 This is a free Reference APP built to provide a useful tool for developers to validate APIs availability with detailed information about API requests and responses.
 This app also provide a tool to test or register webhooks. 
